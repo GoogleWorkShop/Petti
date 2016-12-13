@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "209250414142",
+    "firebase_url": "https://allbusiness-3d893.firebaseio.com",
+    "project_id": "allbusiness-3d893",
+    "storage_bucket": "com.firebase.petti.petti"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209250414142:android:e4bebb011000b775",
+        "android_client_info": {
+          "package_name": "com.firebase.petti.petti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209250414142-3jkvmrn1j2trqbavrf0dspgvtd97rlio.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebase.petti.petti",
+            "certificate_hash": "E90B11C72AC2C67309C5F16FD66CD4ABC454304A"
+          }
+        },
+        {
+          "client_id": "209250414142-kje1n4uspga38jcm9e6l3iufvimpbj04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-551ryrFgF2NSNu8Wceyw3pb4ukCuiTs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209250414142-kje1n4uspga38jcm9e6l3iufvimpbj04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
