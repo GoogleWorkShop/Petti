@@ -1,8 +1,8 @@
 package com.firebase.petti.petti;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +13,16 @@ import android.view.ViewGroup;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NeighborDogsActivityFragment extends Fragment {
+public class NeighborDogsFragment extends Fragment {
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_neighbor_dogs, container, false);
+
+        return rootView;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,14 +49,5 @@ public class NeighborDogsActivityFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_neighbor_dogs, container, false);
-
-        return rootView;
     }
 }
