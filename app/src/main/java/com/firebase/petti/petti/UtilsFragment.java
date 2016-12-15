@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -49,20 +50,28 @@ public class UtilsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * In here we updated the number and type of different utility buttons
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-         String[] data = {
+//         Class<?>[] differentButtonsClasses = {}
+
+         String[] differentButtons = {
                     "Food Notifications",
                     "Vaccinetion Card",
+                    "Find Near Dog Parks",
+                    "Find Near Veterinarians",
+                    "Find Near Pet Stores",
                     "Such",
-                    "As Such",
+                    "And Such",
                     "Other Such",
-                    "Not Such"
+                    "Not As Such"
         };
 
-        ArrayList<String> utilsArrays = new ArrayList<>(Arrays.asList(data));
+        ArrayList<String> utilsArrays = new ArrayList<>(Arrays.asList(differentButtons));
 
         mUtilsAdapter = new ArrayAdapter<>(this.getActivity(),
                 R.layout.list_item_utils,
@@ -74,6 +83,19 @@ public class UtilsFragment extends Fragment {
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_utils);
         listView.setAdapter(mUtilsAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                String utility = mUtilsAdapter.getItem(position);
+//                switch (utility){
+//                    case Str:
+//                }
+//                Intent intent = new Intent(getActivity(), .class)
+//                        .putExtra(Intent.EXTRA_TEXT, forecast);
+//                startActivity(intent);
+//            }
+//        });
 
         return rootView;
     }

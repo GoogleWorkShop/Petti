@@ -9,10 +9,10 @@ public class NeighborDogsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_neighbor_dogs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
@@ -21,5 +21,4 @@ public class NeighborDogsActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
 }
