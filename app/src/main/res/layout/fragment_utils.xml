@@ -5,9 +5,8 @@
     android:gravity="center">
 
     <TextView
-        android:text="Neighbor Dogs Activity"
+        android:text="Utils Activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>

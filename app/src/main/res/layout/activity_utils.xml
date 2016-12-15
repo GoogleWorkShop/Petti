@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.firebase.petti.petti.NeighborDogsActivity">
+    tools:context="com.firebase.petti.petti.UtilsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,9 +22,9 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/neighbor_container"
+        android:id="@+id/utils_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
-    
+
 </android.support.design.widget.CoordinatorLayout>

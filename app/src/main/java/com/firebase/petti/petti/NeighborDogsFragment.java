@@ -1,8 +1,8 @@
 package com.firebase.petti.petti;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NeighborDogsActivityFragment extends Fragment {
+public class NeighborDogsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
