@@ -6,7 +6,7 @@
     android:gravity="center">
 
     <Button
-        android:id="@+id/my_businesses"
+        android:id="@+id/bark"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="@string/schedule_a_walk"
@@ -14,12 +14,12 @@
         android:layout_gravity="center" />
 
     <Button
-    android:id="@+id/my_appointments_opt"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:textSize="30dp"
-    android:text="@string/find_walk_partners_around"
-    android:layout_gravity="center" />
+        android:id="@+id/find_walk_partners"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:textSize="30dp"
+        android:text="@string/find_walk_partners_around"
+        android:layout_gravity="center" />
     <Button
         android:id="@+id/utils"
         android:layout_width="match_parent"

@@ -51,12 +51,12 @@ public class MainFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Get a reference to the ListView, and attach this adapter to it.
-        Button my_businesses = (Button) rootView.findViewById(R.id.my_businesses);
-        my_businesses.setOnClickListener(new View.OnClickListener() {
+        // Get a reference to the bark button and attach a listener.
+        Button bark = (Button) rootView.findViewById(R.id.bark);
+        bark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), R.string.get_ready_for_business,
+                Toast.makeText(getActivity(), R.string.get_ready_for_a_walk,
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), BarkActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
@@ -64,17 +64,28 @@ public class MainFragment extends Fragment {
             }
         });
 
-        Button my_appointments = (Button) rootView.findViewById(R.id.my_appointments_opt);
-//        my_appointments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                String forecast = mForecastAdapter.getItem(position);
-//                Intent intent = new Intent(getActivity(), DetailActivity.class)
-//                        .putExtra(Intent.EXTRA_TEXT, forecast);
-//                startActivity(intent);
-//            }
-//        });
+        // Get a reference to the dog-neighbors button and attach a listener.
+        Button find_partners = (Button) rootView.findViewById(R.id.find_walk_partners);
+        find_partners.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
+                startActivity(intent);
+            }
+        });
+
+        // Get a reference to the dog-neighbors button and attach a listener.
+        Button utils = (Button) rootView.findViewById(R.id.utils);
+        find_partners.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 }
