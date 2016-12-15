@@ -20,6 +20,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!--<include layout="@layout/content_neighbor_dogs" />-->
+
     <FrameLayout
         android:id="@+id/neighbor_container"
         android:layout_width="match_parent"
