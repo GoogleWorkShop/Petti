@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
     android:orientation="vertical"
-    tools:context="com.example.raz.businesscoreandroid.RegistrationActivity">
+    tools:context="com.firebase.petti.petti.RegistrationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

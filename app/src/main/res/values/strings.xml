@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">All Business</string>
+    <string name="app_name">Petti</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

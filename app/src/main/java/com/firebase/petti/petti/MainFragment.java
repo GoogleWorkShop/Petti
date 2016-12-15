@@ -9,13 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 /**
  * Created by barjon on 10-Dec-16.
@@ -63,7 +58,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), R.string.get_ready_for_business,
                         Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), MyBusinessesActivity.class)
+                Intent intent = new Intent(getActivity(), BarkActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
                 startActivity(intent);
             }
