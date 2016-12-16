@@ -36,14 +36,18 @@ public class MainActivity extends AppCompatActivity {
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         // Find our drawer view
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
         drawerToggle = setupDrawerToggle();
 
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.addDrawerListener(drawerToggle);
+
+        // Find our drawer view
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+
+        setupDrawerContent(nvDrawer);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -77,15 +81,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.default_fragment:
                 fragmentClass = MainFragment.class;
                 break;
-//            case R.id.nav_first_fragment:
-//                fragmentClass = FirstFragment.class;
-//                break;
-//            case R.id.nav_second_fragment:
-//                fragmentClass = SecondFragment.class;
-//                break;
-//            case R.id.nav_third_fragment:
-//                fragmentClass = ThirdFragment.class;
-//                break;
+            case R.id.food_notifications:
+                fragmentClass = FoodNotificationsFragment.class;
+                break;
+            case R.id.vaccinetion_card:
+                fragmentClass = VaccinetionCard.class;
+                break;
+            case R.id.find_near_dog_parks:
+                fragmentClass = FindNearDogParks.class;
+                break;
+            case R.id.find_near_veterinarians:
+                fragmentClass = FindNearVeterinarians.class;
+                break;
+            case R.id.find_near_pet_stores:
+                fragmentClass = FindNearPetStores.class;
+                break;
             default:
                 fragmentClass = MainFragment.class;
         }

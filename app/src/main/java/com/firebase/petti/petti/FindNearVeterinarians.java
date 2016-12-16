@@ -1,50 +1,32 @@
 package com.firebase.petti.petti;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BarkFragment extends Fragment {
+public class FindNearVeterinarians extends Fragment {
+
+
+    public FindNearVeterinarians() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_bark, container, false);
-
-
-        // Get a reference to the bark button and attach a listener.
-        Button bark = (Button) rootView.findViewById(R.id.bark_get_matches_button);
-        bark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), R.string.matches_found,
-                        Toast.LENGTH_SHORT).show();
-
-                Fragment matchesFragment = new NeighborDogsFragment();
-
-                FragmentManager fragmentManager = getFragmentManager();
-
-                fragmentManager.beginTransaction().replace(R.id.bark_container, matchesFragment)
-                        .addToBackStack( "tag" ).commit();
-            }
-        });
+        View rootView = inflater.inflate(R.layout.fragment_find_near_veterinarians, container, false);
 
         return rootView;
     }
@@ -58,7 +40,7 @@ public class BarkFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_neighbor_dogs, menu);
+        inflater.inflate(R.menu.main_fragment, menu);
     }
 
     @Override
@@ -75,4 +57,5 @@ public class BarkFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
