@@ -20,12 +20,5 @@
         android:textSize="30dp"
         android:text="@string/find_walk_partners_around"
         android:layout_gravity="center" />
-    <Button
-        android:id="@+id/utils"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="@string/utils"
-        android:textSize="30dp"
-        android:layout_gravity="center" />
 
 </LinearLayout>

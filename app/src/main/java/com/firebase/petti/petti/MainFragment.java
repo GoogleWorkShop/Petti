@@ -75,17 +75,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        // Get a reference to the utils button and attach a listener.
-        Button utils = (Button) rootView.findViewById(R.id.utils);
-        utils.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UtilsActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
-                startActivity(intent);
-            }
-        });
-
         return rootView;
     }
 }
