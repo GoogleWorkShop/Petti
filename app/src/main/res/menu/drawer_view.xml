@@ -3,29 +3,29 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/default_fragment"
-            android:icon="@drawable/ic_one"
-            android:title="Main Menu"
+            android:icon="@drawable/ic_action_walking_together"
+            android:title="Walking and Barking"
             android:checked="true"/>
         <item
             android:id="@+id/food_notifications"
-            android:icon="@drawable/ic_one"
+            android:icon="@drawable/ic_action_food"
             android:title="Food Notifications" />
         <item
             android:id="@+id/vaccinetion_card"
-            android:icon="@drawable/ic_two"
+            android:icon="@drawable/ic_action_vaccinetion"
             android:title="Vaccinetion Card" />
         <item
             android:id="@+id/find_near_dog_parks"
-            android:icon="@drawable/ic_three"
+            android:icon="@drawable/ic_action_dog_parks"
             android:title="Find Near Dog Parks" />
         <item
             android:id="@+id/find_near_veterinarians"
-            android:icon="@drawable/ic_one"
+            android:icon="@drawable/ic_action_veterinarians"
             android:title="Find Near Veterinarians"
             android:checked="true"/>
         <item
             android:id="@+id/find_near_pet_stores"
-            android:icon="@drawable/ic_one"
+            android:icon="@drawable/ic_action_pet_store"
             android:title="Find Near Pet Stores" />
         <item
             android:id="@+id/Such"

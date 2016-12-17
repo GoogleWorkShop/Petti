@@ -3,7 +3,6 @@ package com.firebase.petti.petti;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,8 +48,11 @@ public class NeighborDogsFragment extends Fragment {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             case android.R.id.home:
-                getFragmentManager().popBackStack();
-                return true;
+                if(getActivity().getClass() == BarkActivity.class) {
+                    getFragmentManager().popBackStack();
+                    return true;
+                }
+                return super.onOptionsItemSelected(item);
             default:
                 return super.onOptionsItemSelected(item);
         }
