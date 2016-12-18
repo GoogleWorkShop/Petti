@@ -29,22 +29,27 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_weight="0.12"
+                android:id="@+id/pet_image"
                 android:background="@drawable/pet_pic"
+                android:scaleType="centerCrop"
                 />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:layout_width="165dp"
                 android:layout_height="49dp"
-                android:id="@+id/mediaRouteButton"
+                android:id="@+id/uploadButton"
                 android:layout_gravity="fill_vertical"
                 android:text="UPLOAD IMAGE"
-                android:layout_weight="0.01" />
+                android:layout_weight="0.01"
+                android:onClick="uploadImageMethod"
+                />
             <android.support.v7.widget.AppCompatSpinner
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:id="@+id/pet_type_spinner"
                 android:scrollbarStyle="outsideInset"
+                android:scrollbarSize="30dp"
                 />
 
 
@@ -60,19 +65,18 @@
 
             <EditText
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_height="103dp"
                 android:hint="name:"
                 android:textSize="30dp"
-                android:id="@+id/editText" />
+                android:id="@+id/name" />
 
             <EditText
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_height="106dp"
                 android:hint="age:"
                 android:textSize="30dp"
                 android:inputType="number"
+                android:id="@+id/age"
                 />
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="fill_parent"
@@ -96,27 +100,31 @@
         android:orientation="vertical"
         android:weightSum="3"
         >
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#3b5998"
+            android:text="Sign in with facebook"
+            android:textAllCaps="false"
+
+            android:textColor="#fff" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#dc4e41"
+            android:text="Sign in with google +"
+            android:textAllCaps="false"
+            android:textColor="#fff" />
+
         <android.support.v7.widget.AppCompatButton
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:text="FaceBook sign-up"
-            android:textSize="30dp"
-        />
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:text="Google sign-up"
-            android:textSize="30dp"
-            />
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Regular sign-up"
             android:textSize="30dp"
-            />
+            android:id="@+id/appCompatButton"
+            android:onClick="startUserRegistrationActivity"/>
 
     </LinearLayout>
 
