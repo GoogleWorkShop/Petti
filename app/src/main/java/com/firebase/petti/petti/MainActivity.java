@@ -4,6 +4,7 @@ package com.firebase.petti.petti;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.main_container, new MainFragment())
                     .commit();
         }
+
+        // Set the default shared preferences values
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -96,6 +100,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.find_near_pet_stores:
                 fragmentClass = FindNearPetStores.class;
                 break;
+            case R.id.my_preferences:
+                //TODO Don't highlight the selected item has been done by NavigationView
+                menuItem.setChecked(false);
+                // Close the navigation drawer
+                mDrawer.closeDrawers();
+                startActivity(new Intent(this, MyPreferencesActivity.class));
+                return;
             default:
                 fragmentClass = MainFragment.class;
         }
@@ -138,9 +149,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
 

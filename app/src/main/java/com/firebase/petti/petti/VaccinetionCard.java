@@ -50,7 +50,7 @@ public class VaccinetionCard extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(getActivity(), SettingsActivity.class));
+            startActivity(new Intent(getActivity(), MyPreferencesActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

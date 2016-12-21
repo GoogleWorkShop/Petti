@@ -45,7 +45,7 @@ public class NeighborDogsFragment extends Fragment {
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                startActivity(new Intent(getActivity(), MyPreferencesActivity.class));
                 return true;
             case android.R.id.home:
                 if(getActivity().getClass() == BarkActivity.class) {
