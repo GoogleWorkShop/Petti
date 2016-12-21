@@ -2,6 +2,8 @@
     <string name="app_name">Petti</string>
 
     <!-- Strings related to login -->
+    <string name="sign_out">Sign Out</string>
+    <string name="facebook_application_id" translatable="false">1218781828159702</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in</string>

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
  */
 public class FindNearPetStores extends Fragment {
 
-
     public FindNearPetStores() {
         // Required empty public constructor
     }
