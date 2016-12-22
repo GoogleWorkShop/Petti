@@ -56,7 +56,7 @@
 
         </activity>
 
-        <activity android:name=".AnotherDogActivity">
+        <activity android:name=".MatchedDogActivity">
 
         </activity>
     </application>
