@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
 
-
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -120,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.find_near_pet_stores:
                 fragmentClass = FindNearPetStores.class;
                 break;
+            case R.id.my_preferences:
+                fragmentClass = MyPreferencesFragment.class;
+                break;
             default:
                 fragmentClass = MainFragment.class;
         }
@@ -165,9 +167,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
 
