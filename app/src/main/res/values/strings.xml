@@ -11,6 +11,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_empty_password">Password can not be empty</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
@@ -107,6 +108,7 @@
 
     <!-- dog type  -->
     <string-array name="dog_types_array">
+        <item>Select Type</item>
         <item>poodle</item>
         <item>golden</item>
         <item>german</item>
@@ -114,10 +116,22 @@
         <item>cnaany</item>
         <item>shiwawa</item>
         <item>monkey</item>
-        <item>snake</item>
+    </string-array>
+
+    <!-- dog character  -->
+    <string-array name="dog_character_array">
+        <item>Select characteristics</item>
+        <item>playful</item>
+        <item>aggresive</item>
+        <item>aggresive to males</item>
+        <item>aggresive to females</item>
+        <item>get along</item>
+        <item>energetic</item>
+        <item>tired</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="matches_found">Matches Found</string>
+    <string name="title_activity_user_registration_activitey">UserRegistrationActivitey</string>
 </resources>
