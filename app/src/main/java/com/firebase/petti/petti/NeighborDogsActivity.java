@@ -17,7 +17,7 @@ public class NeighborDogsActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.neighbor_container, new NeighborDogsFragment())
+                    .replace(R.id.neighbor_container, new MatchesFragment())
                     .commit();
         }
     }

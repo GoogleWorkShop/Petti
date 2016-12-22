@@ -56,10 +56,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.firebase.petti.petti.MainActivity" />
         </activity>
+
         <activity
             android:name=".UserRegistrationActivitey"
             android:label="@string/title_activity_user_registration_activitey"
             android:theme="@style/AppTheme"></activity>
+
+        <activity android:name=".AnotherDogActivity"></activity>
     </application>
 
 </manifest>
