@@ -6,7 +6,10 @@ package com.firebase.petti.petti;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 
@@ -25,7 +28,7 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         setPreferencesFromResource(R.xml.preferences, s);
 
         getNotifications = "getNotifications";
@@ -80,5 +83,41 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
                 prefs.edit().putString(key, Integer.toString(last_distance_int)).apply();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            Fragment fragment = null;
+            Class fragmentClass;
+            int container;
+            if(getActivity().getClass() == BarkActivity.class) {
+                fragmentClass = BarkFragment.class;
+                container = R.id.bark_container;
+            } else if(getActivity().getClass() == NeighborDogsActivity.class) {
+                fragmentClass = MatchesFragment.class;
+                container = R.id.neighbor_container;
+            } else {
+                return super.onOptionsItemSelected(item);
+            }
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(container, fragment).commit();
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
