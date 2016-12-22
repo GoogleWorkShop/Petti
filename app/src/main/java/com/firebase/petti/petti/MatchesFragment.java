@@ -57,7 +57,7 @@ public class MatchesFragment extends Fragment {
 
                 String image = mMatchesAdapter.getImage(position);
 
-                Intent intent = new Intent(getActivity(), AnotherDogActivity.class);
+                Intent intent = new Intent(getActivity(), MatchedDogActivity.class);
                 intent.putExtra("id", id);
                 intent.putExtra("dogName", dogName);
                 intent.putExtra("image", image);

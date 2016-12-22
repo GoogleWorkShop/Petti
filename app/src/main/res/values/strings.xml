@@ -136,4 +136,5 @@
     <string name="title_activity_user_registration_activitey">UserRegistrationActivitey</string>
     <string name="poogy">Poogy</string>
     <string name="invalid_distance">Invalid Distance - Should Be Between 1 And 20</string>
+    <string name="start_chat">Start Chat</string>
 </resources>
