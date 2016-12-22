@@ -28,15 +28,6 @@
             android:name=".LoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".MyPreferencesActivity"
-            android:label="@string/action_settings"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
             android:name=".BarkActivity"
             android:label="@string/bark"
             android:parentActivityName=".MainActivity"

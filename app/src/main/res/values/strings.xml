@@ -121,4 +121,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="matches_found">Matches Found</string>
     <string name="poogy">Poogy</string>
+    <string name="invalid_distance">Invalid Distance - Should Be Between 1 And 20</string>
 </resources>

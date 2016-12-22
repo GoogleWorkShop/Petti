@@ -4,7 +4,6 @@ package com.firebase.petti.petti;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -25,9 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 
 import com.firebase.petti.db.API;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -119,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.find_near_pet_stores:
                 fragmentClass = FindNearPetStores.class;
                 break;
+            case R.id.my_preferences:
+                fragmentClass = MyPreferencesFragment.class;
+                break;
             default:
                 fragmentClass = MainFragment.class;
         }
@@ -159,11 +158,11 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                AuthUI.getInstance().signOut(this);
+                return true;
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
 

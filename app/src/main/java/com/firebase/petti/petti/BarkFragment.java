@@ -33,7 +33,7 @@ public class BarkFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.matches_found,
                         Toast.LENGTH_SHORT).show();
 
-                Fragment matchesFragment = new NeighborDogsFragment();
+                Fragment matchesFragment = new MatchesFragment();
 
                 FragmentManager fragmentManager = getFragmentManager();
 
@@ -66,7 +66,10 @@ public class BarkFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(getActivity(), MyPreferencesActivity.class));
+            Fragment myPrefrences = new MyPreferencesFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.bark_container, myPrefrences)
+                    .addToBackStack( "tag" ).commit();
             return true;
         }
         return super.onOptionsItemSelected(item);

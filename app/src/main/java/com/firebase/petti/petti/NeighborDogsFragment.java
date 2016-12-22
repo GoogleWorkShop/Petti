@@ -3,6 +3,7 @@ package com.firebase.petti.petti;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,7 +46,10 @@ public class NeighborDogsFragment extends Fragment {
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), MyPreferencesActivity.class));
+                Fragment myPrefrences = new MyPreferencesFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.neighbor_container, myPrefrences)
+                        .addToBackStack( "tag" ).commit();
                 return true;
             case android.R.id.home:
                 if(getActivity().getClass() == BarkActivity.class) {

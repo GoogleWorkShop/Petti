@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference android:title="Your Dogs Name"
-        android:key="dogName"
-        android:summary="Please provide your username"
-        android:defaultValue="@string/poogy" />
-    <EditTextPreference android:title="Distance"
-        android:key="distance"
-        android:summary="Choose the distance of wanted matches"
-        android:defaultValue="3"/>
-    <CheckBoxPreference android:title="Get Notifications"
-        android:defaultValue="true"
-        android:summary="This option if selected will allow the application to push notifications."
-        android:key="getNotifications" />
+    <PreferenceCategory
+        android:title="My Settings"
+        android:key="mySettings">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="getNotifications"
+            android:title="Get Notifications" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:numeric="integer"
+            android:maxLength="2"
+            android:defaultValue="3"
+            android:title="Matching Distance"
+            android:key="matchDistance" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

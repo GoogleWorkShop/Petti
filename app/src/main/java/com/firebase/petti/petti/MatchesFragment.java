@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,7 +94,10 @@ public class MatchesFragment extends Fragment {
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), MyPreferencesActivity.class));
+                Fragment myPrefrences = new MyPreferencesFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)
+                        .addToBackStack( "tag" ).commit();
                 return true;
             case android.R.id.home:
                 if(getActivity().getClass() == BarkActivity.class) {
