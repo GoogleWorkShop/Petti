@@ -114,8 +114,18 @@
         <item>cnaany</item>
         <item>shiwawa</item>
         <item>monkey</item>
+    </string-array>
 
-
+    <!-- dog character  -->
+    <string-array name="dog_character_array">
+        <item>Select characteristics</item>
+        <item>playful</item>
+        <item>aggresive</item>
+        <item>aggresive to males</item>
+        <item>aggresive to females</item>
+        <item>get along</item>
+        <item>energetic</item>
+        <item>tired</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

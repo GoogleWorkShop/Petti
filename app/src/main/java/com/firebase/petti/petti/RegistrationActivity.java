@@ -4,15 +4,20 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,26 +31,34 @@ public class RegistrationActivity extends AppCompatActivity {
     Button uploadButton;
     ImageView petImage;
     final String[] dog_type = new String[1];
+    final String[] dog_charater = new String[1];
+    enum Gender{Male,Female};
+    Gender gender;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+
         nameView = (EditText) findViewById(R.id.name);
         ageView = (EditText) findViewById(R.id.age);
         uploadButton = (Button) findViewById(R.id.uploadButton);
         petImage = (ImageView) findViewById(R.id.pet_image);
 
-
-        Spinner spinner = (Spinner) findViewById(R.id.pet_type_spinner);
+        //dog type spinner
+        Spinner dog_type_spinner = (Spinner) findViewById(R.id.pet_type_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
                 R.array.dog_types_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
+        typeAdapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        dog_type_spinner.setAdapter(typeAdapter);
+        dog_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 dog_type[0] = adapterView.getItemAtPosition(pos).toString();
@@ -57,6 +70,29 @@ public class RegistrationActivity extends AppCompatActivity {
 
             }
         });
+
+        //character spinner
+        Spinner dog_character_spinner = (Spinner) findViewById(R.id.pet_character_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> characterAdapter = ArrayAdapter.createFromResource(this,
+                R.array.dog_character_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        characterAdapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
+        // Apply the adapter to the spinner
+        dog_character_spinner.setAdapter(characterAdapter);
+        dog_character_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                dog_charater[0] = adapterView.getItemAtPosition(pos).toString();
+                Toast.makeText(adapterView.getContext(), "character :" + dog_charater[0], Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
 
 
@@ -85,6 +121,23 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 }
             }
+        }
+    }
+
+    public void genderSelection(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.gender_male_radio:
+                if (checked)
+                    gender = Gender.Male;
+                break;
+            case R.id.gender_female_radio:
+                if (checked)
+                    gender = Gender.Female;
+                break;
         }
     }
 
