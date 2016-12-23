@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="My Settings"
+        android:key="mySettings">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="getNotifications"
+            android:title="Get Notifications" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:numeric="integer"
+            android:maxLength="2"
+            android:defaultValue="3"
+            android:title="Matching Distance"
+            android:key="matchDistance" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

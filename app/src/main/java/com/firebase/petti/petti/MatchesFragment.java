@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,7 +57,7 @@ public class MatchesFragment extends Fragment {
 
                 String image = mMatchesAdapter.getImage(position);
 
-                Intent intent = new Intent(getActivity(), AnotherDogActivity.class);
+                Intent intent = new Intent(getActivity(), MatchedDogActivity.class);
                 intent.putExtra("id", id);
                 intent.putExtra("dogName", dogName);
                 intent.putExtra("image", image);
@@ -93,7 +94,10 @@ public class MatchesFragment extends Fragment {
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                Fragment myPrefrences = new MyPreferencesFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)
+                        .addToBackStack( "tag" ).commit();
                 return true;
             case android.R.id.home:
                 if(getActivity().getClass() == BarkActivity.class) {

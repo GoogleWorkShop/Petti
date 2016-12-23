@@ -27,6 +27,7 @@ import com.firebase.petti.db.API;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.find_near_pet_stores:
                 fragmentClass = FindNearPetStores.class;
                 break;
+            case R.id.my_preferences:
+                fragmentClass = MyPreferencesFragment.class;
+                break;
             default:
                 fragmentClass = MainFragment.class;
         }
@@ -163,9 +167,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
 
@@ -227,16 +228,38 @@ public class MainActivity extends AppCompatActivity {
             // currently none is populated
 
         // creating db user
-        String user_id = user.getUid();
-        if (!API.isUserExists(user_id)){
-            // user's 1st registeration
-            API.createUser(user_id, user.getDisplayName(), user.getEmail());
-        }
+        final String user_id = user.getUid();
+        final String display_name = user.getDisplayName();
+        final String email = user.getEmail();
+        API.currUserUid = user_id;
+
+        ValueEventListener mNewUserListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists() ||
+                        (display_name != null && !dataSnapshot.child("owner").hasChild("name"))){
+                    // 1st registration
+                    API.createUser(user_id, display_name, email);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
+//        if (!API.isUserExists(user_id)){
+//            // user's 1st registeration
+//
+//        }
     }
-    
+
     private void onSignedOutCleanup() {
         // clear adapters if any populated
             // currently none is populated
+        API.currUserUid = null;
     }
 
 
