@@ -14,10 +14,12 @@ public class API {
     public static FirebaseDatabase mFirebaseDatabase;
     public static DatabaseReference mDatabaseUsersRef;
 
+    public static String currUserUid;  // This variable will set on sign in
 
     public static void initDatabaseApi(){
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
+        currUserUid = null;
     }
 
     public static void createUser(String uid, String name, String mail){
