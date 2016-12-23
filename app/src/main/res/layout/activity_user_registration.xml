@@ -144,28 +144,48 @@
                 android:layout_height="match_parent"
                 android:textSize="20dp"
                 android:hint="describe your self in a few words"
+                android:id="@+id/user_descreption"
                 android:gravity="top"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
+
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="20dp"
                 android:hint="nick-name"
-                android:gravity="top"/>
+                android:gravity="top"
+                android:id="@+id/user_nickname" />
         </android.support.design.widget.TextInputLayout>
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="FIND PARTNERS"
-            android:textSize="20dp"
-            android:background="@color/colorPrimary"
-            />
+            android:weightSum="1"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="Find Partners"
+                android:textSize="20dp"
+                android:onClick="MoveToMainAndUploodUserToDB"
+                android:background="@color/colorPrimary"
+                android:id="@+id/FindPartnersButton" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/walking_paws_pic"/>
+
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
