@@ -4,28 +4,23 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class DogRegistrationActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 100;
-    private static final String TAG = "RegistrationActivity";
+    private static final String TAG = "DogRegistrationActivity";
     EditText nameView;
     EditText ageView ;
     Button uploadButton;
@@ -41,7 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.activity_dog_registration);
 
 
         nameView = (EditText) findViewById(R.id.name);
