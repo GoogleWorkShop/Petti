@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,18 +18,44 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DogRegistrationActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "DogRegistrationActivity";
+
+    //YAHAV: Fields to upload
+
+    String dogName;
+    String dogAge;
+    boolean dog_is_female;
+    String dogType;
+    List<String> dogCharacters = new ArrayList<String>();
+    String dogDescreption;
+    String preferedPartners;
+    String commonWalkPlaces;
+    //picture....
+
+
+
+
+
+
+    //views
     EditText nameView;
     EditText ageView ;
+    TextInputEditText petDescreptionText;
+    TextInputEditText preferdPartnersText;
+    TextInputEditText commonWalkPlacesText;
     Button uploadButton;
     ImageView petImage;
-    final String[] dog_type = new String[1];
-    final String[] dog_charater = new String[1];
     enum Gender{Male,Female};
     Gender gender;
+    final String[] dog_type = new String[1];
+    final String[] dog_charater = new String[1];
+
 
 
 
@@ -39,10 +66,13 @@ public class DogRegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dog_registration);
 
 
-        nameView = (EditText) findViewById(R.id.name);
-        ageView = (EditText) findViewById(R.id.age);
+        nameView = (EditText) findViewById(R.id.pet_name);
+        ageView = (EditText) findViewById(R.id.pet_age);
         uploadButton = (Button) findViewById(R.id.uploadButton);
         petImage = (ImageView) findViewById(R.id.pet_image);
+        petDescreptionText = (TextInputEditText) findViewById(R.id.pet_descreption_text);
+        preferdPartnersText = (TextInputEditText) findViewById(R.id.preferd_walk_partners_text);
+        commonWalkPlacesText = (TextInputEditText) findViewById(R.id.common_walk_places_text);
 
         //dog type spinner
         Spinner dog_type_spinner = (Spinner) findViewById(R.id.pet_type_spinner);
@@ -125,11 +155,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
         // Check which radio button was clicked
         switch(view.getId()) {
-            case R.id.gender_male_radio:
+            case R.id.pet_gender_male_radio:
                 if (checked)
                     gender = Gender.Male;
                 break;
-            case R.id.gender_female_radio:
+            case R.id.pet_gender_female_radio:
                 if (checked)
                     gender = Gender.Female;
                 break;
@@ -147,6 +177,23 @@ public class DogRegistrationActivity extends AppCompatActivity {
         }
         cursor.close();
         return res;
+    }
+
+    //YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
+    public void MoveToEditProfileAndUploadPet(View view) {
+        //fill fields to pass to db
+         dogName = nameView.getText().toString();
+         dogAge = ageView.getText().toString();
+         dog_is_female = (gender == Gender.Female);
+         dogType = dog_type[0];
+         dogCharacters.add(dog_charater[0]);
+         dogDescreption = petDescreptionText.getText().toString();
+         preferedPartners = preferdPartnersText.getText().toString();
+         commonWalkPlaces = commonWalkPlacesText.getText().toString();
+
+        //move to edit profile
+        startUserRegistrationActivity(view);
+
     }
 
 
