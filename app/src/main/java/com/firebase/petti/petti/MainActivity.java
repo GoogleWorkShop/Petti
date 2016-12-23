@@ -231,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
         final String user_id = user.getUid();
         final String display_name = user.getDisplayName();
         final String email = user.getEmail();
+        API.currUserUid = user_id;
+
         ValueEventListener mNewUserListener = new ValueEventListener() {
 
             @Override
@@ -257,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
     private void onSignedOutCleanup() {
         // clear adapters if any populated
             // currently none is populated
+        API.currUserUid = null;
     }
 
 
