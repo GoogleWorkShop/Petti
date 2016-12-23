@@ -32,9 +32,9 @@
             android:icon="@drawable/ic_action_pet_store"
             android:title="Find Near Pet Stores" />
         <item
-            android:id="@+id/Such"
-            android:icon="@drawable/ic_one"
-            android:title="Such" />
+            android:id="@+id/my_preferences"
+            android:icon="@drawable/ic_action_preferences"
+            android:title="Settings" />
         <item
             android:id="@+id/and_such"
             android:icon="@drawable/ic_two"
