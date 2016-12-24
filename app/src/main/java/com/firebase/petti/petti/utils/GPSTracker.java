@@ -48,10 +48,10 @@ public class GPSTracker extends Service implements LocationListener {
 
     public GPSTracker(Context context) {
         this.mContext = context;
-        getLocation();
+        updateLocation();
     }
 
-    public Location getLocation() {
+    public Location updateLocation() throws SecurityException{
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -104,8 +104,6 @@ public class GPSTracker extends Service implements LocationListener {
                     }
                 }
             }
-
-        } catch (SecurityException ignored) {
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,6 +199,16 @@ public class GPSTracker extends Service implements LocationListener {
 
         // return longitude
         return longitude;
+    }
+
+    /**
+     * Function to get current location
+     * */
+    public Location getLocation(){
+        if(location != null){
+            return location;
+        }
+        return null;
     }
 
     /**
