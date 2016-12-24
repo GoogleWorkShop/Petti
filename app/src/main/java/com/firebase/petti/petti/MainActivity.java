@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 
 import com.firebase.petti.db.API;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -108,16 +107,16 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = FoodNotificationsFragment.class;
                 break;
             case R.id.vaccinetion_card:
-                fragmentClass = VaccinetionCard.class;
+                fragmentClass = VaccinetionCardFragment.class;
                 break;
             case R.id.find_near_dog_parks:
-                fragmentClass = FindNearDogParks.class;
+                fragmentClass = FindNearDogParksFragment.class;
                 break;
             case R.id.find_near_veterinarians:
-                fragmentClass = FindNearVeterinarians.class;
+                fragmentClass = FindNearVeterinariansFragment.class;
                 break;
             case R.id.find_near_pet_stores:
-                fragmentClass = FindNearPetStores.class;
+                fragmentClass = FindNearPetStoresFragment.class;
                 break;
             case R.id.my_preferences:
                 fragmentClass = MyPreferencesFragment.class;

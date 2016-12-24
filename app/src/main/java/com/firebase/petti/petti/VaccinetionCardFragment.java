@@ -12,14 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * A placeholder fragment containing a simple view.
  */
-public class FindNearDogParks extends Fragment {
+public class VaccinetionCardFragment extends Fragment {
 
-
-    public FindNearDogParks() {
+    public VaccinetionCardFragment() {
         // Required empty public constructor
     }
 
@@ -27,7 +25,7 @@ public class FindNearDogParks extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_find_near_dog_parks, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_vaccinetion_card, container, false);
 
         return rootView;
     }

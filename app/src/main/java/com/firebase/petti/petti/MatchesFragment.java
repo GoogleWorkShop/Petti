@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.firebase.petti.petti.utils.GridViewAdapter;
+
 import java.util.ArrayList;
 
 

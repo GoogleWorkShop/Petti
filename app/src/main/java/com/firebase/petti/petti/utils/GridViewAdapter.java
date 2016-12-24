@@ -1,4 +1,4 @@
-package com.firebase.petti.petti;
+package com.firebase.petti.petti.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.petti.petti.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
