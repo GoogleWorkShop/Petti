@@ -1,8 +1,13 @@
 package com.firebase.petti.petti;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +21,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.firebase.petti.petti.utils.GPSTracker;
+import com.firebase.petti.petti.utils.GridViewAdapter;
+
 import java.util.ArrayList;
 
 
@@ -25,6 +33,16 @@ import java.util.ArrayList;
 public class MatchesFragment extends Fragment {
 
     GridViewAdapter mMatchesAdapter;
+    boolean bark;
+    private final static String DEFAULT_PREFERENCE_STRING = "com.firebase.petti.petti_preferences";
+
+    // GPSTracker class
+    GPSTracker gps;
+    Location location; // location
+    private static final String[] INITIAL_PERMS={
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int INITIAL_REQUEST = 1337;
 
     public MatchesFragment() {
     }
@@ -34,6 +52,32 @@ public class MatchesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (!canAccessLocation()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+            }
+        }
+        // create class object
+        gps = new GPSTracker(getActivity());
+
+        // check if GPS enabled
+        if (gps.canGetLocation()) {
+
+            location = gps.getLocation();
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+
+            // \n is for new line
+            Toast.makeText(getActivity(),
+                    "Your Location is - \nLat: " + latitude + "\nLong: " + longitude,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
     }
 
     @Override
@@ -41,6 +85,10 @@ public class MatchesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
+        bark = getArguments().getBoolean("bark");
+        Toast.makeText(getActivity(),
+                "Bark is: " + bark,
+                Toast.LENGTH_LONG).show();
 
         View rootView = inflater.inflate(R.layout.fragment_matches, container, false);
 
@@ -110,11 +158,28 @@ public class MatchesFragment extends Fragment {
         }
     }
 
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED==getActivity().checkSelfPermission(perm));
+    }
+
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<String[]>> {
 
         @Override
         protected ArrayList<String[]> doInBackground(Void... voids) {
             ArrayList<String[]> mMatchesArray = new ArrayList();
+            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+            String s = pref.getString("matchDistance", "0");
+            int radius = Integer.parseInt(s);
+            if(radius < 0 || radius > 20){
+
+            }
+
+
 
             //TODO DELETE FROM HERE
 
@@ -156,9 +221,7 @@ public class MatchesFragment extends Fragment {
         protected void onPostExecute(ArrayList<String[]> result) {
             if (result != null) {
                 mMatchesAdapter.clear();
-//                for(int i = 0; i < result.size(); i++) {
-                    mMatchesAdapter.refresh(result);
-//                }
+                mMatchesAdapter.refresh(result);
                 // New data is back from the server.  Hooray!
             }
         }

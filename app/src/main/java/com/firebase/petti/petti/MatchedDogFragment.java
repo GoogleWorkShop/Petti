@@ -24,7 +24,7 @@ import static com.firebase.petti.petti.R.id.imageView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MatchedFragment extends Fragment {
+public class MatchedDogFragment extends Fragment {
 
     private   String mDogId;
     private   String dogName;
@@ -32,7 +32,7 @@ public class MatchedFragment extends Fragment {
     private   String imageUrl;
 
 
-    public MatchedFragment() {
+    public MatchedDogFragment() {
     }
 
     @Override

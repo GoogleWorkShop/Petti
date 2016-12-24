@@ -53,8 +53,8 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), R.string.get_ready_for_a_walk,
                         Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), BarkActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
+                Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, "true");
                 startActivity(intent);
             }
         });
@@ -65,7 +65,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
+                        .putExtra(Intent.EXTRA_TEXT, "false");
                 startActivity(intent);
             }
         });

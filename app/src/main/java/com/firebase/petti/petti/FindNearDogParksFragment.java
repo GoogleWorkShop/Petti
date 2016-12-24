@@ -1,5 +1,6 @@
 package com.firebase.petti.petti;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,16 +12,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 /**
- * A placeholder fragment containing a simple view.
+ * A simple {@link Fragment} subclass.
  */
-public class NeighborDogsFragment extends Fragment {
+public class FindNearDogParksFragment extends Fragment {
+
+
+    public FindNearDogParksFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_neighbor_dogs, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_find_near_dog_parks, container, false);
 
         return rootView;
     }
@@ -34,7 +41,7 @@ public class NeighborDogsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_neighbor_dogs, menu);
+        inflater.inflate(R.menu.main_fragment, menu);
     }
 
     @Override
@@ -44,21 +51,15 @@ public class NeighborDogsFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.action_settings:
-                Fragment myPrefrences = new MyPreferencesFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.neighbor_container, myPrefrences)
-                        .addToBackStack( "tag" ).commit();
-                return true;
-            case android.R.id.home:
-                if(getActivity().getClass() == BarkActivity.class) {
-                    getFragmentManager().popBackStack();
-                    return true;
-                }
-                return super.onOptionsItemSelected(item);
-            default:
-                return super.onOptionsItemSelected(item);
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Fragment myPrefrences = new MyPreferencesFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_container, myPrefrences)
+                    .addToBackStack( "tag" ).commit();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
+
 }
