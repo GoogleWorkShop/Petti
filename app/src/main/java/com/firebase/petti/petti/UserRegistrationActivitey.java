@@ -27,7 +27,7 @@ import java.util.List;
 public class UserRegistrationActivitey extends AppCompatActivity {
 
 
-    //YAHAV: Fields to upload
+    //TODO YAHAV: Fields to upload
 
     String userName;
     String userAge;
@@ -37,7 +37,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     String UserDescreption;
     String userNickname;
 
-    //picture....
+    //TODO picture....
 
 
     private static final int SELECT_PICTURE = 100;
@@ -178,7 +178,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
 
 
-    //YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
+    //TODO YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
     public void MoveToMainAndUploodUserToDB(View view) {
 
         //fill fields to pass to db
@@ -201,6 +201,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     public void startMainActivity(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }
