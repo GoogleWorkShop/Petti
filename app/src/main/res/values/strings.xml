@@ -162,4 +162,10 @@
     <string name="start_chat">Start Chat</string>
     <string name="bark_on">true</string>
     <string name="bark_off">false</string>
+    <string name="no_matches_found">Sorry mate/mam...\nNo matches found...\nWhy not walking a bit further?...</string>
+    <string name="purchase_date">string/purchase_date</string>
+    <string name="food_name">Food Name</string>
+    <string name="amount">Amount</string>
+    <string name="none">None</string>
+    <string name="bought_it">Bought It!</string>
 </resources>

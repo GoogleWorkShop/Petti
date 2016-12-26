@@ -13,13 +13,17 @@
         android:layout_height="150dp"
         android:layout_margin="5dp"
         android:id="@+id/matched_dog_image"
-        android:contentDescription="dogs image" />
+        android:contentDescription="dogs image"
+        android:layout_gravity="center_vertical|center_horizontal|center" />
 
     <Button
         android:text="@string/start_chat"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/start_chat_btn" />
+        android:id="@+id/start_chat_btn"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:foregroundGravity="center"
+        android:layout_gravity="center" />
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/matched_dog_detail"
