@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -175,7 +176,8 @@ public class MatchesFragment extends Fragment {
         @Override
         protected ArrayList<String[]> doInBackground(Void... voids) {
             ArrayList<String[]> mMatchesArray = new ArrayList();
-            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
             String s = pref.getString("matchDistance", "0");
             int radius = Integer.parseInt(s);
             if(radius < 0 || radius > 20){
@@ -186,33 +188,33 @@ public class MatchesFragment extends Fragment {
 
             //TODO DELETE FROM HERE
 
-//            String[] a = {"a", "a",
-//                    "http://pngimg.com/upload/dog_PNG2416.png"};
-//            mMatchesArray.add(a);
-//
-//            String[] b = {"b", "b",
-//                    "https://s-media-cache-ak0.pinimg.com/564x/fe/a6/dd/fea6dd493a862241952066fea699feaa.jpg"};
-//            mMatchesArray.add(b);
-//
-//            String[] c = {"c", "c",
-//                    "https://s-media-cache-ak0.pinimg.com/564x/aa/21/8e/aa218e0d81d51178ab68f65ef759eb11.jpg"};
-//            mMatchesArray.add(c);
-//
-//            String[] d = {"d", "d",
-//                    "https://s-media-cache-ak0.pinimg.com/originals/d9/1b/ee/d91bee03625f15e36020de6d9969a30b.png"};
-//            mMatchesArray.add(d);
-//
-//            String[] e = {"e", "e",
-//                    "http://pngimg.com/upload/dog_PNG2422.png"};
-//            mMatchesArray.add(e);
-//
-//            String[] f = {"f", "f",
-//                    "http://pngimg.com/upload/dog_PNG149.png"};
-//            mMatchesArray.add(f);
-//
-//            String[] g = {"g", "g",
-//                    "http://pngimg.com/upload/dog_PNG192.png"};
-//            mMatchesArray.add(g);
+            String[] a = {"a", "a",
+                    "http://pngimg.com/upload/dog_PNG2416.png"};
+            mMatchesArray.add(a);
+
+            String[] b = {"b", "b",
+                    "https://s-media-cache-ak0.pinimg.com/564x/fe/a6/dd/fea6dd493a862241952066fea699feaa.jpg"};
+            mMatchesArray.add(b);
+
+            String[] c = {"c", "c",
+                    "https://s-media-cache-ak0.pinimg.com/564x/aa/21/8e/aa218e0d81d51178ab68f65ef759eb11.jpg"};
+            mMatchesArray.add(c);
+
+            String[] d = {"d", "d",
+                    "https://s-media-cache-ak0.pinimg.com/originals/d9/1b/ee/d91bee03625f15e36020de6d9969a30b.png"};
+            mMatchesArray.add(d);
+
+            String[] e = {"e", "e",
+                    "http://pngimg.com/upload/dog_PNG2422.png"};
+            mMatchesArray.add(e);
+
+            String[] f = {"f", "f",
+                    "http://pngimg.com/upload/dog_PNG149.png"};
+            mMatchesArray.add(f);
+
+            String[] g = {"1", "g",
+                    "http://pngimg.com/upload/dog_PNG192.png"};
+            mMatchesArray.add(g);
 
             //TODO TO HERE
 

@@ -9,12 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
 public class MyPreferencesFragment extends PreferenceFragmentCompat
         implements OnSharedPreferenceChangeListener {
+
+    SharedPreferences sharedPreferences;
 
     public static final String DEFAULT_DISTANCE_S = "3";
     public static final int DEFAULT_DISTANCE_INT = 3;
@@ -30,6 +33,8 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
     public void onCreatePreferences(Bundle bundle, String s) {
         setHasOptionsMenu(true);
         setPreferencesFromResource(R.xml.preferences, s);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         getNotifications = "getNotifications";
         matchDistance = "matchDistance";
