@@ -38,6 +38,7 @@ public class MatchesFragment extends Fragment {
 
     GridViewAdapter mMatchesAdapter;
     boolean bark;
+    int mRadius;
     private final static String DEFAULT_PREFERENCE_STRING = "com.firebase.petti.petti_preferences";
 
     // GPSTracker class
@@ -82,6 +83,15 @@ public class MatchesFragment extends Fragment {
             // Ask user to enable GPS/network in settings
             gps.showSettingsAlert();
         }
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+        String s = pref.getString("matchDistance", "0");
+        int radius = Integer.parseInt(s);
+        if(radius < 0 || radius > 20){
+
+        }
+        mRadius = radius;
     }
 
     @Override
@@ -133,6 +143,21 @@ public class MatchesFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+        String s = pref.getString("matchDistance", "0");
+        int radius = Integer.parseInt(s);
+        if(radius < 0 || radius > 20){
+
+        } else if (radius != mRadius) {
+            mRadius = radius;
+            updateMatches();
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_neighbor_dogs, menu);
     }
@@ -176,13 +201,6 @@ public class MatchesFragment extends Fragment {
         @Override
         protected ArrayList<String[]> doInBackground(Void... voids) {
             ArrayList<String[]> mMatchesArray = new ArrayList();
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
-            String s = pref.getString("matchDistance", "0");
-            int radius = Integer.parseInt(s);
-            if(radius < 0 || radius > 20){
-
-            }
 
 
 

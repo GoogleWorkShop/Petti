@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = FoodNotificationsFragment.class;
                 break;
             case R.id.vaccinetion_card:
-                fragmentClass = VaccinetionCardFragment.class;
+                fragmentClass = VaccinationCardFragment.class;
                 break;
             case R.id.find_near_dog_parks:
                 fragmentClass = FindNearDogParksFragment.class;
