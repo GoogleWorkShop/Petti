@@ -87,7 +87,9 @@ public class FoodNotificationsFragment extends Fragment {
 
                 scheduleNotification(getNotification("Buy FOOOOOOOOOD"), DAY_IN_MILLIES * daysUntilNotif);
 
-                createEvent(amount, per_meal);
+                Toast.makeText(getActivity(),
+                        "A notification has been set to when food is at 30% captain!",
+                        Toast.LENGTH_LONG).show();
             }
         });
         return rootView;
@@ -112,10 +114,6 @@ public class FoodNotificationsFragment extends Fragment {
         builder.setContentText(content);
         builder.setSmallIcon(R.mipmap.ic_launcher);
         return builder.build();
-    }
-
-    private void createEvent(EditText amount, EditText per_meal) {
-
     }
 
     /*
