@@ -1,11 +1,17 @@
 package com.firebase.petti.petti;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.petti.petti.utils.GPSTracker;
+import com.firebase.petti.petti.utils.GridViewAdapter;
 
 import java.util.ArrayList;
 
@@ -24,16 +34,64 @@ import java.util.ArrayList;
  */
 public class MatchesFragment extends Fragment {
 
+    View rootView;
+
     GridViewAdapter mMatchesAdapter;
+    boolean bark;
+    int mRadius;
+    private final static String DEFAULT_PREFERENCE_STRING = "com.firebase.petti.petti_preferences";
+
+    // GPSTracker class
+    GPSTracker gps;
+    Location location; // location
+    private static final String[] INITIAL_PERMS={
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int INITIAL_REQUEST = 1337;
+
 
     public MatchesFragment() {
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (!canAccessLocation()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+            }
+        }
+        // create class object
+        gps = new GPSTracker(getActivity());
+
+        // check if GPS enabled
+        if (gps.canGetLocation()) {
+
+            location = gps.getLocation();
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+
+            // \n is for new line
+            Toast.makeText(getActivity(),
+                    "Your Location is - \nLat: " + latitude + "\nLong: " + longitude,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+        String s = pref.getString("matchDistance", "0");
+        int radius = Integer.parseInt(s);
+        if(radius < 0 || radius > 20){
+
+        }
+        mRadius = radius;
     }
 
     @Override
@@ -41,8 +99,12 @@ public class MatchesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
+        bark = getArguments().getBoolean("bark");
+        Toast.makeText(getActivity(),
+                "Bark is: " + bark,
+                Toast.LENGTH_LONG).show();
 
-        View rootView = inflater.inflate(R.layout.fragment_matches, container, false);
+        rootView = inflater.inflate(R.layout.fragment_matches, container, false);
 
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
         gridView.setAdapter(mMatchesAdapter);
@@ -81,6 +143,21 @@ public class MatchesFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+        String s = pref.getString("matchDistance", "0");
+        int radius = Integer.parseInt(s);
+        if(radius < 0 || radius > 20){
+
+        } else if (radius != mRadius) {
+            mRadius = radius;
+            updateMatches();
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_neighbor_dogs, menu);
     }
@@ -110,11 +187,22 @@ public class MatchesFragment extends Fragment {
         }
     }
 
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED==getActivity().checkSelfPermission(perm));
+    }
+
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<String[]>> {
 
         @Override
         protected ArrayList<String[]> doInBackground(Void... voids) {
             ArrayList<String[]> mMatchesArray = new ArrayList();
+
+
 
             //TODO DELETE FROM HERE
 
@@ -142,7 +230,7 @@ public class MatchesFragment extends Fragment {
                     "http://pngimg.com/upload/dog_PNG149.png"};
             mMatchesArray.add(f);
 
-            String[] g = {"g", "g",
+            String[] g = {"1", "g",
                     "http://pngimg.com/upload/dog_PNG192.png"};
             mMatchesArray.add(g);
 
@@ -154,12 +242,22 @@ public class MatchesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<String[]> result) {
+
+            GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+            TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
+
             if (result != null) {
                 mMatchesAdapter.clear();
-//                for(int i = 0; i < result.size(); i++) {
-                    mMatchesAdapter.refresh(result);
-//                }
+                mMatchesAdapter.refresh(result);
                 // New data is back from the server.  Hooray!
+            }
+            if(mMatchesAdapter.isEmpty()){
+                gridView.setVisibility(View.GONE);
+                textView.setVisibility(View.VISIBLE);
+
+            } else {
+                gridView.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.GONE);
             }
         }
     }

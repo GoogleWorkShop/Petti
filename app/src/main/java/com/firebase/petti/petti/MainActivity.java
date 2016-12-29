@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 
 import com.firebase.petti.db.API;
-import com.google.firebase.database.ChildEventListener;
+import com.firebase.petti.db.classes.User.Dog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    private boolean editUserProfile;
+    private boolean editDogProfile;
+
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         API.initDatabaseApi();
+        editUserProfile = false;
+        editDogProfile = false;
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle setupDrawerToggle() {
         // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
         // and will not render the hamburger icon without it.
-        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass;
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.default_fragment:
                 fragmentClass = MainFragment.class;
                 break;
@@ -108,16 +113,16 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = FoodNotificationsFragment.class;
                 break;
             case R.id.vaccinetion_card:
-                fragmentClass = VaccinetionCard.class;
+                fragmentClass = VaccinationCardFragment.class;
                 break;
             case R.id.find_near_dog_parks:
-                fragmentClass = FindNearDogParks.class;
+                fragmentClass = FindNearDogParksFragment.class;
                 break;
             case R.id.find_near_veterinarians:
-                fragmentClass = FindNearVeterinarians.class;
+                fragmentClass = FindNearVeterinariansFragment.class;
                 break;
             case R.id.find_near_pet_stores:
-                fragmentClass = FindNearPetStores.class;
+                fragmentClass = FindNearPetStoresFragment.class;
                 break;
             case R.id.my_preferences:
                 fragmentClass = MyPreferencesFragment.class;
@@ -199,11 +204,12 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    String username = user.getDisplayName();
-                    if (username == null) {
-                        username = user.getEmail();
-                    }
+//                    String username = user.getDisplayName();
+//                    if (username == null) {
+//                        username = user.getEmail();
+//                    }
                     onSignedInInitialize(firebaseAuth.getCurrentUser());
+
                 } else {
                     // User is signed out
                     onSignedOutCleanup();
@@ -225,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(FirebaseUser user) {
         // clear adapters if any populated
-            // currently none is populated
+        // currently none is populated
 
         // creating db user
         final String user_id = user.getUid();
@@ -237,10 +243,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists() ||
-                        (display_name != null && !dataSnapshot.child("owner").hasChild("name"))){
+                editUserProfile = !dataSnapshot.exists();
+                if (editUserProfile) {
                     // 1st registration
-                    API.createUser(user_id, display_name, email);
+                    API.createUser(display_name, email);
+                }
+                editDogProfile = !dataSnapshot.child("dog").hasChild("name")
+                        || dataSnapshot.child("dog").child("name").getValue().equals("");
+                if (editDogProfile || editUserProfile){
+                    startEditProfileActivity();
                 }
             }
 
@@ -250,16 +261,16 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
-//        if (!API.isUserExists(user_id)){
-//            // user's 1st registeration
-//
-//        }
+        API.attachCurrUserDataReadListener();
+
     }
 
     private void onSignedOutCleanup() {
         // clear adapters if any populated
-            // currently none is populated
+        // currently none is populated
+        API.detachCurrUserDataReadListener();
         API.currUserUid = null;
+        API.currUserData = null;
     }
 
 
@@ -276,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
         // clear adapters if any populated
-            // currently none is populated
+        // currently none is populated
     }
 
     @Override
@@ -285,12 +296,28 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
+//                if (editUserProfile) {
+//                    Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(this, UserRegistrationActivitey.class);
+//                    startActivity(intent);
+//                } else if (editDogProfile) {
+//                    Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(this, DogRegistrationActivity.class);
+//                    startActivity(intent);
+//                }
+
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
 //                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
+    }
+
+    private void startEditProfileActivity() {
+        Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DogRegistrationActivity.class);
+        startActivity(intent);
+
     }
 }

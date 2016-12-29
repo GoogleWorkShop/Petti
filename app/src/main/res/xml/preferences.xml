@@ -11,7 +11,7 @@
             android:title="Get Notifications" />
 
         <EditTextPreference
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:numeric="integer"
             android:maxLength="2"
             android:defaultValue="3"

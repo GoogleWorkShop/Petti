@@ -24,10 +24,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.firebase.petti.db.API;
+import com.firebase.petti.db.classes.User.Owner;
+
+
 public class UserRegistrationActivitey extends AppCompatActivity {
 
 
-    //YAHAV: Fields to upload
+    //TODO YAHAV: Fields to upload
+
+    Owner currOwnerData = new Owner();
 
     String userName;
     String userAge;
@@ -37,25 +43,25 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     String UserDescreption;
     String userNickname;
 
-    //picture....
+    //TODO picture....
 
 
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "UserRegActivity";
     EditText nameView;
-    EditText ageView ;
+    EditText ageView;
     Button uploadButton;
     ImageView userImage;
     final String[] city = new String[1];
     final String[] looking4 = new String[1];
 
 
-    enum Gender{Male,Female};
+    enum Gender {Male, Female}
+
+    ;
     UserRegistrationActivitey.Gender gender;
     TextInputEditText userDescreptionView;
     TextInputEditText nicknameView;
-
-
 
 
     @Override
@@ -63,6 +69,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_registration);
 
+        currOwnerData = API.getCurrOwnerData();
 
         nameView = (EditText) findViewById(R.id.user_name);
         ageView = (EditText) findViewById(R.id.user_age);
@@ -114,11 +121,6 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
     }
 
 
@@ -151,7 +153,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         boolean checked = ((RadioButton) view).isChecked();
 
         // Check which radio button was clicked
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.user_gender_male_radio:
                 if (checked)
                     gender = UserRegistrationActivitey.Gender.Male;
@@ -176,9 +178,6 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         return res;
     }
 
-
-
-    //YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
     public void MoveToMainAndUploodUserToDB(View view) {
 
         //fill fields to pass to db
@@ -190,17 +189,25 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         UserDescreption = userDescreptionView.getText().toString();
         userNickname = nicknameView.getText().toString();
 
+        currOwnerData.setName(userName);
+        currOwnerData.setAge(userAge);
+        currOwnerData.setFemale(user_is_female);
+        currOwnerData.setCity(cityStr);
+        currOwnerData.setLookingForList(lookingForList);
+        currOwnerData.setDescription(UserDescreption);
+        currOwnerData.setNickname(userNickname);
+
+        API.setOwner(currOwnerData);
 
         //move to Main activitey
         startMainActivity(view);
 
     }
 
-
-
     public void startMainActivity(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }

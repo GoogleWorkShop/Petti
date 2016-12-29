@@ -16,10 +16,9 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FindNearDogParks extends Fragment {
+public class FindNearPetStoresFragment extends Fragment {
 
-
-    public FindNearDogParks() {
+    public FindNearPetStoresFragment() {
         // Required empty public constructor
     }
 
@@ -27,7 +26,7 @@ public class FindNearDogParks extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_find_near_dog_parks, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_find_near_pet_stores, container, false);
 
         return rootView;
     }
@@ -61,5 +60,4 @@ public class FindNearDogParks extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

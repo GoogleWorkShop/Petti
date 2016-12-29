@@ -25,7 +25,7 @@ public class MatchedDogActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.another_dog_container,
-                            new MatchedFragment())
+                            new MatchedDogFragment())
                     .commit();
         }
     }
