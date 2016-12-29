@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,14 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.firebase.petti.db.API;
+import com.firebase.petti.db.classes.User.Dog;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +36,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
     private static final String TAG = "DogRegistrationActivity";
 
     //YAHAV: Fields to upload
+
+    Dog currDogData = new Dog();
 
     String dogName;
     String dogAge;
@@ -39,25 +50,21 @@ public class DogRegistrationActivity extends AppCompatActivity {
     //picture....
 
 
-
-
-
-
     //views
     EditText nameView;
-    EditText ageView ;
+    EditText ageView;
     TextInputEditText petDescreptionText;
     TextInputEditText preferdPartnersText;
     TextInputEditText commonWalkPlacesText;
     Button uploadButton;
     ImageView petImage;
-    enum Gender{Male,Female};
+
+    enum Gender {Male, Female}
+
+    ;
     Gender gender;
     final String[] dog_type = new String[1];
     final String[] dog_charater = new String[1];
-
-
-
 
 
     @Override
@@ -65,6 +72,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_registration);
 
+        currDogData = API.getCurrDogData();
 
         nameView = (EditText) findViewById(R.id.pet_name);
         ageView = (EditText) findViewById(R.id.pet_age);
@@ -119,34 +127,56 @@ public class DogRegistrationActivity extends AppCompatActivity {
         });
 
 
-
-
-
     }
 
 
     public void uploadImageMethod(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/jpeg");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Get the path from the Uri
-                    String path = getPathFromURI(selectedImageUri);
-                    Log.i(TAG, "Image Path : " + path);
-                    // Set the image in ImageView
-                    petImage.setImageURI(selectedImageUri);
-
+        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
+            // Get the url from data
+//            Uri selectedImageUri = data.getData();
+//            if (null != selectedImageUri) {
+//                // Get the path from the Uri
+//                String path = getPathFromURI(selectedImageUri);
+//                Log.i(TAG, "Image Path : " + path);
+//                // Set the image in ImageView
+//                petImage.setImageURI(selectedImageUri);
+//            }
+            Uri selectedImageUri = data.getData();
+            StorageReference photoRef = API.mPetPhotos
+                    .child(API.currUserUid)
+                    .child(selectedImageUri.getLastPathSegment());
+            // Upload file to Firebase Storage
+            UploadTask uploadImageTask = photoRef.putFile(selectedImageUri);
+            uploadImageTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // When the image has successfully uploaded, we get its download URL
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    currDogData.setPhotoUrl(downloadUrl.toString());
+                    setDogImage();
                 }
-            }
+            })
+            .addOnFailureListener(this, new OnFailureListener (){
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            });
         }
+    }
+
+    private void setDogImage(){
+        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
+//        petImage.setImageURI();
+//        Glide.with(petImage.getContext())
+//                .load(currDogData.getPhotoUrl())
+//                .into(petImage);
     }
 
     public void genderSelection(View view) {
@@ -154,7 +184,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         boolean checked = ((RadioButton) view).isChecked();
 
         // Check which radio button was clicked
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.pet_gender_male_radio:
                 if (checked)
                     gender = Gender.Male;
@@ -182,14 +212,31 @@ public class DogRegistrationActivity extends AppCompatActivity {
     //YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
     public void MoveToEditProfileAndUploadPet(View view) {
         //fill fields to pass to db
-         dogName = nameView.getText().toString();
-         dogAge = ageView.getText().toString();
-         dog_is_female = (gender == Gender.Female);
-         dogType = dog_type[0];
-         dogCharacters.add(dog_charater[0]);
-         dogDescreption = petDescreptionText.getText().toString();
-         preferedPartners = preferdPartnersText.getText().toString();
-         commonWalkPlaces = commonWalkPlacesText.getText().toString();
+        dogName = nameView.getText().toString();
+
+        if (dogName.length() < 2) {
+            Toast.makeText(this, "Must add atleast name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        dogAge = ageView.getText().toString();
+        dog_is_female = (gender == Gender.Female);
+        dogType = dog_type[0];
+        dogCharacters.add(dog_charater[0]);
+        dogDescreption = petDescreptionText.getText().toString();
+        preferedPartners = preferdPartnersText.getText().toString();
+        commonWalkPlaces = commonWalkPlacesText.getText().toString();
+
+        currDogData.setName(dogName);
+        currDogData.setAge(dogAge);
+        currDogData.setFemale(dog_is_female);
+        currDogData.setType(dogType);
+        currDogData.setPersonalityAttributes(dogCharacters);
+        currDogData.setDescription(dogDescreption);
+        currDogData.setWalkWith(preferedPartners);
+        currDogData.setWalkWhere(commonWalkPlaces);
+
+        API.setDog(currDogData);
 
         //move to edit profile
         startUserRegistrationActivity(view);
