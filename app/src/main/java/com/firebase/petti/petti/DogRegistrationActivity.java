@@ -35,7 +35,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "DogRegistrationActivity";
 
-    //YAHAV: Fields to upload
+    //TODO YAHAV: Fields to upload
 
     Dog currDogData = new Dog();
 
@@ -47,10 +47,9 @@ public class DogRegistrationActivity extends AppCompatActivity {
     String dogDescreption;
     String preferedPartners;
     String commonWalkPlaces;
-    //picture....
+    //TODO picture....
 
 
-    //views
     EditText nameView;
     EditText ageView;
     TextInputEditText petDescreptionText;
@@ -209,7 +208,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         return res;
     }
 
-    //YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
+    //TODO YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
     public void MoveToEditProfileAndUploadPet(View view) {
         //fill fields to pass to db
         dogName = nameView.getText().toString();

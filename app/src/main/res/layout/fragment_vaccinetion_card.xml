@@ -1,11 +1,16 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    tools:context=".MainActivity">
 
-    <TextView
+    <ListView
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:id="@+id/listview_vaccinetions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Vaccinetion Card Fragment" />
+        android:layout_height="match_parent"/>
 
-</LinearLayout>
+
+
+</FrameLayout>
