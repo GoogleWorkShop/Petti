@@ -5,11 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -37,11 +35,12 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
     String userName;
     String userAge;
-    boolean user_is_female;
+    Boolean user_is_female;
     String cityStr;
     List<String> lookingForList = new ArrayList<String>();
-    String UserDescreption;
+    String userDescreption;
     String userNickname;
+    String userEmail;
 
     //TODO picture....
 
@@ -54,6 +53,8 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     ImageView userImage;
     final String[] city = new String[1];
     final String[] looking4 = new String[1];
+    RadioButton maleButton;
+    RadioButton femaleButton;
 
 
     enum Gender {Male, Female}
@@ -62,6 +63,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     UserRegistrationActivitey.Gender gender;
     TextInputEditText userDescreptionView;
     TextInputEditText nicknameView;
+    TextView userEmailView;
 
 
     @Override
@@ -69,14 +71,60 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_registration);
 
-        currOwnerData = API.getCurrOwnerData();
 
+        //init views
         nameView = (EditText) findViewById(R.id.user_name);
         ageView = (EditText) findViewById(R.id.user_age);
         uploadButton = (Button) findViewById(R.id.user_uploadButton);
         userImage = (ImageView) findViewById(R.id.user_image);
         userDescreptionView = (TextInputEditText) findViewById(R.id.user_descreption);
         nicknameView = (TextInputEditText) findViewById(R.id.user_nickname);
+        maleButton = (RadioButton) findViewById(R.id.user_gender_male_radio);
+        femaleButton = (RadioButton) findViewById(R.id.user_gender_female_radio);
+        userEmailView = (TextView) findViewById(R.id.user_email_view);
+
+        //fill views with data
+        currOwnerData = API.getCurrOwnerData();
+        if(currOwnerData != null) {
+            //name
+            userName = currOwnerData.getName();
+            if (userName != null) {
+                nameView.setText(userName);
+            }
+            //age
+            userAge = currOwnerData.getAge();
+            if (userAge != null) {
+                ageView.setText(userAge);
+            }
+            //email
+            userEmail = currOwnerData.getMail();
+            if (userEmail != null) {
+                userEmailView.setText(userEmail);
+            }
+            //gender
+            user_is_female = currOwnerData.getFemale();
+            if (user_is_female != null) {
+                if (user_is_female) {
+                    femaleButton.toggle();
+                }
+                if (!user_is_female) {
+                    maleButton.toggle();
+                }
+            }
+
+            //descreption
+            userDescreption = currOwnerData.getDescription();
+            if (userDescreption != null) {
+                userDescreptionView.setText(userDescreption);
+            }
+            //nickname
+            userNickname = currOwnerData.getNickname();
+            if (userNickname != null) {
+                nicknameView.setText(userNickname);
+            }
+        }
+
+
 
         //city spinner
         Spinner city_spinner = (Spinner) findViewById(R.id.user_city_spinner);
@@ -100,6 +148,9 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             }
         });
 
+
+
+
         //Lokking for spinner
         Spinner looking_4_spinner = (Spinner) findViewById(R.id.user_looking4_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -121,7 +172,26 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
             }
         });
+
+        // set city selection
+        if(currOwnerData != null) {
+            cityStr = currOwnerData.getCity();
+            if (cityStr != null) {
+                city_spinner.setSelection(cityAdapter.getPosition(cityStr));
+                city[0] = cityStr;
+            }
+
+            //set looking 4 list
+            lookingForList = currOwnerData.getLookingForList();
+            if(lookingForList != null && lookingForList.size() > 0){
+                looking_4_spinner.setSelection(looking4Adapter.getPosition(lookingForList.get(0)));
+                looking4[0] = lookingForList.get(0);
+            }
+        }
+
     }
+
+
 
 
     public void uploadImageMethod(View view) {
@@ -186,7 +256,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
         cityStr = city[0];
         lookingForList.add(looking4[0]);
-        UserDescreption = userDescreptionView.getText().toString();
+        userDescreption = userDescreptionView.getText().toString();
         userNickname = nicknameView.getText().toString();
 
         currOwnerData.setName(userName);
@@ -194,7 +264,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         currOwnerData.setFemale(user_is_female);
         currOwnerData.setCity(cityStr);
         currOwnerData.setLookingForList(lookingForList);
-        currOwnerData.setDescription(UserDescreption);
+        currOwnerData.setDescription(userDescreption);
         currOwnerData.setNickname(userNickname);
 
         API.setOwner(currOwnerData);

@@ -41,9 +41,10 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
     String dogName;
     String dogAge;
-    boolean dog_is_female;
+    Boolean dog_is_female;
     String dogType;
-    List<String> dogCharacters = new ArrayList<String>();
+    List<String> dogCharacters;
+
     String dogDescreption;
     String preferedPartners;
     String commonWalkPlaces;
@@ -57,6 +58,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
     TextInputEditText commonWalkPlacesText;
     Button uploadButton;
     ImageView petImage;
+    RadioButton dogMaleButton;
+    RadioButton dogFemaleButton;
 
     enum Gender {Male, Female}
 
@@ -71,7 +74,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_registration);
 
-        currDogData = API.getCurrDogData();
 
         nameView = (EditText) findViewById(R.id.pet_name);
         ageView = (EditText) findViewById(R.id.pet_age);
@@ -80,6 +82,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
         petDescreptionText = (TextInputEditText) findViewById(R.id.pet_descreption_text);
         preferdPartnersText = (TextInputEditText) findViewById(R.id.preferd_walk_partners_text);
         commonWalkPlacesText = (TextInputEditText) findViewById(R.id.common_walk_places_text);
+        dogMaleButton = (RadioButton) findViewById(R.id.pet_gender_male_radio);
+        dogFemaleButton = (RadioButton) findViewById(R.id.pet_gender_female_radio);
 
         //dog type spinner
         Spinner dog_type_spinner = (Spinner) findViewById(R.id.pet_type_spinner);
@@ -103,6 +107,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
             }
         });
 
+
         //character spinner
         Spinner dog_character_spinner = (Spinner) findViewById(R.id.pet_character_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -124,6 +129,66 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
             }
         });
+
+        //fill dog data if exists from DB
+        currDogData = API.getCurrDogData();
+
+        if (currDogData != null) {
+
+            //name
+            dogName = currDogData.getName();
+            if (dogName != null) {
+                nameView.setText(dogName);
+            }
+            //age
+            dogAge = currDogData.getAge();
+            if (dogAge != null) {
+                ageView.setText(dogAge);
+            }
+            //walk places
+            commonWalkPlaces = currDogData.getWalkWhere();
+            if (commonWalkPlaces != null) {
+                commonWalkPlacesText.setText(commonWalkPlaces);
+            }
+            //gender
+            dog_is_female = currDogData.getFemale();
+            if (dog_is_female != null) {
+                if (dog_is_female) {
+                    dogFemaleButton.toggle();
+                }
+                if (!dog_is_female) {
+                    dogMaleButton.toggle();
+                }
+            }
+
+            //descreption
+            dogDescreption = currDogData.getDescription();
+            if (dogDescreption != null) {
+                petDescreptionText.setText(dogDescreption);
+            }
+            //partners
+            preferedPartners = currDogData.getWalkWith();
+            if (preferedPartners != null) {
+                preferdPartnersText.setText(preferedPartners);
+            }
+
+
+
+
+            dogType = currDogData.getType();
+            if (dogType != null) {
+                dog_type_spinner.setSelection(typeAdapter.getPosition(dogType));
+                dog_type[0] = dogType;
+            }
+
+            //set looking 4 list
+            dogCharacters = currDogData.getPersonalityAttributes();
+            if (dogCharacters != null && dogCharacters.size() > 0) {
+                dog_character_spinner.setSelection(characterAdapter.getPosition(dogCharacters.get(0)));
+                dog_charater[0] = dogCharacters.get(0);
+            }
+
+        }
 
 
     }
@@ -161,16 +226,16 @@ public class DogRegistrationActivity extends AppCompatActivity {
                     setDogImage();
                 }
             })
-            .addOnFailureListener(this, new OnFailureListener (){
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            });
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                        }
+                    });
         }
     }
 
-    private void setDogImage(){
+    private void setDogImage() {
         Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
 //        petImage.setImageURI();
 //        Glide.with(petImage.getContext())
@@ -221,6 +286,9 @@ public class DogRegistrationActivity extends AppCompatActivity {
         dogAge = ageView.getText().toString();
         dog_is_female = (gender == Gender.Female);
         dogType = dog_type[0];
+        if(dogCharacters == null){
+            dogCharacters = new ArrayList<String>();
+        }
         dogCharacters.add(dog_charater[0]);
         dogDescreption = petDescreptionText.getText().toString();
         preferedPartners = preferdPartnersText.getText().toString();

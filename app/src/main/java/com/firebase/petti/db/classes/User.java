@@ -156,7 +156,7 @@ public class User {
             this.type = type;
         }
 
-        public String getType(String type){
+        public String getType(){
             return this.type;
         }
 
