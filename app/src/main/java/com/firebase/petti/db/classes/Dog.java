@@ -1,11 +1,11 @@
-package com.firebase.petti.db.classes;
-
-import java.util.List;
-
-/**
- * Created by yahav on 12/23/2016.
- */
-
+//package com.firebase.petti.db.classes;
+//
+//import java.util.List;
+//
+///**
+// * Created by yahav on 12/23/2016.
+// */
+//
 //public class Dog extends ABCNamedEntity {
 //
 //    private String type;
@@ -21,7 +21,7 @@ import java.util.List;
 //        this.type = type;
 //    }
 //
-//    public String getType(String type){
+//    public String getType(){
 //        return this.type;
 //    }
 //
