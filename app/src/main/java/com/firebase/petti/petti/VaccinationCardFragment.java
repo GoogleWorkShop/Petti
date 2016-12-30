@@ -41,16 +41,18 @@ public class VaccinationCardFragment extends Fragment {
     private static final long HOURS_IN_DAY = 24;
     private static final long DAYS_IN_MONTH = 30;
     private static final long DAY_IN_MILLIES = MILLIES_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY;
-    private static final String[] VACCINETIONS = {"rabies", "Distemper", "Spirocerca lupi", "Deworming"};
+    private static final String[] VACCINETIONS = {"rabies", "Distemper", "Spirocerca lupi", "Deworming", "Check"};
 
     private static final Map<String, Long> myMap;
 
+    /* A map that matches between the treatment and the interval in months */
     static {
         myMap = new HashMap<>();
         myMap.put(VACCINETIONS[0], 12L);
         myMap.put(VACCINETIONS[1], 12L);
         myMap.put(VACCINETIONS[2], 2L);
         myMap.put(VACCINETIONS[3], 6L);
+        myMap.put(VACCINETIONS[4], 1L);
     }
 
     private ArrayAdapter<String> mVaccinationAdapter;
@@ -75,7 +77,7 @@ public class VaccinationCardFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
                 final String VAC = mVaccinationAdapter.getItem(position);
                 final int POSITION = position;
 
@@ -86,6 +88,9 @@ public class VaccinationCardFragment extends Fragment {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         long daysUntilNotif = myMap.get(VACCINETIONS[POSITION]) * DAY_IN_MILLIES * DAYS_IN_MONTH - DAY_IN_MILLIES * 7;
+                        if (VAC.equals("Check")){
+                            daysUntilNotif = 5000;
+                        }
 //                        long daysUntilNotif = 1000;
                         scheduleNotification(getNotification("It's time for " + VAC + " again next week"), daysUntilNotif);
                         Toast.makeText(getActivity(),

@@ -1,4 +1,4 @@
-<resources>
+<resources> 
     <string name="app_name">Petti</string>
 
     <!-- Strings related to login -->
@@ -169,4 +169,6 @@
     <string name="none">None</string>
     <string name="bought_it">Bought It!</string>
     <string name="per_meal">Per Meal (In Grams)</string>
+    <string name="show_owner">Show Owner</string>
+    <string name="show_dog">Show Dog</string>
 </resources>

@@ -1,4 +1,4 @@
-<LinearLayout
+<LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/another_dog_container"
@@ -16,14 +16,39 @@
         android:contentDescription="dogs image"
         android:layout_gravity="center_vertical|center_horizontal|center" />
 
-    <Button
-        android:text="@string/start_chat"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/start_chat_btn"
-        android:gravity="center_vertical|center_horizontal|center"
-        android:foregroundGravity="center"
-        android:layout_gravity="center" />
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center">
+        <Button
+            android:text="@string/start_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/start_chat_btn"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:foregroundGravity="center"
+            android:layout_gravity="center" />
+        <Button
+            android:text="@string/show_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_owner_btn"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:foregroundGravity="center"
+            android:layout_gravity="center" />
+        <Button
+            android:text="@string/show_dog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_dog_btn"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:foregroundGravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/matched_dog_detail"
