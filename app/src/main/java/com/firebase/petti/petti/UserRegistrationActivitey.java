@@ -186,6 +186,8 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             if(lookingForList != null && lookingForList.size() > 0){
                 looking_4_spinner.setSelection(looking4Adapter.getPosition(lookingForList.get(0)));
                 looking4[0] = lookingForList.get(0);
+            } else {
+                lookingForList = new ArrayList<>();
             }
         }
 

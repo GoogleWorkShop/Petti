@@ -262,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
         };
         API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
         API.attachCurrUserDataReadListener();
-
     }
 
     private void onSignedOutCleanup() {
