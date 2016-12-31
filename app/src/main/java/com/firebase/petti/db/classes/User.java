@@ -11,6 +11,8 @@ public class User {
     private Dog dog;
     private Owner owner;
 
+    private Long lastLocationTime;
+
     public User(){
 
     }
@@ -19,6 +21,14 @@ public class User {
         this.owner = new Owner();
         this.owner.setName(name);
         this.owner.mail = mail;
+    }
+
+    public Long getLastLocationTime() {
+        return lastLocationTime;
+    }
+
+    public void setLastLocationTime(Long lastLocationTime) {
+        this.lastLocationTime = lastLocationTime;
     }
 
     public Dog getDog(){

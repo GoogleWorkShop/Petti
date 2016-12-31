@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
+    private MenuItem mainMenuItem;
 
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
@@ -74,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
         setupDrawerContent(nvDrawer);
+
+        mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -190,6 +194,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
+        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+            // Close the navigation drawer
+            mDrawer.closeDrawers();
+            return true;
+        } else if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0
+                && fragment.getClass() != MainFragment.class) {
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
+        if(fragment.getClass() != MainFragment.class) {
+            fragment = new MainFragment();
+            fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
+            // Highlight the selected item has been done by NavigationView
+            mainMenuItem.setChecked(true);
+            // Set action bar title
+            setTitle(mainMenuItem.getTitle());
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
@@ -262,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
         };
         API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
         API.attachCurrUserDataReadListener();
-
     }
 
     private void onSignedOutCleanup() {
