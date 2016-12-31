@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.firebase.petti.petti.AnotherDogActivity">
+    tools:context="com.firebase.petti.petti.MatchedDogActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,25 +20,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:gravity="top"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <TextView android:layout_width="wrap_content"
-            android:id="@+id/title"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/image" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="150dp"
-            android:layout_margin="5dp"
-            android:id="@+id/image" />
-    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/another_dog_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

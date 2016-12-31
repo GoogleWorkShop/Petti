@@ -1,4 +1,4 @@
-<resources>
+<resources> 
     <string name="app_name">Petti</string>
 
     <!-- Strings related to login -->
@@ -132,9 +132,46 @@
         <item>tired</item>
     </string-array>
 
+    <!-- city  -->
+    <string-array name="city_array">
+        <item>Select City</item>
+        <item>Tel-aviv</item>
+        <item>Haifa</item>
+        <item>Beer-Sheva</item>
+        <item>Jerusalem</item>
+        <item>Kriot area</item>
+        <item>Eilat</item>
+        <item>Netanya</item>
+    </string-array>
+
+
+    <!-- user_looking for  -->
+    <string-array name="looking4_array">
+        <item>Looking for:</item>
+        <item>company while walking my dog</item>
+        <item>share dog walking</item>
+        <item>date for my dog</item>
+        <item>play partner for my dog</item>
+        <item>play partner for myself</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="matches_found">Matches Found</string>
     <string name="title_activity_user_registration_activitey">UserRegistrationActivitey</string>
-    <string name="title_activity_chat_activity">chat_activity</string>
+    <string name="poogy">Poogy</string>
+    <string name="invalid_distance">Invalid Distance - Should Be Between 1 And 20</string>
+    <string name="start_chat">Start Chat</string>
+    <string name="bark_on">true</string>
+    <string name="bark_off">false</string>
+    <string name="no_matches_found">Sorry mate/mam…\nNo matches found...\nWhy not walking a bit further?...</string>
+    <string name="purchase_date">Purchase Date</string>
+    <string name="food_name">Food Name</string>
+    <string name="amount">Amount (In KGs)</string>
+    <string name="none">None</string>
+    <string name="bought_it">Bought It!</string>
+    <string name="per_meal">Per Meal (In Grams)</string>
+    <string name="show_owner">Show Owner</string>
+    <string name="show_dog">Show Dog</string>
+    <string name="searching_matches">I\'m searching for other dogs DWAG...\nSo chilex!!!</string>
 </resources>

@@ -1,9 +1,9 @@
 package com.firebase.petti.petti;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,12 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class VaccinetionCard extends Fragment {
 
-    public VaccinetionCard() {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class FindNearDogParksFragment extends Fragment {
+
+
+    public FindNearDogParksFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +26,7 @@ public class VaccinetionCard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_vaccinetion_card, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_find_near_dog_parks, container, false);
 
         return rootView;
     }
@@ -50,7 +52,10 @@ public class VaccinetionCard extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(getActivity(), SettingsActivity.class));
+            Fragment myPrefrences = new MyPreferencesFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_container, myPrefrences)
+                    .addToBackStack( "tag" ).commit();
             return true;
         }
         return super.onOptionsItemSelected(item);

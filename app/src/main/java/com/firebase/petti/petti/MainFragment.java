@@ -34,11 +34,6 @@ public class MainFragment extends Fragment {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_refresh) {
-//            updateWeather();
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -58,8 +53,8 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), R.string.get_ready_for_a_walk,
                         Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), BarkActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
+                Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, "true");
                 startActivity(intent);
             }
         });
@@ -70,7 +65,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "Get This Bizzzz");
+                        .putExtra(Intent.EXTRA_TEXT, "false");
                 startActivity(intent);
             }
         });

@@ -1,10 +1,17 @@
 package com.firebase.petti.petti;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,9 +20,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.API;
+import com.firebase.petti.db.classes.User;
+import com.firebase.petti.petti.utils.GPSTracker;
+import com.firebase.petti.petti.utils.GridViewAdapter;
+
 import java.util.ArrayList;
+import java.util.List;
+
+import java.util.Map;
 
 
 /**
@@ -23,43 +39,97 @@ import java.util.ArrayList;
  */
 public class MatchesFragment extends Fragment {
 
+    View rootView;
+
     GridViewAdapter mMatchesAdapter;
+    boolean bark;
+    int mRadius;
+
+    // GPSTracker class
+    GPSTracker gps;
+    Location location; // location
+    private static final String[] INITIAL_PERMS={
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int INITIAL_REQUEST = 1337;
+
+    private static final long HALF_HOUR_MILLSEC = 30*60*1000;
+
 
     public MatchesFragment() {
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (!canAccessLocation()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+            }
+        }
+        // create class object
+        gps = new GPSTracker(getActivity());
+
+        // check if GPS enabled
+        if (gps.canGetLocation()) {
+
+            location = gps.getLocation();
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+
+            // \n is for new line
+            Toast.makeText(getActivity(),
+                    "Your Location is - \nLat: " + latitude + "\nLong: " + longitude,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
+
+        API.attachNearbyUsersListener(location, mRadius);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
-
-        View rootView = inflater.inflate(R.layout.fragment_matches, container, false);
+        rootView = inflater.inflate(R.layout.fragment_matches, container, false);
 
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+        TextView notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
+        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+
+        gridView.setVisibility(View.GONE);
+        notFoundView.setVisibility(View.GONE);
+        searchingView.setVisibility(View.VISIBLE);
+
+        mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
+        bark = getArguments().getBoolean("bark");
+        Toast.makeText(getActivity(),
+                "Bark is: " + bark,
+                Toast.LENGTH_LONG).show();
+
         gridView.setAdapter(mMatchesAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String id = mMatchesAdapter.getId(position);
 
                 String dogName = mMatchesAdapter.getName(position);
                 Toast.makeText(getActivity(), dogName, Toast.LENGTH_SHORT).show();
 
-                String image = mMatchesAdapter.getImage(position);
+                User selected = mMatchesAdapter.getItem(position);
 
-                Intent intent = new Intent(getActivity(), AnotherDogActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("dogName", dogName);
-                intent.putExtra("image", image);
+                Intent intent = new Intent(getActivity(), MatchedDogActivity.class);
+                intent.putExtra("user", selected);
 
                 startActivity(intent);
             }
@@ -80,6 +150,29 @@ public class MatchesFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        API.detachNearbyUsersListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
+        String s = pref.getString("matchDistance", "1");
+        int radius = Integer.parseInt(s);
+        if(radius < 0 || radius > 20){
+
+        } else if (radius != mRadius) {
+            mRadius = radius;
+            API.detachNearbyUsersListener();
+            API.attachNearbyUsersListener(location, mRadius);
+            updateMatches();
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_neighbor_dogs, menu);
     }
@@ -93,7 +186,10 @@ public class MatchesFragment extends Fragment {
 
         switch (id) {
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                Fragment myPrefrences = new MyPreferencesFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)
+                        .addToBackStack( "tag" ).commit();
                 return true;
             case android.R.id.home:
                 if(getActivity().getClass() == BarkActivity.class) {
@@ -106,56 +202,71 @@ public class MatchesFragment extends Fragment {
         }
     }
 
-    private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<String[]>> {
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED==getActivity().checkSelfPermission(perm));
+    }
+
+    private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
-        protected ArrayList<String[]> doInBackground(Void... voids) {
-            ArrayList<String[]> mMatchesArray = new ArrayList();
 
-            //TODO DELETE FROM HERE
+        protected ArrayList<User> doInBackground(Void... voids) {
+            int timeout = 10; // five seconds of timeout until we decide there are no matches
+            while (!API.queryReady && timeout-- != 0){
 
-            String[] a = {"a", "a",
-                    "http://pngimg.com/upload/dog_PNG2416.png"};
-            mMatchesArray.add(a);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex){
 
-            String[] b = {"b", "b",
-                    "https://s-media-cache-ak0.pinimg.com/564x/fe/a6/dd/fea6dd493a862241952066fea699feaa.jpg"};
-            mMatchesArray.add(b);
+                }
+            }
 
-            String[] c = {"c", "c",
-                    "https://s-media-cache-ak0.pinimg.com/564x/aa/21/8e/aa218e0d81d51178ab68f65ef759eb11.jpg"};
-            mMatchesArray.add(c);
 
-            String[] d = {"d", "d",
-                    "https://s-media-cache-ak0.pinimg.com/originals/d9/1b/ee/d91bee03625f15e36020de6d9969a30b.png"};
-            mMatchesArray.add(d);
+            API.queryReady = false;
+            ArrayList<User> mMatchesArray = new ArrayList<>();
+            for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
+                User userCandidate = item.getValue();
+                Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
+                long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
+                if (bark && (userLastWalkTimestamp == null ||
+                        userLastWalkTimestamp < minBarkTimeLimit)){
+                    continue;
+                }
+//                item.getKey()
+                mMatchesArray.add(userCandidate);
+            }
 
-            String[] e = {"e", "e",
-                    "http://pngimg.com/upload/dog_PNG2422.png"};
-            mMatchesArray.add(e);
-
-            String[] f = {"f", "f",
-                    "http://pngimg.com/upload/dog_PNG149.png"};
-            mMatchesArray.add(f);
-
-            String[] g = {"g", "g",
-                    "http://pngimg.com/upload/dog_PNG192.png"};
-            mMatchesArray.add(g);
-
-            //TODO TO HERE
 
             return mMatchesArray;
         }
 
 
         @Override
-        protected void onPostExecute(ArrayList<String[]> result) {
+        protected void onPostExecute(ArrayList<User> result) {
+
+            GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+            TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
+            TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+
             if (result != null) {
                 mMatchesAdapter.clear();
-//                for(int i = 0; i < result.size(); i++) {
-                    mMatchesAdapter.refresh(result);
-//                }
+                mMatchesAdapter.refresh(result);
                 // New data is back from the server.  Hooray!
+            }
+
+            searchingView.setVisibility(View.GONE);
+            if(mMatchesAdapter.isEmpty()){
+                gridView.setVisibility(View.GONE);
+                textView.setVisibility(View.VISIBLE);
+
+            } else {
+                gridView.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.GONE);
             }
         }
     }

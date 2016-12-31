@@ -1,4 +1,4 @@
-package com.firebase.petti.petti;
+package com.firebase.petti.petti.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,10 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.petti.db.classes.User;
+import com.firebase.petti.petti.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,8 +21,7 @@ import java.util.ArrayList;
 
 public class GridViewAdapter extends ArrayAdapter {
     private Context             mContext;
-                             /*{ID, NAME, URL}*/
-    private ArrayList<String[]> mMatchesArray;
+    private ArrayList<User>     mMatchesArray;
     private int                 layoutResourceId;
 
     public GridViewAdapter(Context context, int layoutResourceId) {
@@ -33,28 +33,22 @@ public class GridViewAdapter extends ArrayAdapter {
 
     public int getCount() {
         return mMatchesArray.size();
-//        return mThumbUris.size();
     }
 
     public String getId(int position){
-        return mMatchesArray.get(position)[0];
+        return mMatchesArray.get(position).getDog().getName();
     }
 
     public String getName(int position){
-        return mMatchesArray.get(position)[1];
+        return mMatchesArray.get(position).getDog().getName();
     }
 
     public String getImage(int position){
-        return mMatchesArray.get(position)[2];
+        return mMatchesArray.get(position).getDog().getPhotoUrl();
     }
 
-    public Object getItem(int position) {
+    public User getItem(int position) {
         return mMatchesArray.get(position);
-//        return mThumbUris.get(position);
-    }
-
-    public long getItemId(int position) {
-        return Long.parseLong(mMatchesArray.get(position)[0], 16);
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -74,8 +68,8 @@ public class GridViewAdapter extends ArrayAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        String url  = mMatchesArray.get(position)[2];
-        String name = mMatchesArray.get(position)[1];
+        String url  = getImage(position);
+        String name = getName(position);
 
         holder.imageTitle.setText(name);
         Picasso.with(mContext).load(url).into(holder.image);
@@ -83,7 +77,7 @@ public class GridViewAdapter extends ArrayAdapter {
         return row;
     }
 
-    public ArrayList<String[]> getmMatchesArray() {
+    public ArrayList<User> getmMatchesArray() {
         return mMatchesArray;
     }
 
@@ -93,7 +87,7 @@ public class GridViewAdapter extends ArrayAdapter {
         }
     }
 
-    public void refresh(ArrayList<String[]> result) {
+    public void refresh(ArrayList<User> result) {
 
         if (mMatchesArray == null) {
             mMatchesArray = new ArrayList<>();

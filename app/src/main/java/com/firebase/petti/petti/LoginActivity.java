@@ -21,13 +21,10 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -170,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void RegisterOnClick(View view) {
 
-        Intent regIntent = new Intent(this,RegistrationActivity.class);
+        Intent regIntent = new Intent(this,DogRegistrationActivity.class);
         startActivity(regIntent);
     }
 

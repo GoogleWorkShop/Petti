@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -24,15 +25,17 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 
 import com.firebase.petti.db.API;
-import com.google.firebase.database.ChildEventListener;
+import com.firebase.petti.db.classes.User.Dog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
+    private MenuItem mainMenuItem;
 
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
@@ -41,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    private boolean editUserProfile;
+    private boolean editDogProfile;
 
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -52,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         API.initDatabaseApi();
+        editUserProfile = false;
+        editDogProfile = false;
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawerContent(nvDrawer);
 
+        mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.main_container, new MainFragment())
@@ -81,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle setupDrawerToggle() {
         // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
         // and will not render the hamburger icon without it.
-        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -99,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass;
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.default_fragment:
                 fragmentClass = MainFragment.class;
                 break;
@@ -107,16 +117,19 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = FoodNotificationsFragment.class;
                 break;
             case R.id.vaccinetion_card:
-                fragmentClass = VaccinetionCard.class;
+                fragmentClass = VaccinationCardFragment.class;
                 break;
             case R.id.find_near_dog_parks:
-                fragmentClass = FindNearDogParks.class;
+                fragmentClass = FindNearDogParksFragment.class;
                 break;
             case R.id.find_near_veterinarians:
-                fragmentClass = FindNearVeterinarians.class;
+                fragmentClass = FindNearVeterinariansFragment.class;
                 break;
             case R.id.find_near_pet_stores:
-                fragmentClass = FindNearPetStores.class;
+                fragmentClass = FindNearPetStoresFragment.class;
+                break;
+            case R.id.my_preferences:
+                fragmentClass = MyPreferencesFragment.class;
                 break;
             default:
                 fragmentClass = MainFragment.class;
@@ -164,9 +177,6 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -184,6 +194,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
+        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+            // Close the navigation drawer
+            mDrawer.closeDrawers();
+            return true;
+        } else if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0
+                && fragment.getClass() != MainFragment.class) {
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
+        if(fragment.getClass() != MainFragment.class) {
+            fragment = new MainFragment();
+            fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
+            // Highlight the selected item has been done by NavigationView
+            mainMenuItem.setChecked(true);
+            // Set action bar title
+            setTitle(mainMenuItem.getTitle());
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
@@ -198,11 +242,12 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    String username = user.getDisplayName();
-                    if (username == null) {
-                        username = user.getEmail();
-                    }
+//                    String username = user.getDisplayName();
+//                    if (username == null) {
+//                        username = user.getEmail();
+//                    }
                     onSignedInInitialize(firebaseAuth.getCurrentUser());
+
                 } else {
                     // User is signed out
                     onSignedOutCleanup();
@@ -224,19 +269,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(FirebaseUser user) {
         // clear adapters if any populated
-            // currently none is populated
+        // currently none is populated
 
         // creating db user
-        String user_id = user.getUid();
-        if (!API.isUserExists(user_id)){
-            // user's 1st registeration
-            API.createUser(user_id, user.getDisplayName(), user.getEmail());
-        }
+        final String user_id = user.getUid();
+        final String display_name = user.getDisplayName();
+        final String email = user.getEmail();
+        API.currUserUid = user_id;
+
+        ValueEventListener mNewUserListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                editUserProfile = !dataSnapshot.exists();
+                if (editUserProfile) {
+                    // 1st registration
+                    API.createUser(display_name, email);
+                }
+                editDogProfile = !dataSnapshot.child("dog").hasChild("name")
+                        || dataSnapshot.child("dog").child("name").getValue().equals("");
+                if (editDogProfile || editUserProfile){
+                    startEditProfileActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
+        API.attachCurrUserDataReadListener();
     }
-    
+
     private void onSignedOutCleanup() {
         // clear adapters if any populated
-            // currently none is populated
+        // currently none is populated
+        API.detachCurrUserDataReadListener();
+        API.currUserUid = null;
+        API.currUserData = null;
     }
 
 
@@ -253,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
         // clear adapters if any populated
-            // currently none is populated
+        // currently none is populated
     }
 
     @Override
@@ -262,12 +333,28 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
+//                if (editUserProfile) {
+//                    Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(this, UserRegistrationActivitey.class);
+//                    startActivity(intent);
+//                } else if (editDogProfile) {
+//                    Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(this, DogRegistrationActivity.class);
+//                    startActivity(intent);
+//                }
+
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
 //                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
+    }
+
+    private void startEditProfileActivity() {
+        Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DogRegistrationActivity.class);
+        startActivity(intent);
+
     }
 }

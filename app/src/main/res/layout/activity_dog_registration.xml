@@ -11,7 +11,7 @@
     android:weightSum="1"
     android:layout_marginTop="5dp"
     android:orientation="vertical"
-    tools:context="com.firebase.petti.petti.RegistrationActivity">
+    tools:context="com.firebase.petti.petti.DogRegistrationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:layout_height="49dp"
                 android:id="@+id/uploadButton"
                 android:layout_gravity="fill_vertical"
-                android:text="UPLOAD IMAGE"
+                android:text="pet_UPLOAD IMAGE"
                 android:layout_weight="0.01"
                 android:onClick="uploadImageMethod"
                 />
@@ -61,7 +61,7 @@
                 android:layout_height="43dp"
                 android:hint="name:"
                 android:textSize="20dp"
-                android:id="@+id/name" />
+                android:id="@+id/pet_name" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -69,7 +69,7 @@
                 android:hint="age:"
                 android:textSize="20dp"
                 android:inputType="number"
-                android:id="@+id/age"
+                android:id="@+id/pet_age"
                 />
             <RadioGroup
                 android:layout_width="fill_parent"
@@ -80,14 +80,14 @@
                     android:layout_height="wrap_content"
                     android:hint="Male"
                     android:layout_weight="1"
-                    android:id="@+id/gender_male_radio"
+                    android:id="@+id/pet_gender_male_radio"
                     android:onClick="genderSelection"
                     />
                 <android.support.v7.widget.AppCompatRadioButton
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:id="@+id/gender_female_radio"
+                    android:id="@+id/pet_gender_female_radio"
                     android:hint="Female"
                     android:onClick="genderSelection"
                     />
@@ -133,6 +133,7 @@
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:hint="describe your dog in a few words"
+            android:id="@+id/pet_descreption_text"
             android:gravity="top"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -143,6 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="20dp"
+                android:id="@+id/preferd_walk_partners_text"
                 android:hint="who would you like to walk with"
                 android:gravity="top"/>
         </android.support.design.widget.TextInputLayout>
@@ -154,52 +156,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="20dp"
+                android:id="@+id/common_walk_places_text"
                 android:hint="where do you usualy go for a walk"
                 android:gravity="top"/>
         </android.support.design.widget.TextInputLayout>
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="FIND PARTNERS"
-            android:textSize="20dp"
-            android:background="@color/colorPrimary"
-            />
+            android:weightSum="1"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="Edit Your profile"
+                android:textSize="20dp"
+                android:onClick="MoveToEditProfileAndUploadPet"
+                android:background="@color/colorPrimary"
+                android:id="@+id/moveToEditProfileButton" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/walking_paws_pic"/>
+
+
+
+        </LinearLayout>
+
 
 
     </LinearLayout>
 
 
 </LinearLayout>
-       <!-- <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#3b5998"
-            android:text="Sign in with facebook"
-            android:textAllCaps="false"
 
-            android:textColor="#fff"
-            android:id="@+id/button2" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#dc4e41"
-            android:text="Sign in with google +"
-            android:textAllCaps="false"
-            android:textColor="#fff"
-            android:id="@+id/button3" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Regular sign-up"
-            android:textSize="30dp"
-            android:layout_gravity="bottom"
-            android:id="@+id/appCompatButton"
-            android:onClick="startUserRegistrationActivity"/>-->
 
 
 
