@@ -60,6 +60,32 @@ public class MatchedDogFragment extends Fragment {
 //            }
 //        });
 
+        Button showOwnerBtn = (Button) rootView.findViewById(R.id.show_owner_btn);
+//        startChatBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Fragment matchesFragment = new ();
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//
+//                fragmentManager.beginTransaction().replace(R.id.bark_container, matchesFragment)
+//                        .addToBackStack( "tag" ).commit();
+//            }
+//        });
+
+        Button showDogBtn = (Button) rootView.findViewById(R.id.show_dog_btn);
+//        startChatBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Fragment matchesFragment = new ();
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//
+//                fragmentManager.beginTransaction().replace(R.id.bark_container, matchesFragment)
+//                        .addToBackStack( "tag" ).commit();
+//            }
+//        });
+
         return rootView;
     }
 
