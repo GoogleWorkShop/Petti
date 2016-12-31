@@ -206,15 +206,15 @@ public class MatchesFragment extends Fragment {
         @Override
         protected ArrayList<User> doInBackground(Void... voids) {
             int timeout = 10; // five seconds of timeout until we decide there are no matches
-            while (!API.queryReady && timeout-- != 0){
+            do {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex){
 
                 }
             }
-
-            API.queryReady = false;
+            while (!API.queryReady && timeout-- != 0);
+//            API.queryReady = false;
             ArrayList<User> mMatchesArray = new ArrayList<>();
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
                 User userCandidate = item.getValue();
