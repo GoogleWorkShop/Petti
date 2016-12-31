@@ -15,8 +15,9 @@ public class User implements Serializable{
 
     private Long lastLocationTime;
 
-    public User(){
+    private String tempUid;
 
+    public User(){
     }
 
     public User(String name, String mail){
@@ -31,6 +32,14 @@ public class User implements Serializable{
 
     public void setLastLocationTime(Long lastLocationTime) {
         this.lastLocationTime = lastLocationTime;
+    }
+
+    public String getTempUid() {
+        return tempUid;
+    }
+
+    public void setTempUid(String tempUid) {
+        this.tempUid = tempUid;
     }
 
     public Dog getDog(){
@@ -152,7 +161,7 @@ public class User implements Serializable{
             return this.lookingForList;
         }
 
-        public ArrayList<String> getDetailList (){
+        public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = new ArrayList<>();
             output.add("Nickname: " + nickname);
             output.add("City: " + city);
@@ -206,7 +215,7 @@ public class User implements Serializable{
             return this.walkWhere;
         }
 
-        public ArrayList<String> getDetailList (){
+        public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = new ArrayList<>();
             output.add("Type: " + type);
             output.add("Age: " + getAge());

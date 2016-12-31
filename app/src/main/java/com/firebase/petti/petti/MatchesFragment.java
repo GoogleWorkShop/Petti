@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import com.firebase.petti.petti.utils.GridViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Map;
 
 
@@ -47,10 +49,6 @@ public class MatchesFragment extends Fragment {
     // GPSTracker class
     GPSTracker gps;
     Location location; // location
-    private static final String[] INITIAL_PERMS={
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-    };
-    private static final int INITIAL_REQUEST = 1337;
 
     private static final long HALF_HOUR_MILLSEC = 30*60*1000;
 
@@ -62,12 +60,6 @@ public class MatchesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        if (!canAccessLocation()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
-            }
-        }
         // create class object
         gps = new GPSTracker(getActivity());
 
@@ -75,6 +67,12 @@ public class MatchesFragment extends Fragment {
         if (gps.canGetLocation()) {
 
             location = gps.getLocation();
+            if (location == null){
+                Toast.makeText(getActivity(),
+                        "All locations and no permissions makes Johnny a dull boy",
+                        Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
 
@@ -90,7 +88,9 @@ public class MatchesFragment extends Fragment {
         }
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
+
         API.attachNearbyUsersListener(location, mRadius);
     }
 
@@ -98,15 +98,22 @@ public class MatchesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        rootView = inflater.inflate(R.layout.fragment_matches, container, false);
+
+        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+        TextView notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
+        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+
+        gridView.setVisibility(View.GONE);
+        notFoundView.setVisibility(View.GONE);
+        searchingView.setVisibility(View.VISIBLE);
+
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
         bark = getArguments().getBoolean("bark");
         Toast.makeText(getActivity(),
                 "Bark is: " + bark,
                 Toast.LENGTH_LONG).show();
 
-        rootView = inflater.inflate(R.layout.fragment_matches, container, false);
-
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
         gridView.setAdapter(mMatchesAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -192,29 +199,22 @@ public class MatchesFragment extends Fragment {
         }
     }
 
-    private boolean canAccessLocation() {
-        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED==getActivity().checkSelfPermission(perm));
-    }
-
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
+
         protected ArrayList<User> doInBackground(Void... voids) {
             int timeout = 10; // five seconds of timeout until we decide there are no matches
-            while (!API.queryReady && timeout-- != 0){
+            do {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex){
 
                 }
             }
+            while (!API.queryReady && timeout-- != 0);
+//            API.queryReady = false;
 
-            API.queryReady = false;
             ArrayList<User> mMatchesArray = new ArrayList<>();
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
                 User userCandidate = item.getValue();
@@ -224,9 +224,10 @@ public class MatchesFragment extends Fragment {
                         userLastWalkTimestamp < minBarkTimeLimit)){
                     continue;
                 }
-//                item.getKey()
+                userCandidate.setTempUid(item.getKey());
                 mMatchesArray.add(userCandidate);
             }
+
 
             return mMatchesArray;
         }
@@ -237,12 +238,15 @@ public class MatchesFragment extends Fragment {
 
             GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
             TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
+            TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
 
             if (result != null) {
                 mMatchesAdapter.clear();
                 mMatchesAdapter.refresh(result);
                 // New data is back from the server.  Hooray!
             }
+
+            searchingView.setVisibility(View.GONE);
             if(mMatchesAdapter.isEmpty()){
                 gridView.setVisibility(View.GONE);
                 textView.setVisibility(View.VISIBLE);

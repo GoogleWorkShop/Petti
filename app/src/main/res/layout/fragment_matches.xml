@@ -11,6 +11,15 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/searching_matches_str"
+        android:text="@string/searching_matches"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="visible"/>
 
     <GridView
