@@ -212,4 +212,8 @@ public class API {
             nearbyUsers = null;
         }
     }
+
+    public static boolean isMyUid(String uid){
+        return currUserUid.equals(uid);
+    }
 }

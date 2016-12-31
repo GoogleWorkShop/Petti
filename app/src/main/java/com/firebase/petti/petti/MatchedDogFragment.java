@@ -69,14 +69,16 @@ public class MatchedDogFragment extends Fragment {
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_matched_dog_info, // The name of the layout ID.
                         R.id.list_item_matched_dog_textview, // The ID of the textview to populate.
-                        user.getDog().getDetailList());
+                        user.getDog().retrieveDetailList()
+                );
 
         mDogOwnerDetailsAdapter =
                 new ArrayAdapter<>(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_matched_dog_owner_info, // The name of the layout ID.
                         R.id.list_item_matched_dog_owner_textview, // The ID of the textview to populate.
-                        user.getOwner().getDetailList());
+                        user.getOwner().retrieveDetailList()
+                );
 
         final Button showOwnerBtn = (Button) rootView.findViewById(R.id.show_owner_btn);
         final Button showDogBtn = (Button) rootView.findViewById(R.id.show_dog_btn);

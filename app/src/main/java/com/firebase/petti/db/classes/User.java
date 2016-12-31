@@ -152,7 +152,7 @@ public class User implements Serializable{
             return this.lookingForList;
         }
 
-        public ArrayList<String> getDetailList (){
+        public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = new ArrayList<>();
             output.add("Nickname: " + nickname);
             output.add("City: " + city);
@@ -206,7 +206,7 @@ public class User implements Serializable{
             return this.walkWhere;
         }
 
-        public ArrayList<String> getDetailList (){
+        public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = new ArrayList<>();
             output.add("Type: " + type);
             output.add("Age: " + getAge());
