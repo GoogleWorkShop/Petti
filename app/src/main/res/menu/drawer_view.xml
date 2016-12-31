@@ -32,12 +32,17 @@
             android:icon="@drawable/ic_action_pet_store"
             android:title="Find Near Pet Stores" />
         <item
+            android:id="@+id/edit_user_profile"
+            android:icon="@drawable/ic_action_edit_profile"
+            android:title="Edit Your Profile" />
+        <item
+            android:id="@+id/edit_dog_profile"
+            android:icon="@drawable/ic_action_edit_dog_profile"
+            android:title="Edit Dog Profile" />
+        <item
             android:id="@+id/my_preferences"
             android:icon="@drawable/ic_action_preferences"
             android:title="Settings" />
-        <item
-            android:id="@+id/and_such"
-            android:icon="@drawable/ic_two"
-            android:title="And Such" />
+
     </group>
 </menu>

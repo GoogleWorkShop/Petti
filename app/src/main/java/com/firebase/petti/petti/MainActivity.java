@@ -131,6 +131,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.my_preferences:
                 fragmentClass = MyPreferencesFragment.class;
                 break;
+            case R.id.edit_user_profile:
+                Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
+                startActivity(userIntent);
+                return;
+            case R.id.edit_dog_profile:
+                Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
+                startActivity(dogIntent);
+                return;
+
+
             default:
                 fragmentClass = MainFragment.class;
         }
