@@ -4,6 +4,7 @@ package com.firebase.petti.db;
 import android.location.Location;
 import android.util.Log;
 
+
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;

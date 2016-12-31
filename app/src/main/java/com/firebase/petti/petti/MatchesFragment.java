@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -208,7 +209,7 @@ public class MatchesFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED==getActivity().checkSelfPermission(perm));
+        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
     }
 
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<String[]>> {
