@@ -30,6 +30,8 @@ import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Map;
 
 
@@ -90,7 +92,9 @@ public class MatchesFragment extends Fragment {
         }
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
+
         API.attachNearbyUsersListener(location, mRadius);
     }
 
@@ -211,15 +215,18 @@ public class MatchesFragment extends Fragment {
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
+
         protected ArrayList<User> doInBackground(Void... voids) {
             int timeout = 10; // five seconds of timeout until we decide there are no matches
             while (!API.queryReady && timeout-- != 0){
+
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex){
 
                 }
             }
+
 
             API.queryReady = false;
             ArrayList<User> mMatchesArray = new ArrayList<>();
@@ -234,6 +241,7 @@ public class MatchesFragment extends Fragment {
 //                item.getKey()
                 mMatchesArray.add(userCandidate);
             }
+
 
             return mMatchesArray;
         }
