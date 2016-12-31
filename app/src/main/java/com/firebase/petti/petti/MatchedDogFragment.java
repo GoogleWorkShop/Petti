@@ -4,13 +4,17 @@ package com.firebase.petti.petti;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.petti.db.classes.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,10 +25,11 @@ import java.util.ArrayList;
  */
 public class MatchedDogFragment extends Fragment {
 
-    private   String mDogId;
-    private   String dogName;
-    private   ImageView imageView;
-    private   String imageUrl;
+    private User user;
+    private ImageView imageView;
+
+    ArrayAdapter<String> mDogDetailsAdapter;
+    ArrayAdapter<String> mDogOwnerDetailsAdapter;
 
 
     public MatchedDogFragment() {
@@ -36,13 +41,12 @@ public class MatchedDogFragment extends Fragment {
 
         MatchedDogActivity parentActivity = (MatchedDogActivity) getActivity();
 
-        dogName = parentActivity.getDogName();
-        imageUrl = parentActivity.getImageUrl();
+        user = parentActivity.getUser();
 
-        View rootView = inflater.inflate(R.layout.fragment_matched_dog, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_matched_dog, container, false);
 
-        TextView titleTextView = (TextView) rootView.findViewById(R.id.matched_dog_detail);
-        titleTextView.setText(dogName);
+        TextView titleTextView = (TextView) rootView.findViewById(R.id.matched_dog_name);
+        titleTextView.setText(user.getDog().getName());
 
         imageView = (ImageView) rootView.findViewById(R.id.matched_dog_image);
 
@@ -60,31 +64,46 @@ public class MatchedDogFragment extends Fragment {
 //            }
 //        });
 
-        Button showOwnerBtn = (Button) rootView.findViewById(R.id.show_owner_btn);
-//        startChatBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Fragment matchesFragment = new ();
-//
-//                FragmentManager fragmentManager = getFragmentManager();
-//
-//                fragmentManager.beginTransaction().replace(R.id.bark_container, matchesFragment)
-//                        .addToBackStack( "tag" ).commit();
-//            }
-//        });
+        mDogDetailsAdapter =
+                new ArrayAdapter<>(
+                        getActivity(), // The current context (this activity)
+                        R.layout.list_item_matched_dog_info, // The name of the layout ID.
+                        R.id.list_item_matched_dog_textview, // The ID of the textview to populate.
+                        user.getDog().getDetailList());
 
-        Button showDogBtn = (Button) rootView.findViewById(R.id.show_dog_btn);
-//        startChatBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Fragment matchesFragment = new ();
-//
-//                FragmentManager fragmentManager = getFragmentManager();
-//
-//                fragmentManager.beginTransaction().replace(R.id.bark_container, matchesFragment)
-//                        .addToBackStack( "tag" ).commit();
-//            }
-//        });
+        mDogOwnerDetailsAdapter =
+                new ArrayAdapter<>(
+                        getActivity(), // The current context (this activity)
+                        R.layout.list_item_matched_dog_owner_info, // The name of the layout ID.
+                        R.id.list_item_matched_dog_owner_textview, // The ID of the textview to populate.
+                        user.getOwner().getDetailList());
+
+        final Button showOwnerBtn = (Button) rootView.findViewById(R.id.show_owner_btn);
+        final Button showDogBtn = (Button) rootView.findViewById(R.id.show_dog_btn);
+        final ListView dogDetail = (ListView) rootView.findViewById(R.id.matched_dog_detail);
+        dogDetail.setAdapter(mDogDetailsAdapter);
+        final ListView ownerDetail = (ListView) rootView.findViewById(R.id.matched_dog_owner_detail);
+        ownerDetail.setAdapter(mDogOwnerDetailsAdapter);
+
+
+        showOwnerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOwnerBtn.setVisibility(View.GONE);
+                ownerDetail.setVisibility(View.VISIBLE);
+                showDogBtn.setVisibility(View.VISIBLE);
+                dogDetail.setVisibility(View.GONE);
+            }
+        });
+        showDogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOwnerBtn.setVisibility(View.VISIBLE);
+                ownerDetail.setVisibility(View.GONE);
+                showDogBtn.setVisibility(View.GONE);
+                dogDetail.setVisibility(View.VISIBLE);
+            }
+        });
 
         return rootView;
     }
@@ -97,8 +116,8 @@ public class MatchedDogFragment extends Fragment {
     }
 
     private void updateDogDate() {
-        FetchAnotherDogTask movieTask = new FetchAnotherDogTask(imageView);
-        movieTask.execute();
+        FetchAnotherDogTask dogTask = new FetchAnotherDogTask(imageView);
+        dogTask.execute();
     }
 
     @Override
@@ -126,7 +145,7 @@ public class MatchedDogFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
-            Picasso.with(getActivity()).load(imageUrl).into(imageView);
+            Picasso.with(getActivity()).load(user.getDog().getPhotoUrl()).into(imageView);
             // New data is back from the server.  Hooray!
         }
 

@@ -47,7 +47,7 @@ public class GridViewAdapter extends ArrayAdapter {
         return mMatchesArray.get(position).getDog().getPhotoUrl();
     }
 
-    public Object getItem(int position) {
+    public User getItem(int position) {
         return mMatchesArray.get(position);
     }
 

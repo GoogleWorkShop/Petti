@@ -112,17 +112,14 @@ public class MatchesFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String id = mMatchesAdapter.getId(position);
 
                 String dogName = mMatchesAdapter.getName(position);
                 Toast.makeText(getActivity(), dogName, Toast.LENGTH_SHORT).show();
 
-                String image = mMatchesAdapter.getImage(position);
+                User selected = mMatchesAdapter.getItem(position);
 
                 Intent intent = new Intent(getActivity(), MatchedDogActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("dogName", dogName);
-                intent.putExtra("image", image);
+                intent.putExtra("user", selected);
 
                 startActivity(intent);
             }
