@@ -1,12 +1,14 @@
 package com.firebase.petti.db.classes;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by yahav on 12/26/2016.
  */
 
-public class User {
+public class User implements Serializable{
 
     private Dog dog;
     private Owner owner;
@@ -47,7 +49,7 @@ public class User {
         this.owner = owner;
     }
 
-    private static abstract class ABCNamedEntity {
+    private static abstract class ABCNamedEntity implements Serializable{
 
         private String name;
         private String description;
@@ -149,6 +151,16 @@ public class User {
         public List<String> getLookingForList(){
             return this.lookingForList;
         }
+
+        public ArrayList<String> getDetailList (){
+            ArrayList<String> output = new ArrayList<>();
+            output.add("Nickname: " + nickname);
+            output.add("City: " + city);
+            output.add("Age: " + getAge());
+            output.add(getFemale()? "Female" : "Male");
+            output.add("Description: " + getDescription());
+            return output;
+        }
     }
 
     public static class Dog extends ABCNamedEntity {
@@ -192,6 +204,19 @@ public class User {
 
         public String getWalkWhere(){
             return this.walkWhere;
+        }
+
+        public ArrayList<String> getDetailList (){
+            ArrayList<String> output = new ArrayList<>();
+            output.add("Type: " + type);
+            output.add("Age: " + getAge());
+            output.add(getFemale()? "Female" : "Male");
+            for (String trait : personalityAttributes){
+                output.add(trait);
+            }
+            output.add(walkWith);
+            output.add(getDescription());
+            return output;
         }
     }
 }

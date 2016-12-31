@@ -5,11 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.firebase.petti.db.classes.User;
+
 public class MatchedDogActivity extends AppCompatActivity {
 
-    private   String mDogId;
-    private   String dogName;
-    private   String imageUrl;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +19,7 @@ public class MatchedDogActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        dogName = getIntent().getStringExtra("dogName");
-        imageUrl = getIntent().getStringExtra("image");
+        user = (User) getIntent().getSerializableExtra("user");
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -45,15 +44,7 @@ public class MatchedDogActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public String getmDogId() {
-        return mDogId;
-    }
-
-    public String getDogName() {
-        return dogName;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public User getUser() {
+        return user;
     }
 }
