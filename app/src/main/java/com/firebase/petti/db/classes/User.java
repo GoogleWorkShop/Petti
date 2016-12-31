@@ -15,8 +15,9 @@ public class User implements Serializable{
 
     private Long lastLocationTime;
 
-    public User(){
+    private String tempUid;
 
+    public User(){
     }
 
     public User(String name, String mail){
@@ -31,6 +32,14 @@ public class User implements Serializable{
 
     public void setLastLocationTime(Long lastLocationTime) {
         this.lastLocationTime = lastLocationTime;
+    }
+
+    public String getTempUid() {
+        return tempUid;
+    }
+
+    public void setTempUid(String tempUid) {
+        this.tempUid = tempUid;
     }
 
     public Dog getDog(){

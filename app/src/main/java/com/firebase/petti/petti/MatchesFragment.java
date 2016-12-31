@@ -236,7 +236,7 @@ public class MatchesFragment extends Fragment {
                         userLastWalkTimestamp < minBarkTimeLimit)){
                     continue;
                 }
-//                item.getKey()
+                userCandidate.setTempUid(item.getKey());
                 mMatchesArray.add(userCandidate);
             }
 
