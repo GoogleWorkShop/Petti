@@ -13,6 +13,8 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_empty_password">Password can not be empty</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="button1">chat</string>
+    <string name="button2">delete</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -162,7 +164,7 @@
     <string name="start_chat">Start Chat</string>
     <string name="bark_on">true</string>
     <string name="bark_off">false</string>
-    <string name="no_matches_found">Sorry mate/mam...\nNo matches found...\nWhy not walking a bit further?...</string>
+    <string name="no_matches_found">Sorry mate/mam…\nNo matches found...\nWhy not walking a bit further?...</string>
     <string name="purchase_date">Purchase Date</string>
     <string name="food_name">Food Name</string>
     <string name="amount">Amount (In KGs)</string>
@@ -171,4 +173,5 @@
     <string name="per_meal">Per Meal (In Grams)</string>
     <string name="show_owner">Show Owner</string>
     <string name="show_dog">Show Dog</string>
+    <string name="searching_matches">I\'m searching for other dogs DWAG...\nSo chilex!!!</string>
 </resources>

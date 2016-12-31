@@ -30,6 +30,7 @@ import com.firebase.petti.petti.utils.GridViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Map;
 
 
@@ -90,7 +91,9 @@ public class MatchesFragment extends Fragment {
         }
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
+
         API.attachNearbyUsersListener(location, mRadius);
     }
 
@@ -98,15 +101,22 @@ public class MatchesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        rootView = inflater.inflate(R.layout.fragment_matches, container, false);
+
+        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+        TextView notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
+        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+
+        gridView.setVisibility(View.GONE);
+        notFoundView.setVisibility(View.GONE);
+        searchingView.setVisibility(View.VISIBLE);
+
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
         bark = getArguments().getBoolean("bark");
         Toast.makeText(getActivity(),
                 "Bark is: " + bark,
                 Toast.LENGTH_LONG).show();
 
-        rootView = inflater.inflate(R.layout.fragment_matches, container, false);
-
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
         gridView.setAdapter(mMatchesAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -204,6 +214,7 @@ public class MatchesFragment extends Fragment {
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
+
         protected ArrayList<User> doInBackground(Void... voids) {
             int timeout = 10; // five seconds of timeout until we decide there are no matches
             do {
@@ -215,6 +226,7 @@ public class MatchesFragment extends Fragment {
             }
             while (!API.queryReady && timeout-- != 0);
 //            API.queryReady = false;
+
             ArrayList<User> mMatchesArray = new ArrayList<>();
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
                 User userCandidate = item.getValue();
@@ -228,6 +240,7 @@ public class MatchesFragment extends Fragment {
                 mMatchesArray.add(userCandidate);
             }
 
+
             return mMatchesArray;
         }
 
@@ -237,12 +250,15 @@ public class MatchesFragment extends Fragment {
 
             GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
             TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
+            TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
 
             if (result != null) {
                 mMatchesAdapter.clear();
                 mMatchesAdapter.refresh(result);
                 // New data is back from the server.  Hooray!
             }
+
+            searchingView.setVisibility(View.GONE);
             if(mMatchesAdapter.isEmpty()){
                 gridView.setVisibility(View.GONE);
                 textView.setVisibility(View.VISIBLE);
