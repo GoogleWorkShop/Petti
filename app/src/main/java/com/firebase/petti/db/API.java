@@ -210,7 +210,7 @@ public class API {
         if (geoQuery != null) {
             geoQuery.removeGeoQueryEventListener(mLocationsListener);
             geoQuery = null;
-            nearbyUsers = null;
+            nearbyUsers.clear();
         }
     }
 
