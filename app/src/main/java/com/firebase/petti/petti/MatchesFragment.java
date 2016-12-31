@@ -44,7 +44,6 @@ public class MatchesFragment extends Fragment {
     GridViewAdapter mMatchesAdapter;
     boolean bark;
     int mRadius;
-    private final static String DEFAULT_PREFERENCE_STRING = "com.firebase.petti.petti_preferences";
 
     // GPSTracker class
     GPSTracker gps;
@@ -92,13 +91,7 @@ public class MatchesFragment extends Fragment {
         }
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
-        String s = pref.getString("matchDistance", "0");
-        int radius = Integer.parseInt(s);
-        if(radius < 0 || radius > 20){
-
-        }
-        mRadius = radius;
+        mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
         API.attachNearbyUsersListener(location, mRadius);
     }
 
@@ -120,17 +113,14 @@ public class MatchesFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String id = mMatchesAdapter.getId(position);
 
                 String dogName = mMatchesAdapter.getName(position);
                 Toast.makeText(getActivity(), dogName, Toast.LENGTH_SHORT).show();
 
-                String image = mMatchesAdapter.getImage(position);
+                User selected = mMatchesAdapter.getItem(position);
 
                 Intent intent = new Intent(getActivity(), MatchedDogActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("dogName", dogName);
-                intent.putExtra("image", image);
+                intent.putExtra("user", selected);
 
                 startActivity(intent);
             }
@@ -161,7 +151,7 @@ public class MatchesFragment extends Fragment {
         super.onResume();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 //            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
-        String s = pref.getString("matchDistance", "0");
+        String s = pref.getString("matchDistance", "1");
         int radius = Integer.parseInt(s);
         if(radius < 0 || radius > 20){
 
@@ -212,18 +202,12 @@ public class MatchesFragment extends Fragment {
         return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
     }
 
-    private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<String[]>> {
+    private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
-        protected ArrayList<String[]> doInBackground(Void... voids) {
-            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
-            String s = pref.getString("matchDistance", "0");
-            int radius = Integer.parseInt(s);
-//            List<String[]> mMatchesArray = new ArrayList<>();
-//            ArrayList<String[]> mMatchesArray = (ArrayList) API.nearbyUsers.values();
-            int c = 0;
-            while (!API.queryReady){
-                c++;
+        protected ArrayList<User> doInBackground(Void... voids) {
+            int timeout = 10; // five seconds of timeout until we decide there are no matches
+            while (!API.queryReady && timeout-- != 0){
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex){
@@ -232,9 +216,7 @@ public class MatchesFragment extends Fragment {
             }
 
             API.queryReady = false;
-//            ArrayList<String[]> mMatchesArray = new ArrayList<>();
-
-            ArrayList<String[]> mMatchesArray = new ArrayList<>();
+            ArrayList<User> mMatchesArray = new ArrayList<>();
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
                 User userCandidate = item.getValue();
                 Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
@@ -243,22 +225,16 @@ public class MatchesFragment extends Fragment {
                         userLastWalkTimestamp < minBarkTimeLimit)){
                     continue;
                 }
-                mMatchesArray.add(new String[]{item.getKey(),
-                        userCandidate.getDog().getName(),
-                        userCandidate.getDog().getPhotoUrl()});
+//                item.getKey()
+                mMatchesArray.add(userCandidate);
             }
-
-//            ArrayList<String[]> mMatchesArray = new ArrayList<>(API.nearbyUsers.values());
-//            if (radius < 0 || radius > 20) {
-//
-//            }
 
             return mMatchesArray;
         }
 
 
         @Override
-        protected void onPostExecute(ArrayList<String[]> result) {
+        protected void onPostExecute(ArrayList<User> result) {
 
             GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
             TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
