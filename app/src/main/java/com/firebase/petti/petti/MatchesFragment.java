@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,10 +49,6 @@ public class MatchesFragment extends Fragment {
     // GPSTracker class
     GPSTracker gps;
     Location location; // location
-    private static final String[] INITIAL_PERMS={
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-    };
-    private static final int INITIAL_REQUEST = 1337;
 
     private static final long HALF_HOUR_MILLSEC = 30*60*1000;
 
@@ -63,12 +60,6 @@ public class MatchesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        if (!canAccessLocation()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
-            }
-        }
         // create class object
         gps = new GPSTracker(getActivity());
 
@@ -76,6 +67,12 @@ public class MatchesFragment extends Fragment {
         if (gps.canGetLocation()) {
 
             location = gps.getLocation();
+            if (location == null){
+                Toast.makeText(getActivity(),
+                        "All locations and no permissions makes Johnny a dull boy",
+                        Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
 
@@ -200,15 +197,6 @@ public class MatchesFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private boolean canAccessLocation() {
-        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED==getActivity().checkSelfPermission(perm));
     }
 
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
