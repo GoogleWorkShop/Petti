@@ -39,8 +39,8 @@ public class ChatApi {
 //            mChildEventListener = new ChildEventListener() {
 //                @Override
 //                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    ChatMessage chatMessage = dataSnapshot.getValue(FriendlyMessage.class);
-//                    mMessageAdapter.add(friendlyMessage);
+//                    ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
+//                    mMessageAdapter.add(chatMessage);
 //                }
 //
 //                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
