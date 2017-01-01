@@ -1,5 +1,6 @@
 package com.firebase.petti.petti;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -50,6 +51,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
     String commonWalkPlaces;
     //TODO picture....
 
+    boolean isEditState;
 
     EditText nameView;
     EditText ageView;
@@ -60,6 +62,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
     ImageView petImage;
     RadioButton dogMaleButton;
     RadioButton dogFemaleButton;
+    Button moveToEditButton;
 
     enum Gender {Male, Female}
 
@@ -84,6 +87,20 @@ public class DogRegistrationActivity extends AppCompatActivity {
         commonWalkPlacesText = (TextInputEditText) findViewById(R.id.common_walk_places_text);
         dogMaleButton = (RadioButton) findViewById(R.id.pet_gender_male_radio);
         dogFemaleButton = (RadioButton) findViewById(R.id.pet_gender_female_radio);
+        moveToEditButton = (Button) findViewById(R.id.moveToEditProfileButton);
+
+        //change button text acoording to ui flow, it its from initail registration: move to user reg,
+        //if it is from editing profile, go back to main
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            isEditState = (Boolean) bundle.get("edit");
+        }
+
+        if(isEditState){
+            moveToEditButton.setText("Done Editing");
+        }
+
 
         //dog type spinner
         Spinner dog_type_spinner = (Spinner) findViewById(R.id.pet_type_spinner);
@@ -305,11 +322,24 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
         API.setDog(currDogData);
 
+
         //move to edit profile
-        startUserRegistrationActivity(view);
+        if(isEditState){
+            startMainActivity(view);
+        }
+        else{
+            startUserRegistrationActivity(view);
+        }
+
 
     }
 
+
+
+    public void startMainActivity(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
     public void startUserRegistrationActivity(View view) {
         Intent intent = new Intent(this, UserRegistrationActivitey.class);
