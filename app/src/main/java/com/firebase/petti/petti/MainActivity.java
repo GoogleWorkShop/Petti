@@ -20,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private MenuItem mainMenuItem;
+    private TextView dogNameHederText;
 
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         API.initDatabaseApi();
         editUserProfile = false;
         editDogProfile = false;
+
+        dogNameHederText = (TextView) findViewById(R.id.dog_name_header); 
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -135,6 +140,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.my_preferences:
                 fragmentClass = MyPreferencesFragment.class;
                 break;
+            case R.id.edit_user_profile:
+                Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
+                userIntent.putExtra("edit",true);
+                startActivity(userIntent);
+                return;
+            case R.id.edit_dog_profile:
+                Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
+                dogIntent.putExtra("edit",true);
+                startActivityForResult(dogIntent,0);
+                return;
+
+
             default:
                 fragmentClass = MainFragment.class;
         }
@@ -360,5 +377,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DogRegistrationActivity.class);
         startActivity(intent);
 
+    }
+
+    public void EditDogProfile(View view) {
+        Intent intent = new Intent(this, DogRegistrationActivity.class);
+        intent.putExtra("edit",true);
+        startActivity(intent);
     }
 }

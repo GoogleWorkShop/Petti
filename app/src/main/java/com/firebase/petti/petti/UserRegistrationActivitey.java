@@ -55,6 +55,9 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     final String[] looking4 = new String[1];
     RadioButton maleButton;
     RadioButton femaleButton;
+    Button moveToMainButton;
+
+    boolean isEditState;
 
 
     enum Gender {Male, Female}
@@ -82,6 +85,19 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         maleButton = (RadioButton) findViewById(R.id.user_gender_male_radio);
         femaleButton = (RadioButton) findViewById(R.id.user_gender_female_radio);
         userEmailView = (TextView) findViewById(R.id.user_email_view);
+        moveToMainButton = (Button) findViewById(R.id.FindPartnersButton);
+
+        //change button text acoording to ui flow, it its from initail registration: move to user reg,
+        //if it is from editing profile, go back to main
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            isEditState = (Boolean) bundle.get("edit");
+        }
+
+        if(isEditState){
+            moveToMainButton.setText("Done Editing");
+        }
 
         //fill views with data
         currOwnerData = API.getCurrOwnerData();

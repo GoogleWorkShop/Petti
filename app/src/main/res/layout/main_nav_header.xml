@@ -13,13 +13,14 @@
         app:srcCompat="@drawable/pet_pic"
         android:id="@+id/imageView2"
         android:layout_height="90dp"
+        android:onClick="EditDogProfile"
         android:layout_width="75dp" />
 
     <TextView
         android:text="Dog Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3" />
+        android:id="@+id/dog_name_header" />
 
     <TextView
         android:text="Petti Main Options"

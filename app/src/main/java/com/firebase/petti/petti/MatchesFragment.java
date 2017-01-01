@@ -199,6 +199,17 @@ public class MatchesFragment extends Fragment {
         }
     }
 
+
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
+    }
+
+
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
