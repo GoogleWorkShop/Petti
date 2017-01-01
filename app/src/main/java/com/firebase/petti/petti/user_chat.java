@@ -21,13 +21,14 @@ import java.util.List;
 
 public class user_chat extends AppCompatActivity {
     private ListView mainListView ;
+    private String otherUserId;
     private ArrayAdapter<String> listAdapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        otherUserId = getIntent().getStringExtra("USER_ID");
         setContentView(R.layout.activity_chat_activity);
         mainListView = (ListView) findViewById( R.id.mainListView );
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         final ImageButton button = (ImageButton) findViewById(R.id.sendButton);
         button.setOnClickListener(new View.OnClickListener() {
