@@ -49,10 +49,6 @@ public class MatchesFragment extends Fragment {
     // GPSTracker class
     GPSTracker gps;
     Location location; // location
-    private static final String[] INITIAL_PERMS={
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-    };
-    private static final int INITIAL_REQUEST = 1337;
 
     private static final long HALF_HOUR_MILLSEC = 30*60*1000;
 
@@ -64,12 +60,6 @@ public class MatchesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        if (!canAccessLocation()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
-            }
-        }
         // create class object
         gps = new GPSTracker(getActivity());
 
@@ -77,6 +67,12 @@ public class MatchesFragment extends Fragment {
         if (gps.canGetLocation()) {
 
             location = gps.getLocation();
+            if (location == null){
+                Toast.makeText(getActivity(),
+                        "All locations and no permissions makes Johnny a dull boy",
+                        Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
 
@@ -203,6 +199,7 @@ public class MatchesFragment extends Fragment {
         }
     }
 
+
     private boolean canAccessLocation() {
         return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
     }
@@ -212,23 +209,23 @@ public class MatchesFragment extends Fragment {
         return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
     }
 
+
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
         @Override
 
         protected ArrayList<User> doInBackground(Void... voids) {
             int timeout = 10; // five seconds of timeout until we decide there are no matches
-            while (!API.queryReady && timeout-- != 0){
-
+            do {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex){
 
                 }
             }
+            while (!API.queryReady && timeout-- != 0);
+//            API.queryReady = false;
 
-
-            API.queryReady = false;
             ArrayList<User> mMatchesArray = new ArrayList<>();
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
                 User userCandidate = item.getValue();
@@ -238,7 +235,7 @@ public class MatchesFragment extends Fragment {
                         userLastWalkTimestamp < minBarkTimeLimit)){
                     continue;
                 }
-//                item.getKey()
+                userCandidate.setTempUid(item.getKey());
                 mMatchesArray.add(userCandidate);
             }
 

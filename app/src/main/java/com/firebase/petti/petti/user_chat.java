@@ -11,9 +11,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ImageButton;
 
+import com.firebase.petti.db.classes.ChatMessage;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 
 public class user_chat extends AppCompatActivity {
@@ -24,7 +27,7 @@ public class user_chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_activity);
         mainListView = (ListView) findViewById( R.id.mainListView );
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         final ImageButton button = (ImageButton) findViewById(R.id.sendButton);
         button.setOnClickListener(new View.OnClickListener() {

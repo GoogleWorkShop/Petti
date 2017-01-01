@@ -1,8 +1,13 @@
 package com.firebase.petti.petti;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +22,21 @@ import android.widget.Toast;
  */
 public class MainFragment extends Fragment {
 
+    private static final String[] INITIAL_PERMS={
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int INITIAL_REQUEST = 1337;
+    private static boolean locationGranted = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        if (!canAccessLocation()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+            }
+        }
+
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
@@ -51,11 +69,18 @@ public class MainFragment extends Fragment {
         bark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), R.string.get_ready_for_a_walk,
-                        Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "true");
-                startActivity(intent);
+                if (locationGranted) {
+                    Toast.makeText(getActivity(), R.string.get_ready_for_a_walk,
+                            Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, "true");
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(),
+                            "All locations and no permissions makes Johnny a dull boy",
+                            Toast.LENGTH_SHORT).show();
+                    requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+                }
             }
         });
 
@@ -64,12 +89,46 @@ public class MainFragment extends Fragment {
         find_partners.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "false");
-                startActivity(intent);
+                if (locationGranted) {
+                    Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, "false");
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(),
+                            "All locations and no permissions makes Johnny a dull boy",
+                            Toast.LENGTH_SHORT).show();
+                    requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+                }
             }
         });
 
         return rootView;
+    }
+
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED== getActivity().checkSelfPermission(perm));
+    }
+
+    // Callback with the request from calling requestPermissions
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        // Make sure it's our original GET_LOCATION request
+        if (requestCode == INITIAL_REQUEST) {
+            if (grantResults.length == 1 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationGranted = true;
+            } else {
+                locationGranted = false;
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }
