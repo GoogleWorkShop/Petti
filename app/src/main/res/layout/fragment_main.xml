@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,18 +7,23 @@
 
     <Button
         android:id="@+id/bark"
-        android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="@string/schedule_a_walk"
-        android:textSize="30dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_width="320dp"
+        android:background="@drawable/our_button"
+        android:textColor="@color/tw__light_gray"/>
 
     <Button
         android:id="@+id/find_walk_partners"
-        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:textSize="30dp"
         android:text="@string/find_walk_partners_around"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_below="@+id/bark"
+        android:layout_alignStart="@+id/bark"
+        android:layout_marginTop="53dp"
+        android:layout_width="320dp"
+        android:background="@drawable/our_button"
+        android:textColor="@color/tw__light_gray"/>
 
-</LinearLayout>
+</RelativeLayout>

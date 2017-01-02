@@ -4,7 +4,6 @@ package com.firebase.petti.db;
 import android.location.Location;
 import android.util.Log;
 
-
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -28,6 +27,7 @@ import java.util.Map;
 
 public class API {
 
+    private static final String tag = "***FIREBASE API***";
     protected static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseStorage mFirebaseStorage;
     public static GeoFire geoFire;
@@ -167,7 +167,12 @@ public class API {
 //                                Dog dog = dataSnapshot.getValue(Dog.class);
                                 User user = dataSnapshot.getValue(User.class);
 //                                String[] ownerDetails = new String[]{userId, dog.getName(), dog.getPhotoUrl()};
-                                nearbyUsers.put(userId, user);
+                                try {
+                                    nearbyUsers.put(userId, user);
+                                } catch (NullPointerException e){
+                                    Log.d(tag, "Tried to put in -nerbayUsers- after detach (nulified)");
+                                    return;
+                                }
                             }
 
                             @Override
