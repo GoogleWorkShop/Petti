@@ -28,12 +28,13 @@ import java.util.Map;
 
 public class API {
 
-    private static FirebaseDatabase mFirebaseDatabase;
+    protected static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseStorage mFirebaseStorage;
     public static GeoFire geoFire;
 
     public static DatabaseReference mDatabaseUsersRef;
     public static StorageReference mPetPhotos;
+    public static StorageReference mOwnerPhotos;
     public static DatabaseReference mDatabaseLocationsRef;
 
     private static ValueEventListener mUserEventListener;
@@ -51,8 +52,10 @@ public class API {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
 
+
         mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
         mPetPhotos = mFirebaseStorage.getReference().child("pet_photos");
+        mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
 
         mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
         geoFire = new GeoFire(mDatabaseLocationsRef);
@@ -60,6 +63,8 @@ public class API {
         queryReady = false;
 
         mUserEventListener = null;
+
+        ChatApi.initChatDb();
 
         currUserUid = null;
         currUserData = null;
@@ -216,5 +221,10 @@ public class API {
 
     public static boolean isMyUid(String uid){
         return currUserUid.equals(uid);
+    }
+
+    public static boolean isMatchedWith(String uid){
+        return (currUserData.getMsgTracker() != null &&
+                currUserData.getMsgTracker().containsKey(uid));
     }
 }

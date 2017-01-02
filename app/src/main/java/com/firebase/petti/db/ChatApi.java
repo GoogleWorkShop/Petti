@@ -6,63 +6,56 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by yahav on 12/31/2016.
  */
 
 public class ChatApi {
 
-    private static DatabaseReference mCurrUserMessagesDatabaseReference;
+    private static Map<String, String> chatUids;
+
+    private static DatabaseReference mMessagesDatabaseReference;
 
     protected static void initChatDb(){
-        if (API.mDatabaseUsersRef == null){
+        if (API.mFirebaseDatabase == null){
             // ERROR NOT INITIALIZED DB YET
         }
-        mCurrUserMessagesDatabaseReference = API.getCurrUserRef().child("messages");
+        chatUids = new HashMap<>();
+        mMessagesDatabaseReference = API.mFirebaseDatabase.getReference().child("messages");
     }
 
     public static void sendChatMessage(String toUid, String text){
         ChatMessage msg = new ChatMessage(API.currUserUid, toUid, text);
-        mCurrUserMessagesDatabaseReference.child(toUid).push().setValue(msg);
-        getUserMsgRefById(toUid).child(API.currUserUid).push().setValue(msg);
+        getMsgRefById(toUid).push().setValue(msg);
+        API.getUserRef(toUid).child("msgTracker").child(API.currUserUid).setValue(false);
+//        mCurrUserMessagesDatabaseReference.child(toUid).push().setValue(msg);
+//        getUserMsgRefById(toUid).child(API.currUserUid).push().setValue(msg);
     }
 
 
-    private static DatabaseReference getUserMsgRefById(String uid){
-        return API.getUserRef(uid).child("messages");
+    public static DatabaseReference getMsgRefById(String otherUserUid){
+        String chatUid = getCurrChatUid(otherUserUid);
+        return mMessagesDatabaseReference.child(chatUid);
     }
 
-
-
-//    private void attachDatabaseReadListener() {
-//        if (mChildEventListener == null) {
-//            mChildEventListener = new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
-//                    mMessageAdapter.add(chatMessage);
-//                }
-//
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                }
-//
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            };
-//            mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-//        }
-//    }
-//
-//    private void detachDatabaseReadListener() {
-//        if (mChildEventListener != null) {
-//            mMessagesDatabaseReference.removeEventListener(mChildEventListener);
-//            mChildEventListener = null;
-//        }
-//    }
+    public static String getCurrChatUid(String otherUserUid){
+        if (chatUids.containsKey(otherUserUid)){
+            return chatUids.get(otherUserUid);
+        }
+        String firstId;
+        String secondId;
+        if (API.currUserUid.compareTo(otherUserUid)>0){
+            firstId = API.currUserUid;
+            secondId = otherUserUid;
+        } else {
+            firstId = otherUserUid;
+            secondId = API.currUserUid;
+        }
+        String chatId = firstId + secondId;
+        chatUids.put(otherUserUid, chatId);
+        return chatId;
+    }
 }

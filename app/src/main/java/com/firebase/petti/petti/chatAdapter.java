@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.ChatMessage;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class chatAdapter extends ArrayAdapter<ChatMessage> {
 
             TextView chatView = (TextView) v.findViewById(R.id.rowTextView);
             chatView.setText(p.getText());
-            if (p.getFromUid() == getMyUid())
+            if (API.isMyUid(p.getFromUid()))
                 chatView.setBackgroundColor(Color.parseColor("#FFFFFF"));
             else
                 chatView.setBackgroundColor(Color.parseColor("#009900"));
@@ -53,8 +54,4 @@ public class chatAdapter extends ArrayAdapter<ChatMessage> {
 
         return v;
     }
-     public String getMyUid()
-     {
-         return "amir";
-     }
 }
