@@ -35,6 +35,15 @@
         <item name="colorAccent">#FF4081</item>
     </style>
 
+    <style name="Our.Button" parent="tw__Button">
+        <item name="colorPrimaryDark">#512DA8</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/tw__login_btn_text_size</item>
+        <item name="android:textColor">@color/tw__solid_white</item>
+        <item name="android:paddingLeft">@dimen/tw__login_btn_left_padding</item>
+        <item name="android:paddingRight">@dimen/tw__login_btn_right_padding</item>
+    </style>
+
     <style name="PreferenceThemeOverlay">
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
         <item name="preferenceFragmentStyle">@style/PreferenceFragment</item>
@@ -44,7 +53,8 @@
         <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference</item>
         <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat</item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
-        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference</item>
+        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference
+        </item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
     </style>
 </resources>

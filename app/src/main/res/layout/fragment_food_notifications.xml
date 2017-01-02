@@ -56,7 +56,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/bought_it" />
+            android:text="@string/bought_it"
+            android:background="@drawable/our_button"
+            android:textColor="@color/tw__light_gray"/>
 
     </LinearLayout>
 

@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +43,10 @@ public class MatchesFragment extends Fragment {
 
     View rootView;
 
+    private static final String tag = "***MATCHES-FRAGMENT***";
+
     GridViewAdapter mMatchesAdapter;
+    FetchMatchesTask matchesTask;
     boolean bark;
     int mRadius;
 
@@ -73,13 +77,6 @@ public class MatchesFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
                 getActivity().finish();
             }
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-
-            // \n is for new line
-            Toast.makeText(getActivity(),
-                    "Your Location is - \nLat: " + latitude + "\nLong: " + longitude,
-                    Toast.LENGTH_LONG).show();
         } else {
             // can't get location
             // GPS or Network is not enabled
@@ -109,19 +106,16 @@ public class MatchesFragment extends Fragment {
         searchingView.setVisibility(View.VISIBLE);
 
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
-        bark = getArguments().getBoolean("bark");
-        Toast.makeText(getActivity(),
-                "Bark is: " + bark,
-                Toast.LENGTH_LONG).show();
-
+        if(getArguments().isEmpty()){
+            bark = false;
+        } else {
+            bark = getArguments().getBoolean("bark");
+        }
         gridView.setAdapter(mMatchesAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                String dogName = mMatchesAdapter.getName(position);
-                Toast.makeText(getActivity(), dogName, Toast.LENGTH_SHORT).show();
 
                 User selected = mMatchesAdapter.getItem(position);
 
@@ -136,7 +130,7 @@ public class MatchesFragment extends Fragment {
     }
 
     private void updateMatches() {
-        FetchMatchesTask matchesTask = new FetchMatchesTask();
+        matchesTask = new FetchMatchesTask();
         matchesTask.execute();
     }
 
@@ -148,8 +142,9 @@ public class MatchesFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        matchesTask.cancel(true);
         API.detachNearbyUsersListener();
+        super.onDestroy();
     }
 
     @Override
@@ -159,9 +154,7 @@ public class MatchesFragment extends Fragment {
 //            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
         String s = pref.getString("matchDistance", "1");
         int radius = Integer.parseInt(s);
-        if(radius < 0 || radius > 20){
-
-        } else if (radius != mRadius) {
+        if (radius != mRadius) {
             mRadius = radius;
             API.detachNearbyUsersListener();
             API.attachNearbyUsersListener(location, mRadius);
@@ -212,19 +205,24 @@ public class MatchesFragment extends Fragment {
 
     private class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
 
+        private static final String tag = "FETCH-MATCHES-TASK";
+
         @Override
 
         protected ArrayList<User> doInBackground(Void... voids) {
             int timeout = 10; // five seconds of timeout until we decide there are no matches
             do {
                 try {
-                    Thread.sleep(1000);
+                    if(isCancelled()) {
+                        return new ArrayList<>();
+                    } else {
+                        Thread.sleep(1000);
+                    }
                 } catch (InterruptedException ex){
-
+                    return new ArrayList<>();
                 }
             }
-            while (!API.queryReady && timeout-- != 0);
-//            API.queryReady = false;
+            while (timeout-- != 0 && !API.queryReady);
 
             ArrayList<User> mMatchesArray = new ArrayList<>();
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
@@ -237,6 +235,13 @@ public class MatchesFragment extends Fragment {
                 }
                 userCandidate.setTempUid(item.getKey());
                 mMatchesArray.add(userCandidate);
+                if(isCancelled()){
+                    return new ArrayList<>();
+                }
+            }
+
+            if (timeout !=0 && mMatchesArray.isEmpty()){
+                Log.d(tag, "in 'timeout !=0 && mMatchesArray.isEmpty()' - timeout: " + timeout);
             }
 
 
@@ -246,6 +251,10 @@ public class MatchesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<User> result) {
+
+            if (isCancelled()){
+                return;
+            }
 
             GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
             TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);

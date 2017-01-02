@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -377,11 +378,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DogRegistrationActivity.class);
         startActivity(intent);
 
-    }
-
-    public void EditDogProfile(View view) {
-        Intent intent = new Intent(this, DogRegistrationActivity.class);
-        intent.putExtra("edit",true);
-        startActivity(intent);
     }
 }

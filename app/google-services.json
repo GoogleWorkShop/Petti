@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "862897918179-mg73v12eg9qho57sgd1vllclu1vjcpmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebase.petti.petti",
+            "certificate_hash": "4D9555A7B4F9E296BDCFEC2C286BD04BEBC4AA73"
+          }
+        },
+        {
           "client_id": "862897918179-8q6nooa97rsmgj71kij811g8l939jo9d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
