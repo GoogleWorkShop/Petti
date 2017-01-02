@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +25,11 @@ import java.util.List;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User.Owner;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 
 public class UserRegistrationActivitey extends AppCompatActivity {
@@ -220,20 +226,33 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Get the path from the Uri
-                    String path = getPathFromURI(selectedImageUri);
-                    Log.i(TAG, "Image Path : " + path);
-                    // Set the image in ImageView
-                    userImage.setImageURI(selectedImageUri);
-
+        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
+            // Get the url from data
+            Uri selectedImageUri = data.getData();
+            StorageReference photoRef = API.mOwnerPhotos
+                    .child(API.currUserUid)
+                    .child(selectedImageUri.getLastPathSegment());
+            // Upload file to Firebase Storage
+            UploadTask uploadImageTask = photoRef.putFile(selectedImageUri);
+            uploadImageTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // When the image has successfully uploaded, we get its download URL
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    currOwnerData.setPhotoUrl(downloadUrl.toString());
+                    setDogImage();
                 }
-            }
+            })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                        }
+                    });
         }
+    }
+
+    private void setDogImage() {
+        Picasso.with(userImage.getContext()).load(currOwnerData.getPhotoUrl()).into(userImage);
     }
 
     public void genderSelection(View view) {

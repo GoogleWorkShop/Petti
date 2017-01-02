@@ -3,6 +3,7 @@ package com.firebase.petti.db.classes;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yahav on 12/26/2016.
@@ -12,6 +13,8 @@ public class User implements Serializable{
 
     private Dog dog;
     private Owner owner;
+
+    private Map<String, Boolean> msgTracker;
 
     private Long lastLocationTime;
 
@@ -24,6 +27,14 @@ public class User implements Serializable{
         this.owner = new Owner();
         this.owner.setName(name);
         this.owner.mail = mail;
+    }
+
+    public Map<String, Boolean> getMsgTracker() {
+        return msgTracker;
+    }
+
+    public void setMsgTracker(Map<String, Boolean> msgTracker) {
+        this.msgTracker = msgTracker;
     }
 
     public Long getLastLocationTime() {
