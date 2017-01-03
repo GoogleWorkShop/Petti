@@ -81,6 +81,7 @@ public class MatchedDogFragment extends Fragment {
 
         final Button showOwnerBtn = (Button) rootView.findViewById(R.id.show_owner_btn);
         final Button showDogBtn = (Button) rootView.findViewById(R.id.show_dog_btn);
+        final Button addAsFriendBtn = (Button) rootView.findViewById(R.id.add_as_friend_btn);
         final ListView dogDetail = (ListView) rootView.findViewById(R.id.matched_dog_detail);
         dogDetail.setAdapter(mDogDetailsAdapter);
         final ListView ownerDetail = (ListView) rootView.findViewById(R.id.matched_dog_owner_detail);
@@ -103,6 +104,13 @@ public class MatchedDogFragment extends Fragment {
                 ownerDetail.setVisibility(View.GONE);
                 showDogBtn.setVisibility(View.GONE);
                 dogDetail.setVisibility(View.VISIBLE);
+            }
+        });
+        addAsFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO YAHAV insert code here
+                return;
             }
         });
 
