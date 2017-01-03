@@ -11,7 +11,7 @@ import com.firebase.petti.petti.utils.RVAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class matched_friends extends Activity {
+public class MatchedFriendsActivity extends Activity {
 
     private List<Friend> persons;
     private RecyclerView rv;
