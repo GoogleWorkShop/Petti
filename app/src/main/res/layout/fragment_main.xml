@@ -12,7 +12,7 @@
         android:layout_gravity="center"
         android:layout_width="320dp"
         android:background="@drawable/our_button"
-        android:textColor="@color/tw__light_gray"/>
+        android:textColor="@color/tw__composer_white"/>
 
     <Button
         android:id="@+id/find_walk_partners"
@@ -24,6 +24,6 @@
         android:layout_marginTop="53dp"
         android:layout_width="320dp"
         android:background="@drawable/our_button"
-        android:textColor="@color/tw__light_gray"/>
+        android:textColor="@color/tw__composer_white"/>
 
 </RelativeLayout>

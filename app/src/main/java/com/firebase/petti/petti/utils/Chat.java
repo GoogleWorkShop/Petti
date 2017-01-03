@@ -1,4 +1,4 @@
-package com.firebase.petti.petti;
+package com.firebase.petti.petti.utils;
 
 /**
  * Created by Ashu on 20/11/15.
@@ -10,10 +10,10 @@ public class Chat {
 
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
-    private Chat() {
+    public Chat() {
     }
 
-    Chat(String message, String author) {
+    public Chat(String message, String author) {
         this.message = message;
         this.author = author;
     }

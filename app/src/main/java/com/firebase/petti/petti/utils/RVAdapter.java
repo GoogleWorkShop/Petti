@@ -1,11 +1,8 @@
-package com.firebase.petti.petti;
+package com.firebase.petti.petti.utils;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.CardView;
 
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
+import com.firebase.petti.petti.R;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
+import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
@@ -55,7 +52,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     List<Friend> persons;
 
-    RVAdapter(List<Friend> persons){
+    public RVAdapter(List<Friend> persons){
         this.persons = persons;
     }
 

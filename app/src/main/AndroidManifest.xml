@@ -27,21 +27,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".BarkActivity"
-            android:label="@string/bark"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.firebase.petti.petti.MainActivity" />
-        </activity>
         <activity android:name=".DogRegistrationActivity" />
         <activity
             android:name=".NeighborDogsActivity"
             android:label="@string/title_activity_neighbor_dogs"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.firebase.petti.petti.MainActivity" />
@@ -57,7 +49,7 @@
             android:name=".matched_friends"
             android:label="@string/app_name"></activity>
 
-          <activity android:name=".user_chat">
+          <activity android:name=".UserChatActivity">
            
 
         </activity>
