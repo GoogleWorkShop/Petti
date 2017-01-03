@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,8 +18,6 @@ import com.firebase.petti.db.classes.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 /**
@@ -59,7 +55,7 @@ public class MatchedDogFragment extends Fragment {
         startChatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), user_chat.class);
+                Intent myIntent = new Intent(getActivity(), UserChatActivity.class);
                 user.getTempUid();
                 String message =    user.getTempUid();
                 myIntent.putExtra("USER_ID", message);

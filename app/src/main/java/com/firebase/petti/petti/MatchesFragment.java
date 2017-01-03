@@ -181,12 +181,6 @@ public class MatchesFragment extends Fragment {
                 fragmentManager.beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)
                         .addToBackStack( "tag" ).commit();
                 return true;
-            case android.R.id.home:
-                if(getActivity().getClass() == BarkActivity.class) {
-                    getFragmentManager().popBackStack();
-                    return true;
-                }
-                return super.onOptionsItemSelected(item);
             default:
                 return super.onOptionsItemSelected(item);
         }

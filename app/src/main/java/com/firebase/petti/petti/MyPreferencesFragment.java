@@ -101,10 +101,7 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
             Fragment fragment = null;
             Class fragmentClass;
             int container;
-            if(getActivity().getClass() == BarkActivity.class) {
-                fragmentClass = BarkFragment.class;
-                container = R.id.bark_container;
-            } else if(getActivity().getClass() == NeighborDogsActivity.class) {
+            if(getActivity().getClass() == NeighborDogsActivity.class) {
                 fragmentClass = MatchesFragment.class;
                 container = R.id.neighbor_container;
             } else {

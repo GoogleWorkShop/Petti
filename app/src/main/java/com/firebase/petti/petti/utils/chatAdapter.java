@@ -1,4 +1,4 @@
-package com.firebase.petti.petti;
+package com.firebase.petti.petti.utils;
 
 import android.content.ClipData;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.ChatMessage;
+import com.firebase.petti.petti.R;
 
 import java.util.List;
 

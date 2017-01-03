@@ -1,10 +1,7 @@
 package com.firebase.petti.petti;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -17,18 +14,19 @@ import android.widget.ImageButton;
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.ChatApi;
 import com.firebase.petti.db.classes.ChatMessage;
+import com.firebase.petti.petti.R;
+import com.firebase.petti.petti.utils.chatAdapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
 
-public class user_chat extends AppCompatActivity {
+public class UserChatActivity extends AppCompatActivity {
     private ListView mainListView ;
     private String otherUserId;
     private ArrayAdapter<String> listAdapter ;
