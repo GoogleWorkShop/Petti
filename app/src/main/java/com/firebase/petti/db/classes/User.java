@@ -20,6 +20,9 @@ public class User implements Serializable{
 
     private String tempUid;
 
+    private Double tempLongtitude;
+    private Double tempLatitude;
+
     public User(){
     }
 
@@ -52,6 +55,14 @@ public class User implements Serializable{
     public void setTempUid(String tempUid) {
         this.tempUid = tempUid;
     }
+
+    public Double getTempLatitude() { return tempLatitude; }
+
+    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
+
+    public Double getTempLongtitude() { return tempLongtitude; }
+
+    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
 
     public Dog getDog(){
         return this.dog;

@@ -29,8 +29,11 @@ import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
+import com.google.android.gms.plus.model.people.Person;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import java.util.Map;
@@ -238,10 +241,39 @@ public class MatchesFragment extends Fragment {
                 Log.d(tag, "in 'timeout !=0 && mMatchesArray.isEmpty()' - timeout: " + timeout);
             }
 
+            // sort list by distance to current user
+            Collections.sort(mMatchesArray, new MatchedUserComparator());
+
+            //put friends before non-friends
+            ArrayList<User> tmpFriendsListByLocation = new ArrayList<>();
+            ArrayList<User> tmpNotFriendsListByLocation = new ArrayList<>();
+            for (User user : mMatchesArray){
+                if (API.isMatchedWith(user.getTempUid())){
+                    tmpFriendsListByLocation.add(user);
+                }else{
+                    tmpNotFriendsListByLocation.add(user);
+                }
+            }
+            mMatchesArray = new ArrayList<>(tmpFriendsListByLocation);
+            mMatchesArray.addAll(tmpNotFriendsListByLocation);
 
             return mMatchesArray;
         }
 
+        class MatchedUserComparator implements Comparator<User> {
+            @Override
+            public int compare(User a, User b) {
+                Location aLoacation = new Location("");
+                aLoacation.setLatitude(a.getTempLatitude());
+                aLoacation.setLongitude(a.getTempLongtitude());
+
+                Location bLoacation = new Location("");
+                bLoacation.setLatitude(b.getTempLatitude());
+                bLoacation.setLongitude(b.getTempLongtitude());
+
+                return Math.round(location.distanceTo(aLoacation) - location.distanceTo(bLoacation));
+            }
+        }
 
         @Override
         protected void onPostExecute(ArrayList<User> result) {

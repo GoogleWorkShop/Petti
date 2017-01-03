@@ -8,12 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import com.firebase.petti.petti.utils.Friend;
 import com.firebase.petti.petti.utils.RVAdapter;
 
+import com.firebase.petti.db.classes.User.Dog;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchedFriendsActivity extends Activity {
 
-    private List<Friend> persons;
+    private List<Dog> mFriends;
+    private RVAdapter mAdapter;
     private RecyclerView rv;
 
     @Override
@@ -28,22 +31,15 @@ public class MatchedFriendsActivity extends Activity {
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
-        initializeData();
-        initializeAdapter();
+        mFriends = new ArrayList<>();
+        mAdapter = new RVAdapter(mFriends);
+        rv.setAdapter(mAdapter);
+
+//        initializeData();
+//        initializeAdapter();
     }
 
-    private void initializeData(){
-        persons = new ArrayList<>();
-        persons.add(new Friend("roee", "23 years old", R.drawable.emma));
-        persons.add(new Friend("yahav", "25 years old", R.drawable.lavery));
-        persons.add(new Friend("nir", "35 years old", R.drawable.lillie));
-        persons.add(new Friend("amir", "23 years old", R.drawable.emma));
-        persons.add(new Friend("amir 2", "25 years old", R.drawable.lavery));
-        persons.add(new Friend("Lillie Watts", "35 years old", R.drawable.lillie));
-    }
+//        adapter.persons.add(new Friend("yahav", "25 years old", R.drawable.lavery));
+//        adapter.notifyItemInserted(persons.size() - 1);
 
-    private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(persons);
-        rv.setAdapter(adapter);
-    }
 }

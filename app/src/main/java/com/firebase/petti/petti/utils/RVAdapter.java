@@ -1,8 +1,11 @@
 package com.firebase.petti.petti.utils;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.CardView;
 
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
@@ -50,10 +57,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     }
 
-    List<Friend> persons;
+    List<Dog> mFriends;
 
-    public RVAdapter(List<Friend> persons){
-        this.persons = persons;
+    RVAdapter(List<Dog> mFriends){
+        this.mFriends = mFriends;
     }
 
     @Override
@@ -70,13 +77,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.personPhoto.setImageResource(persons.get(i).photoId);
+        Dog currDogData = mFriends.get(i);
+        personViewHolder.personName.setText(currDogData.getName());
+        personViewHolder.personAge.setText(currDogData.getAge());
+        ImageView petImage = personViewHolder.personPhoto;
+        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
+
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return mFriends.size();
     }
 }

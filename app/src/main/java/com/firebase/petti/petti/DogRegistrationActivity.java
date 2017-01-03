@@ -229,7 +229,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
 //                // Set the image in ImageView
 //                petImage.setImageURI(selectedImageUri);
 //            }
-            Uri selectedImageUri = data.getData();
+            final Uri selectedImageUri = data.getData();
+            petImage.setImageURI(selectedImageUri);
             StorageReference photoRef = API.mPetPhotos
                     .child(API.currUserUid)
                     .child(selectedImageUri.getLastPathSegment());
@@ -240,12 +241,13 @@ public class DogRegistrationActivity extends AppCompatActivity {
                     // When the image has successfully uploaded, we get its download URL
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     currDogData.setPhotoUrl(downloadUrl.toString());
-                    setDogImage();
+//                    setDogImage();
                 }
             })
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
+//                            petImage.
                             // Handle unsuccessful uploads
                         }
                     });

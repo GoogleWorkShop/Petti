@@ -157,7 +157,11 @@ public class API {
             mLocationsListener = new GeoQueryEventListener() {
                 @Override
                 public void onKeyEntered(String key, GeoLocation location) {
+
                     final String userId = key;
+                    final double userLongtitude = location.longitude;
+                    final double userLatitude = location.latitude;
+
                     queryReady = false;
                     if (!userId.equals(currUserUid)) {
                         ValueEventListener userLocationListener = new ValueEventListener() {
@@ -166,6 +170,8 @@ public class API {
                                 // Get Post object and use the values to update the UI
 //                                Dog dog = dataSnapshot.getValue(Dog.class);
                                 User user = dataSnapshot.getValue(User.class);
+                                user.setTempLatitude(userLatitude);
+                                user.setTempLongtitude(userLongtitude);
 //                                String[] ownerDetails = new String[]{userId, dog.getName(), dog.getPhotoUrl()};
                                 try {
                                     nearbyUsers.put(userId, user);
