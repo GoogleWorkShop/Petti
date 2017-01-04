@@ -5,15 +5,23 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.firebase.petti.petti.utils.Friend;
+import com.firebase.petti.db.API;
 import com.firebase.petti.petti.utils.RVAdapter;
+
+import com.firebase.petti.db.classes.User.Dog;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MatchedFriendsActivity extends Activity {
 
-    private List<Friend> persons;
+    private List<Dog> mFriends;
+    private RVAdapter mAdapter;
     private RecyclerView rv;
 
     @Override
@@ -28,22 +36,38 @@ public class MatchedFriendsActivity extends Activity {
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
-        initializeData();
-        initializeAdapter();
+        mFriends = new ArrayList<>();
+        mAdapter = new RVAdapter(mFriends);
+        rv.setAdapter(mAdapter);
+
+        Map<String, Boolean> msgTracker = API.currUserData.getMsgTracker();
+        if (msgTracker != null && msgTracker.size() > 0){
+            Set<String> friendsSet = msgTracker.keySet();
+            API.mDatabaseUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (String friendUid: API.currUserData.getMsgTracker().keySet()){
+                        DataSnapshot currFriend = dataSnapshot.child(friendUid);
+                        if (currFriend.exists() && currFriend.hasChild("dog")){
+                            Dog currDogData = currFriend.child("dog").getValue(Dog.class);
+                            mAdapter.mFriends.add(currDogData);
+                            mAdapter.notifyItemInserted(mFriends.size() - 1);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+//        initializeData();
+//        initializeAdapter();
     }
 
-    private void initializeData(){
-        persons = new ArrayList<>();
-        persons.add(new Friend("roee", "23 years old", R.drawable.emma));
-        persons.add(new Friend("yahav", "25 years old", R.drawable.lavery));
-        persons.add(new Friend("nir", "35 years old", R.drawable.lillie));
-        persons.add(new Friend("amir", "23 years old", R.drawable.emma));
-        persons.add(new Friend("amir 2", "25 years old", R.drawable.lavery));
-        persons.add(new Friend("Lillie Watts", "35 years old", R.drawable.lillie));
-    }
+//        adapter.persons.add(new Friend("yahav", "25 years old", R.drawable.lavery));
+//        adapter.notifyItemInserted(persons.size() - 1);
 
-    private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(persons);
-        rv.setAdapter(adapter);
-    }
 }

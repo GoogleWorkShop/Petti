@@ -151,6 +151,11 @@ public class MainActivity extends AppCompatActivity {
                 dogIntent.putExtra("edit",true);
                 startActivityForResult(dogIntent,0);
                 return;
+            case R.id.friends:
+                Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
+                startActivity(chatFriendsIntent);
+                return;
+
 
 
             default:
