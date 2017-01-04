@@ -14,6 +14,8 @@ public class User implements Serializable{
     private Dog dog;
     private Owner owner;
 
+    // map of format: <FriendUid, isViewed>
+    // isViewed: This will be true if we have seen all messages from that friend
     private Map<String, Boolean> msgTracker;
 
     private Long lastLocationTime;

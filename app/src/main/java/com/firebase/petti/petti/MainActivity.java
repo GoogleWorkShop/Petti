@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(dogIntent,0);
                 return;
             case R.id.friends:
-                Intent chatFriendsIntent = new Intent(this, matched_friends.class);
+                Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
                 return;
 
