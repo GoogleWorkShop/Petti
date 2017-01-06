@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/image"
+    <FrameLayout
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/anonymous_prpl"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="23dp"
+            app:srcCompat="@drawable/dog_friend_burned"
+            android:id="@+id/friend_indicator"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/text"
@@ -18,6 +35,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:textSize="12sp" />
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textSize="12sp"/>
 
 </LinearLayout>

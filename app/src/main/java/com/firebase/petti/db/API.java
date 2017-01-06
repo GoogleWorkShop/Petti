@@ -151,12 +151,14 @@ public class API {
 
         addLocation(geoLoc, location.getTime());
 
+        final Location myLocation = location;
+
         if (geoQuery == null) {
             geoQuery = geoFire.queryAtLocation(geoLoc, radius);
 
             mLocationsListener = new GeoQueryEventListener() {
                 @Override
-                public void onKeyEntered(String key, GeoLocation location) {
+                public void onKeyEntered(String key, final GeoLocation location) {
 
                     final String userId = key;
                     final double userLongtitude = location.longitude;
@@ -170,8 +172,10 @@ public class API {
                                 // Get Post object and use the values to update the UI
 //                                Dog dog = dataSnapshot.getValue(Dog.class);
                                 User user = dataSnapshot.getValue(User.class);
-                                user.setTempLatitude(userLatitude);
-                                user.setTempLongtitude(userLongtitude);
+                                Float distanceFromMe = calcDistanceTo(myLocation, userLatitude, userLongtitude);
+                                user.setTempDistanceFromMe(distanceFromMe);
+//                                user.setTempLatitude(userLatitude);
+//                                user.setTempLongtitude(userLongtitude);
 //                                String[] ownerDetails = new String[]{userId, dog.getName(), dog.getPhotoUrl()};
                                 try {
                                     nearbyUsers.put(userId, user);
@@ -236,6 +240,18 @@ public class API {
 
     public static boolean isMatchedWith(String uid){
         return (currUserData.getMsgTracker() != null &&
+                uid != null &&
                 currUserData.getMsgTracker().containsKey(uid));
+    }
+
+    public static Map<String, Boolean> getCurrMsgTracker(){
+        return currUserData.getMsgTracker();
+    }
+
+    private static float calcDistanceTo(Location myLoc, double otherLat, double otherLon){
+        Location otherLoacation = new Location("");
+        otherLoacation.setLatitude(otherLat);
+        otherLoacation.setLongitude(otherLon);
+        return myLoc.distanceTo(otherLoacation);
     }
 }

@@ -20,10 +20,12 @@ public class User implements Serializable{
 
     private Long lastLocationTime;
 
+    // These members are set only in the java realm. they are always null in the db
     private String tempUid;
+    private Float tempDistanceFromMe;
 
-    private Double tempLongtitude;
-    private Double tempLatitude;
+//    private Double tempLongtitude;
+//    private Double tempLatitude;
 
     public User(){
     }
@@ -33,6 +35,30 @@ public class User implements Serializable{
         this.owner.setName(name);
         this.owner.mail = mail;
     }
+
+    public Float getTempDistanceFromMe() {
+        return tempDistanceFromMe;
+    }
+
+    public void setTempDistanceFromMe(Float tempDistanceFromMe) {
+        this.tempDistanceFromMe = tempDistanceFromMe;
+    }
+
+    public String getTempUid() {
+        return tempUid;
+    }
+
+    public void setTempUid(String tempUid) {
+        this.tempUid = tempUid;
+    }
+
+//    public Double getTempLatitude() { return tempLatitude; }
+//
+//    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
+//
+//    public Double getTempLongtitude() { return tempLongtitude; }
+//
+//    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
 
     public Map<String, Boolean> getMsgTracker() {
         return msgTracker;
@@ -49,22 +75,6 @@ public class User implements Serializable{
     public void setLastLocationTime(Long lastLocationTime) {
         this.lastLocationTime = lastLocationTime;
     }
-
-    public String getTempUid() {
-        return tempUid;
-    }
-
-    public void setTempUid(String tempUid) {
-        this.tempUid = tempUid;
-    }
-
-    public Double getTempLatitude() { return tempLatitude; }
-
-    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
-
-    public Double getTempLongtitude() { return tempLongtitude; }
-
-    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
 
     public Dog getDog(){
         return this.dog;

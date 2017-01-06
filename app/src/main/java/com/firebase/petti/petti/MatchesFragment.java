@@ -109,10 +109,14 @@ public class MatchesFragment extends Fragment {
         searchingView.setVisibility(View.VISIBLE);
 
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
-        if(getArguments().isEmpty()){
-            bark = false;
-        } else {
-            bark = getArguments().getBoolean("bark");
+
+        //TODO: Yahav: this returns null after we go to settings and back
+        if (getArguments() != null) {
+            if (getArguments().isEmpty()) {
+                bark = false;
+            } else {
+                bark = getArguments().getBoolean("bark");
+            }
         }
         gridView.setAdapter(mMatchesAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -244,34 +248,43 @@ public class MatchesFragment extends Fragment {
             // sort list by distance to current user
             Collections.sort(mMatchesArray, new MatchedUserComparator());
 
-            //put friends before non-friends
-            ArrayList<User> tmpFriendsListByLocation = new ArrayList<>();
-            ArrayList<User> tmpNotFriendsListByLocation = new ArrayList<>();
-            for (User user : mMatchesArray){
-                if (API.isMatchedWith(user.getTempUid())){
-                    tmpFriendsListByLocation.add(user);
-                }else{
-                    tmpNotFriendsListByLocation.add(user);
-                }
-            }
-            mMatchesArray = new ArrayList<>(tmpFriendsListByLocation);
-            mMatchesArray.addAll(tmpNotFriendsListByLocation);
-
+//            //put friends before non-friends
+//            ArrayList<User> tmpFriendsListByLocation = new ArrayList<>();
+//            ArrayList<User> tmpNotFriendsListByLocation = new ArrayList<>();
+//            for (User user : mMatchesArray){
+//                if (API.isMatchedWith(user.getTempUid())){
+//                    tmpFriendsListByLocation.add(user);
+//                }else{
+//                    tmpNotFriendsListByLocation.add(user);
+//                }
+//            }
+//            mMatchesArray = new ArrayList<>(tmpFriendsListByLocation);
+//            mMatchesArray.addAll(tmpNotFriendsListByLocation);
             return mMatchesArray;
         }
 
         class MatchedUserComparator implements Comparator<User> {
             @Override
             public int compare(User a, User b) {
-                Location aLoacation = new Location("");
-                aLoacation.setLatitude(a.getTempLatitude());
-                aLoacation.setLongitude(a.getTempLongtitude());
 
-                Location bLoacation = new Location("");
-                bLoacation.setLatitude(b.getTempLatitude());
-                bLoacation.setLongitude(b.getTempLongtitude());
+                boolean aFriend = API.isMatchedWith(a.getTempUid());
+                boolean bFriend = API.isMatchedWith(b.getTempUid());
 
-                return Math.round(location.distanceTo(aLoacation) - location.distanceTo(bLoacation));
+                if (aFriend ^ bFriend){
+                    return aFriend ? -1: 1;
+                }
+
+                float aDist = a.getTempDistanceFromMe();
+                float bDist = b.getTempDistanceFromMe();
+
+                if (aDist > bDist){
+                    return 1;
+                } else if (aDist == bDist){
+                    return 0;
+                } else {
+                    return -1;
+                }
+
             }
         }
 

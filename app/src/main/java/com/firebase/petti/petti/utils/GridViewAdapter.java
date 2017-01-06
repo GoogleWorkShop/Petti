@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.R;
 import com.squareup.picasso.Picasso;
@@ -43,8 +44,17 @@ public class GridViewAdapter extends ArrayAdapter {
         return mMatchesArray.get(position).getDog().getName();
     }
 
+    public String getDistanceTo(int position){
+        float toKM = mMatchesArray.get(position).getTempDistanceFromMe() / 1000;
+        return String.format("%.1f km", toKM);
+    }
+
     public String getImage(int position){
         return mMatchesArray.get(position).getDog().getPhotoUrl();
+    }
+
+    public boolean isFriend(int position){
+        return API.isMatchedWith(mMatchesArray.get(position).getTempUid());
     }
 
     public User getItem(int position) {
@@ -62,7 +72,9 @@ public class GridViewAdapter extends ArrayAdapter {
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
             holder.imageTitle = (TextView) row.findViewById(R.id.text);
+            holder.distance = (TextView) row.findViewById(R.id.distance);
             holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.friendIndicator = (ImageView) row.findViewById(R.id.friend_indicator);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -70,9 +82,17 @@ public class GridViewAdapter extends ArrayAdapter {
 
         String url  = getImage(position);
         String name = getName(position);
+        String distanceTo = getDistanceTo(position);
 
         holder.imageTitle.setText(name);
-        Picasso.with(mContext).load(url).into(holder.image);
+        holder.distance.setText(distanceTo);
+//        Picasso.with(mContext).load(url).into(holder.image);
+        ImageLoaderUtils.setImage(url, holder.image);
+        if (isFriend(position)) {
+            holder.friendIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.friendIndicator.setVisibility(View.GONE);
+        }
 
         return row;
     }
@@ -99,6 +119,8 @@ public class GridViewAdapter extends ArrayAdapter {
 
     static class ViewHolder {
         TextView imageTitle;
+        TextView distance;
         ImageView image;
+        ImageView friendIndicator;
     }
 }

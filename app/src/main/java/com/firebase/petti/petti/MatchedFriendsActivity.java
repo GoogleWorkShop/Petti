@@ -40,7 +40,7 @@ public class MatchedFriendsActivity extends Activity {
         mAdapter = new RVAdapter(mFriends);
         rv.setAdapter(mAdapter);
 
-        Map<String, Boolean> msgTracker = API.currUserData.getMsgTracker();
+        Map<String, Boolean> msgTracker = API.getCurrMsgTracker();
         if (msgTracker != null && msgTracker.size() > 0){
             Set<String> friendsSet = msgTracker.keySet();
             API.mDatabaseUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
