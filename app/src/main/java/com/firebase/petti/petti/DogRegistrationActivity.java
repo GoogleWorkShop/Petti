@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User.Dog;
+import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
@@ -189,9 +190,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
                 preferdPartnersText.setText(preferedPartners);
             }
 
-
-
-
             dogType = currDogData.getType();
             if (dogType != null) {
                 dog_type_spinner.setSelection(typeAdapter.getPosition(dogType));
@@ -205,6 +203,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
                 dog_charater[0] = dogCharacters.get(0);
             }
 
+            setDogImage();
+
         }
 
 
@@ -213,7 +213,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
     public void uploadImageMethod(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/jpeg");
+        intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
@@ -247,19 +247,22 @@ public class DogRegistrationActivity extends AppCompatActivity {
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-//                            petImage.
                             // Handle unsuccessful uploads
+                            uploadImageFailedToast();
+                            setDogImage();
                         }
                     });
         }
     }
 
+    private void uploadImageFailedToast(){
+        Toast.makeText(this, "Failed to upload image..", Toast.LENGTH_SHORT).show();
+    }
+
     private void setDogImage() {
-        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
-//        petImage.setImageURI();
-//        Glide.with(petImage.getContext())
-//                .load(currDogData.getPhotoUrl())
-//                .into(petImage);
+        if (currDogData != null) {
+            ImageLoaderUtils.setImage(currDogData.getPhotoUrl(), petImage);
+        }
     }
 
     public void genderSelection(View view) {
