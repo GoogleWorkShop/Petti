@@ -10,7 +10,7 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:layout_margin="5dp"
         android:id="@+id/matched_dog_image"
         android:contentDescription="dogs image"

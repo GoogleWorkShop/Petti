@@ -13,11 +13,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
+import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -109,12 +113,37 @@ public class MatchedDogFragment extends Fragment {
         addAsFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO YAHAV insert code here
-                return;
+                Map<String, Boolean> msgsData = API.getCurrMsgTracker();
+                String friendUid = user.getTempUid();
+                if (msgsData != null && msgsData.containsKey(friendUid)){
+                    friendAlreadyAdded();
+                } else {
+                    API.getCurrUserRef().child("msgTracker").child(user.getTempUid()).setValue(true);
+                    friendAddedToast();
+                }
             }
         });
 
         return rootView;
+    }
+
+    private void friendToast(boolean isAdded){
+        String toastText;
+        String dogName = user.getDog().getName();
+        if (isAdded){
+            toastText = String.format("Added %s as friend successfully", dogName);
+        } else {
+            toastText = String.format("You and %s are already friends", dogName);
+        }
+        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+    }
+
+    private void friendAddedToast(){
+        friendToast(true);
+    }
+
+    private void friendAlreadyAdded(){
+        friendToast(false);
     }
 
     @Override
@@ -154,7 +183,8 @@ public class MatchedDogFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
-            Picasso.with(getActivity()).load(user.getDog().getPhotoUrl()).into(imageView);
+            ImageLoaderUtils.setImage(user.getDog().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
+//            Picasso.with(getActivity()).load(user.getDog().getPhotoUrl()).into(imageView);
             // New data is back from the server.  Hooray!
         }
 

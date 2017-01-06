@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
     }
 
