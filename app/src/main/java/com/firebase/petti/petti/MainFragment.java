@@ -111,7 +111,7 @@ public class MainFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED== getActivity().checkSelfPermission(perm));
+        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
     }
 
     // Callback with the request from calling requestPermissions

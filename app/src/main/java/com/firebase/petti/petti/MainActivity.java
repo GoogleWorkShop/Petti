@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.petti.utils.UtilsDBHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView nvDrawer;
     private MenuItem mainMenuItem;
     private TextView dogNameHederText;
+
+    //DB
+    public static UtilsDBHelper m_dbHelper;
+
 
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
@@ -67,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         API.initDatabaseApi();
         editUserProfile = false;
         editDogProfile = false;
+
+        m_dbHelper =  new UtilsDBHelper(this);
 
         dogNameHederText = (TextView) findViewById(R.id.dog_name_header); 
 
