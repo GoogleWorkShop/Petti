@@ -3,6 +3,7 @@ package com.firebase.petti.db.classes;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yahav on 12/26/2016.
@@ -13,9 +14,18 @@ public class User implements Serializable{
     private Dog dog;
     private Owner owner;
 
+    // map of format: <FriendUid, isViewed>
+    // isViewed: This will be true if we have seen all messages from that friend
+    private Map<String, Boolean> msgTracker;
+
     private Long lastLocationTime;
 
+    // These members are set only in the java realm. they are always null in the db
     private String tempUid;
+    private Float tempDistanceFromMe;
+
+//    private Double tempLongtitude;
+//    private Double tempLatitude;
 
     public User(){
     }
@@ -26,12 +36,12 @@ public class User implements Serializable{
         this.owner.mail = mail;
     }
 
-    public Long getLastLocationTime() {
-        return lastLocationTime;
+    public Float getTempDistanceFromMe() {
+        return tempDistanceFromMe;
     }
 
-    public void setLastLocationTime(Long lastLocationTime) {
-        this.lastLocationTime = lastLocationTime;
+    public void setTempDistanceFromMe(Float tempDistanceFromMe) {
+        this.tempDistanceFromMe = tempDistanceFromMe;
     }
 
     public String getTempUid() {
@@ -40,6 +50,30 @@ public class User implements Serializable{
 
     public void setTempUid(String tempUid) {
         this.tempUid = tempUid;
+    }
+
+//    public Double getTempLatitude() { return tempLatitude; }
+//
+//    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
+//
+//    public Double getTempLongtitude() { return tempLongtitude; }
+//
+//    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
+
+    public Map<String, Boolean> getMsgTracker() {
+        return msgTracker;
+    }
+
+    public void setMsgTracker(Map<String, Boolean> msgTracker) {
+        this.msgTracker = msgTracker;
+    }
+
+    public Long getLastLocationTime() {
+        return lastLocationTime;
+    }
+
+    public void setLastLocationTime(Long lastLocationTime) {
+        this.lastLocationTime = lastLocationTime;
     }
 
     public Dog getDog(){

@@ -5,23 +5,23 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
+import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import java.util.Map;
 
 
 /**
@@ -59,7 +59,7 @@ public class MatchedDogFragment extends Fragment {
         startChatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), user_chat.class);
+                Intent myIntent = new Intent(getActivity(), UserChatActivity.class);
                 user.getTempUid();
                 String message =    user.getTempUid();
                 myIntent.putExtra("USER_ID", message);
@@ -85,6 +85,7 @@ public class MatchedDogFragment extends Fragment {
 
         final Button showOwnerBtn = (Button) rootView.findViewById(R.id.show_owner_btn);
         final Button showDogBtn = (Button) rootView.findViewById(R.id.show_dog_btn);
+        final Button addAsFriendBtn = (Button) rootView.findViewById(R.id.add_as_friend_btn);
         final ListView dogDetail = (ListView) rootView.findViewById(R.id.matched_dog_detail);
         dogDetail.setAdapter(mDogDetailsAdapter);
         final ListView ownerDetail = (ListView) rootView.findViewById(R.id.matched_dog_owner_detail);
@@ -109,8 +110,40 @@ public class MatchedDogFragment extends Fragment {
                 dogDetail.setVisibility(View.VISIBLE);
             }
         });
+        addAsFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Boolean> msgsData = API.getCurrMsgTracker();
+                String friendUid = user.getTempUid();
+                if (msgsData != null && msgsData.containsKey(friendUid)){
+                    friendAlreadyAdded();
+                } else {
+                    API.getCurrUserRef().child("msgTracker").child(user.getTempUid()).setValue(true);
+                    friendAddedToast();
+                }
+            }
+        });
 
         return rootView;
+    }
+
+    private void friendToast(boolean isAdded){
+        String toastText;
+        String dogName = user.getDog().getName();
+        if (isAdded){
+            toastText = String.format("Added %s as friend successfully", dogName);
+        } else {
+            toastText = String.format("You and %s are already friends", dogName);
+        }
+        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+    }
+
+    private void friendAddedToast(){
+        friendToast(true);
+    }
+
+    private void friendAlreadyAdded(){
+        friendToast(false);
     }
 
     @Override
@@ -150,7 +183,8 @@ public class MatchedDogFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
-            Picasso.with(getActivity()).load(user.getDog().getPhotoUrl()).into(imageView);
+            ImageLoaderUtils.setImage(user.getDog().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
+//            Picasso.with(getActivity()).load(user.getDog().getPhotoUrl()).into(imageView);
             // New data is back from the server.  Hooray!
         }
 

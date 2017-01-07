@@ -4,7 +4,6 @@ package com.firebase.petti.db;
 import android.location.Location;
 import android.util.Log;
 
-
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -28,12 +27,14 @@ import java.util.Map;
 
 public class API {
 
-    private static FirebaseDatabase mFirebaseDatabase;
+    private static final String tag = "***FIREBASE API***";
+    protected static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseStorage mFirebaseStorage;
     public static GeoFire geoFire;
 
     public static DatabaseReference mDatabaseUsersRef;
     public static StorageReference mPetPhotos;
+    public static StorageReference mOwnerPhotos;
     public static DatabaseReference mDatabaseLocationsRef;
 
     private static ValueEventListener mUserEventListener;
@@ -51,8 +52,10 @@ public class API {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
 
+
         mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
         mPetPhotos = mFirebaseStorage.getReference().child("pet_photos");
+        mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
 
         mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
         geoFire = new GeoFire(mDatabaseLocationsRef);
@@ -60,6 +63,8 @@ public class API {
         queryReady = false;
 
         mUserEventListener = null;
+
+        ChatApi.initChatDb();
 
         currUserUid = null;
         currUserData = null;
@@ -146,13 +151,19 @@ public class API {
 
         addLocation(geoLoc, location.getTime());
 
+        final Location myLocation = location;
+
         if (geoQuery == null) {
             geoQuery = geoFire.queryAtLocation(geoLoc, radius);
 
             mLocationsListener = new GeoQueryEventListener() {
                 @Override
-                public void onKeyEntered(String key, GeoLocation location) {
+                public void onKeyEntered(String key, final GeoLocation location) {
+
                     final String userId = key;
+                    final double userLongtitude = location.longitude;
+                    final double userLatitude = location.latitude;
+
                     queryReady = false;
                     if (!userId.equals(currUserUid)) {
                         ValueEventListener userLocationListener = new ValueEventListener() {
@@ -161,8 +172,17 @@ public class API {
                                 // Get Post object and use the values to update the UI
 //                                Dog dog = dataSnapshot.getValue(Dog.class);
                                 User user = dataSnapshot.getValue(User.class);
+                                Float distanceFromMe = calcDistanceTo(myLocation, userLatitude, userLongtitude);
+                                user.setTempDistanceFromMe(distanceFromMe);
+//                                user.setTempLatitude(userLatitude);
+//                                user.setTempLongtitude(userLongtitude);
 //                                String[] ownerDetails = new String[]{userId, dog.getName(), dog.getPhotoUrl()};
-                                nearbyUsers.put(userId, user);
+                                try {
+                                    nearbyUsers.put(userId, user);
+                                } catch (NullPointerException e){
+                                    Log.d(tag, "Tried to put in -nerbayUsers- after detach (nulified)");
+                                    return;
+                                }
                             }
 
                             @Override
@@ -210,11 +230,28 @@ public class API {
         if (geoQuery != null) {
             geoQuery.removeGeoQueryEventListener(mLocationsListener);
             geoQuery = null;
-            nearbyUsers = null;
+            nearbyUsers.clear();
         }
     }
 
     public static boolean isMyUid(String uid){
         return currUserUid.equals(uid);
+    }
+
+    public static boolean isMatchedWith(String uid){
+        return (currUserData.getMsgTracker() != null &&
+                uid != null &&
+                currUserData.getMsgTracker().containsKey(uid));
+    }
+
+    public static Map<String, Boolean> getCurrMsgTracker(){
+        return currUserData.getMsgTracker();
+    }
+
+    private static float calcDistanceTo(Location myLoc, double otherLat, double otherLon){
+        Location otherLoacation = new Location("");
+        otherLoacation.setLatitude(otherLat);
+        otherLoacation.setLongitude(otherLon);
+        return myLoc.distanceTo(otherLoacation);
     }
 }

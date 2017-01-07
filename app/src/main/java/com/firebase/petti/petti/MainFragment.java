@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -26,7 +28,6 @@ public class MainFragment extends Fragment {
             android.Manifest.permission.ACCESS_FINE_LOCATION
     };
     private static final int INITIAL_REQUEST = 1337;
-    private static boolean locationGranted = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,12 +65,16 @@ public class MainFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        final Animation animShiftUp = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_shift_up);
+        final Animation animShiftDown = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_shift_down);
+
         // Get a reference to the bark button and attach a listener.
         Button bark = (Button) rootView.findViewById(R.id.bark);
         bark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (locationGranted) {
+                v.startAnimation(animShiftUp);
+                if (canAccessLocation()) {
                     Toast.makeText(getActivity(), R.string.get_ready_for_a_walk,
                             Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
@@ -89,7 +94,8 @@ public class MainFragment extends Fragment {
         find_partners.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (locationGranted) {
+                v.startAnimation(animShiftDown);
+                if (canAccessLocation()) {
                     Intent intent = new Intent(getActivity(), NeighborDogsActivity.class)
                             .putExtra(Intent.EXTRA_TEXT, "false");
                     startActivity(intent);
@@ -122,10 +128,11 @@ public class MainFragment extends Fragment {
         // Make sure it's our original GET_LOCATION request
         if (requestCode == INITIAL_REQUEST) {
             if (grantResults.length == 1 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                locationGranted = true;
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             } else {
-                locationGranted = false;
+                Toast.makeText(getActivity(),
+                        "We can not play with you without your permission...",
+                        Toast.LENGTH_SHORT).show();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

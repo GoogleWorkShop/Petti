@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +25,12 @@ import java.util.List;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User.Owner;
+import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 
 public class UserRegistrationActivitey extends AppCompatActivity {
@@ -205,12 +212,11 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             } else {
                 lookingForList = new ArrayList<>();
             }
+
+            setOwnerImage();
         }
 
     }
-
-
-
 
     public void uploadImageMethod(View view) {
         Intent intent = new Intent();
@@ -220,19 +226,40 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Get the path from the Uri
-                    String path = getPathFromURI(selectedImageUri);
-                    Log.i(TAG, "Image Path : " + path);
-                    // Set the image in ImageView
-                    userImage.setImageURI(selectedImageUri);
-
+        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
+            // Get the url from data
+            Uri selectedImageUri = data.getData();
+            userImage.setImageURI(selectedImageUri);
+            StorageReference photoRef = API.mOwnerPhotos
+                    .child(API.currUserUid)
+                    .child(selectedImageUri.getLastPathSegment());
+            // Upload file to Firebase Storage
+            UploadTask uploadImageTask = photoRef.putFile(selectedImageUri);
+            uploadImageTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // When the image has successfully uploaded, we get its download URL
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    currOwnerData.setPhotoUrl(downloadUrl.toString());
+//                    setDogImage();
                 }
-            }
+            })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            uploadImageFailedToast();
+                            setOwnerImage();
+                        }
+                    });
+        }
+    }
+
+    private void uploadImageFailedToast(){
+        Toast.makeText(this, "Failed to upload image..", Toast.LENGTH_SHORT).show();
+    }
+
+    private void setOwnerImage() {
+        if (currOwnerData != null) {
+            ImageLoaderUtils.setImage(currOwnerData.getPhotoUrl(), userImage);
         }
     }
 
@@ -254,17 +281,17 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     }
 
 
-    public String getPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
-    }
+//    public String getPathFromURI(Uri contentUri) {
+//        String res = null;
+//        String[] proj = {MediaStore.Images.Media.DATA};
+//        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+//        if (cursor.moveToFirst()) {
+//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//            res = cursor.getString(column_index);
+//        }
+//        cursor.close();
+//        return res;
+//    }
 
     public void MoveToMainAndUploodUserToDB(View view) {
 
