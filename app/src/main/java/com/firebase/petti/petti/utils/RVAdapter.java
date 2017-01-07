@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.R;
@@ -44,17 +45,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         }
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
+            String message = RVAdapter.this.mFriends.get(position).getTempUid();
 
             if (v.getId() == delete_bt.getId()){
-
-                Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                API.getCurrUserRef().child("msgTracker").child(message).removeValue();
+                mFriends.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, mFriends.size());
+//                Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(position), Toast.LENGTH_SHORT).show();
             } else {
                 Intent myIntent = new Intent(context, UserChatActivity.class);
-                String message = RVAdapter.this.mFriends.get(getAdapterPosition()).getTempUid();
+//                String message = RVAdapter.this.mFriends.get(getAdapterPosition()).getTempUid();
                 myIntent.putExtra("USER_ID", message);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(myIntent);
-                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -85,7 +91,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         personViewHolder.personName.setText(currDogData.getName());
         personViewHolder.personAge.setText(currDogData.getAge());
         ImageView petImage = personViewHolder.personPhoto;
-        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
+        String dogPhotoUrl = currDogData.getPhotoUrl();
+        ImageLoaderUtils.setImage(dogPhotoUrl, petImage, R.drawable.anonymous_grn);
+//        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
 
     }
 
