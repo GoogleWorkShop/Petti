@@ -63,13 +63,13 @@
                 android:textSize="20dp"
                 android:id="@+id/pet_name" />
 
-            <EditText
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="age:"
+                android:hint="Birth Date:"
+                android:onClick="ShowDatePicker"
                 android:textSize="20dp"
-                android:inputType="number"
-                android:id="@+id/pet_age"
+                android:id="@+id/pet_BD"
                 />
             <RadioGroup
                 android:layout_width="fill_parent"

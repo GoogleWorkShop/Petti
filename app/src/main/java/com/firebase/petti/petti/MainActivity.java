@@ -17,15 +17,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +49,11 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawer;
+
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private MenuItem mainMenuItem;
+    private LinearLayout profileHeaderLayout;
 
     private TextView drawerDogNameTextView;
     private ImageView drawerProfilePicImageView;
@@ -94,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         // Find our drawer view
         mDrawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
+
+
         drawerToggle = setupDrawerToggle();
 
         // Tie DrawerLayout events to the ActionBarToggle
@@ -112,8 +119,11 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-        drawerDogNameTextView = (TextView) nvDrawer.findViewById(R.id.dog_name_header);
-        drawerProfilePicImageView = (ImageView) nvDrawer.findViewById(R.id.profile_pic);
+        //get widgets from drawer( profile pic and name)
+        final LayoutInflater factory = getLayoutInflater();
+        final View drwaerProfileHeader = factory.inflate(R.layout.main_nav_header, null);
+        drawerDogNameTextView = (TextView) drwaerProfileHeader.findViewById(R.id.dog_name_header);
+        drawerProfilePicImageView = (ImageView) drwaerProfileHeader.findViewById(R.id.profile_pic);
         setDrawerProfileInfo();
 
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
