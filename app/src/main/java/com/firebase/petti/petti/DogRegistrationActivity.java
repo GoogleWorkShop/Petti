@@ -1,5 +1,6 @@
 package com.firebase.petti.petti;
 
+import android.app.DatePickerDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.petti.db.API;
@@ -30,6 +33,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DogRegistrationActivity extends AppCompatActivity {
@@ -42,7 +46,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
     Dog currDogData = new Dog();
 
     String dogName;
-    String dogAge;
+    String dogBD;
     Boolean dog_is_female;
     String dogType;
     List<String> dogCharacters;
@@ -55,7 +59,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
     boolean isEditState;
 
     EditText nameView;
-    EditText ageView;
+    TextView BDView;
     TextInputEditText petDescreptionText;
     TextInputEditText preferdPartnersText;
     TextInputEditText commonWalkPlacesText;
@@ -64,6 +68,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
     RadioButton dogMaleButton;
     RadioButton dogFemaleButton;
     Button moveToEditButton;
+
+
 
     enum Gender {Male, Female}
 
@@ -80,7 +86,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
 
         nameView = (EditText) findViewById(R.id.pet_name);
-        ageView = (EditText) findViewById(R.id.pet_age);
+        BDView = (TextView) findViewById(R.id.pet_BD);
         uploadButton = (Button) findViewById(R.id.uploadButton);
         petImage = (ImageView) findViewById(R.id.pet_image);
         petDescreptionText = (TextInputEditText) findViewById(R.id.pet_descreption_text);
@@ -159,9 +165,9 @@ public class DogRegistrationActivity extends AppCompatActivity {
                 nameView.setText(dogName);
             }
             //age
-            dogAge = currDogData.getAge();
-            if (dogAge != null) {
-                ageView.setText(dogAge);
+            dogBD = currDogData.getAge();
+            if (dogBD != null) {
+                BDView.setText(dogBD);
             }
             //walk places
             commonWalkPlaces = currDogData.getWalkWhere();
@@ -305,7 +311,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        dogAge = ageView.getText().toString();
+        dogBD = BDView.getText().toString();
         dog_is_female = (gender == Gender.Female);
         dogType = dog_type[0];
         if(dogCharacters == null){
@@ -317,7 +323,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         commonWalkPlaces = commonWalkPlacesText.getText().toString();
 
         currDogData.setName(dogName);
-        currDogData.setAge(dogAge);
+        currDogData.setAge(dogBD);
         currDogData.setFemale(dog_is_female);
         currDogData.setType(dogType);
         currDogData.setPersonalityAttributes(dogCharacters);
@@ -349,5 +355,19 @@ public class DogRegistrationActivity extends AppCompatActivity {
     public void startUserRegistrationActivity(View view) {
         Intent intent = new Intent(this, UserRegistrationActivitey.class);
         startActivity(intent);
+    }
+
+    public void ShowDatePicker(View view) {
+        DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+               dogBD = Integer.toString(dayOfMonth)+"/" + Integer.toString(month+1) + "/" + Integer.toString(year);
+                BDView.setText(dogBD);
+            }
+        };
+        Calendar now = Calendar.getInstance();
+        new DatePickerDialog(DogRegistrationActivity.this,dateListener, now
+                .get(Calendar.YEAR), now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)).show();
     }
 }
