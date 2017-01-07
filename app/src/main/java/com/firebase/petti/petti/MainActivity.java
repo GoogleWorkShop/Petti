@@ -1,7 +1,7 @@
 package com.firebase.petti.petti;
 
 
-import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -18,13 +18,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.classes.User.Dog;
+import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.firebase.petti.petti.utils.UtilsDBHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private MenuItem mainMenuItem;
-    private TextView dogNameHederText;
+
+    private TextView drawerDogNameTextView;
+    private ImageView drawerProfilePicImageView;
 
     //DB
     public static UtilsDBHelper m_dbHelper;
@@ -67,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -75,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         editDogProfile = false;
 
         m_dbHelper =  new UtilsDBHelper(this);
-
-        dogNameHederText = (TextView) findViewById(R.id.dog_name_header); 
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -102,7 +112,44 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        drawerDogNameTextView = (TextView) nvDrawer.findViewById(R.id.dog_name_header);
+        drawerProfilePicImageView = (ImageView) nvDrawer.findViewById(R.id.profile_pic);
+        setDrawerProfileInfo();
+
+        ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
+    }
+
+
+    private void setDrawerProfileInfo(String dogName, String dogPhotoUrl){
+        if (drawerDogNameTextView != null && drawerProfilePicImageView != null) {
+            String defaultDog = getString(R.string.default_dog_name);
+            if (dogPhotoUrl != null && !dogPhotoUrl.isEmpty()) {
+                ImageLoaderUtils.setImage(dogPhotoUrl, drawerProfilePicImageView, R.drawable.anonymous_prpl);
+            } else {
+                drawerProfilePicImageView.setImageResource(R.drawable.anonymous_prpl);
+            }
+            if (dogName != null && dogName.length() > 1) {
+                drawerDogNameTextView.setText(dogName);
+            } else {
+                drawerDogNameTextView.setText(defaultDog);
+            }
+        } else {
+            // TODO: remove this when fixed
+            Toast.makeText(this, "Profile views are not set", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void setDrawerProfileInfo(){
+        Dog myDog = API.getCurrDogData();
+        if (myDog != null){
+            String dogName = myDog.getName();
+            String dogPhoto = myDog.getPhotoUrl();
+            setDrawerProfileInfo(dogName, dogPhoto);
+        } else {
+            setDrawerProfileInfo("", "");
+        }
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -158,6 +205,11 @@ public class MainActivity extends AppCompatActivity {
                 dogIntent.putExtra("edit",true);
                 startActivityForResult(dogIntent,0);
                 return;
+            case R.id.friends:
+                Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
+                startActivity(chatFriendsIntent);
+                return;
+
 
 
             default:
@@ -319,6 +371,10 @@ public class MainActivity extends AppCompatActivity {
                         || dataSnapshot.child("dog").child("name").getValue().equals("");
                 if (editDogProfile || editUserProfile){
                     startEditProfileActivity();
+                } else {
+                    String dogName = (String) dataSnapshot.child("dog").child("name").getValue();
+                    String dogPhoto = (String) dataSnapshot.child("dog").child("photoUrl").getValue();
+                    setDrawerProfileInfo(dogName, dogPhoto);
                 }
             }
 
@@ -337,6 +393,7 @@ public class MainActivity extends AppCompatActivity {
         API.detachCurrUserDataReadListener();
         API.currUserUid = null;
         API.currUserData = null;
+        setDrawerProfileInfo();
     }
 
 
@@ -384,8 +441,12 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DogRegistrationActivity.class);
         startActivity(intent);
-
     }
 
-
+    // used in main_nav_header as on click
+    public void EditDogProfile(View view){
+        Intent intent = new Intent(this, DogRegistrationActivity.class);
+        intent.putExtra("edit", true);
+        startActivity(intent);
+    }
 }
