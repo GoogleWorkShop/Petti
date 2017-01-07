@@ -7,7 +7,7 @@ import android.text.format.Time;
  * Defines table and column names for the user database.
  */
 
-public class UserContract {
+public class UtilsContract {
 
     // To make it easy to query for the exact date, we normalize all dates that go into
     // the database to the start of the the Julian day at UTC.

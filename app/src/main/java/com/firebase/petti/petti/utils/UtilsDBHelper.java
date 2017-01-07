@@ -4,20 +4,20 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.firebase.petti.petti.utils.UserContract.FoodEntry;
+import com.firebase.petti.petti.utils.UtilsContract.FoodEntry;
 
 /**
  * Created by barjon on 30-Dec-16.
  */
 
-public class UserDBHelper extends SQLiteOpenHelper {
+public class UtilsDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    static final String DATABASE_NAME = "dog.db";
+    static final String DATABASE_NAME = "Utils.db";
 
-    public UserDBHelper(Context context) {
+    public UtilsDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -28,14 +28,11 @@ public class UserDBHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_FOOD_TABLE = "CREATE TABLE " + FoodEntry.TABLE_NAME + " (" +
                 FoodEntry._ID + " INTEGER PRIMARY KEY," +
-                FoodEntry.COLUMN_FOOD_KEY + " TEXT UNIQUE NOT NULL, " +
-                FoodEntry.COLUMN_DATE + " TEXT NOT NULL, " +
-                FoodEntry.COLUMN_AMOUNT + " REAL NOT NULL, " +
-                FoodEntry.COLUMN_NAME + " REAL NOT NULL " +
+                FoodEntry.COLUMN_NAME + " TEXT," +
+                FoodEntry.COLUMN_AMOUNT + " INTEGER"+
+                FoodEntry.COLUMN_DATE + "DATETIME)"
+                ;
 
-                // To assure the application have just one weather entry per day
-                // per location, it's created a UNIQUE constraint with REPLACE strategy
-                " UNIQUE (" + FoodEntry.COLUMN_FOOD_KEY + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_FOOD_TABLE);
     }

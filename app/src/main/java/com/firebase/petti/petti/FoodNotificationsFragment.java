@@ -4,8 +4,11 @@ package com.firebase.petti.petti;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
@@ -22,9 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.petti.petti.utils.NotificationPublisher;
+import com.firebase.petti.petti.utils.UtilsContract;
+import com.firebase.petti.petti.utils.UtilsDBHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import static android.support.customtabs.CustomTabsIntent.KEY_ID;
 
 
 /**
@@ -38,6 +45,9 @@ public class FoodNotificationsFragment extends Fragment {
     private static final long MINUTES_IN_HOUR = 60;
     private static final long HOURS_IN_DAY = 24;
     private static final long DAY_IN_MILLIES = MILLIES_IN_SECOND*SECONDS_IN_MINUTE*MINUTES_IN_HOUR*HOURS_IN_DAY;
+
+    SQLiteDatabase db;
+
 
     public FoodNotificationsFragment() {
     }
@@ -79,7 +89,6 @@ public class FoodNotificationsFragment extends Fragment {
                     return;
                 }
 
-                updateFoodTable(food_name_str, amount_str);
 
                 int amount_int = Integer.parseInt(amount_str);
                 int per_day_int = Integer.parseInt(per_meal_str);
@@ -90,10 +99,63 @@ public class FoodNotificationsFragment extends Fragment {
                 Toast.makeText(getActivity(),
                         "A notification has been set to when food is at 30% captain!",
                         Toast.LENGTH_LONG).show();
+
+                //save to DB
+                if(db != null){
+                    db.close();
+                }
+                db = MainActivity.m_dbHelper.getWritableDatabase();
+
+                ContentValues values = new ContentValues();
+                values.put(UtilsContract.FoodEntry.COLUMN_NAME,food_name_str);
+                values.put(UtilsContract.FoodEntry.COLUMN_AMOUNT,amount_str);
+
+
+                // Insert the new row, returning the primary key value of the new row
+                long newRowId = db.insert(UtilsContract.FoodEntry.TABLE_NAME, null, values);
+                Cursor cursor = db.query(UtilsContract.FoodEntry.TABLE_NAME, null, null, null, null, null, null);
+                if(cursor.getCount() >= 4) {
+                    //delete the first row, bc valuses are readed backwards so now the first row is outdated bc we only save 3 last entrys
+                        cursor.moveToNext();
+
+                        String rowId = cursor.getString(cursor.getColumnIndex(UtilsContract.FoodEntry._ID));
+
+                        db.delete(UtilsContract.FoodEntry.TABLE_NAME, UtilsContract.FoodEntry._ID + "=?", new String[]{rowId});
+
+                }
+                updateFoodTable(food_name_str,amount_str);
+
             }
+
         });
-        return rootView;
-    }
+
+//        //delete all table
+//        while(true){
+//            Cursor cursor = db.query(UtilsContract.FoodEntry.TABLE_NAME, null, null, null, null, null, null);
+//            if(cursor.moveToNext()) {
+//                String rowId = cursor.getString(cursor.getColumnIndex(UtilsContract.FoodEntry._ID));
+//
+//                db.delete(UtilsContract.FoodEntry.TABLE_NAME, UtilsContract.FoodEntry._ID + "=?", new String[]{rowId});
+//            }
+//        }
+
+//            //read DB data to put in table
+        Cursor cursor = db.rawQuery("SELECT * from "+ UtilsContract.FoodEntry.TABLE_NAME,null);
+        cursor.moveToNext();
+
+        while(cursor.moveToNext()) {
+            updateFoodTable(cursor.getString(1), cursor.getString(2)); //name, amount
+        }
+
+
+//
+           return rootView;
+        }
+
+
+
+
+
 
 
     private void scheduleNotification(Notification notification, long delay) {
@@ -156,6 +218,8 @@ public class FoodNotificationsFragment extends Fragment {
         first_amount.setText(amount_str);
         first_food_name.setText(food_name_str);
 
+        //put data into DB
+
     }
 
     @Override
@@ -163,6 +227,9 @@ public class FoodNotificationsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+
+        db=MainActivity.m_dbHelper.getReadableDatabase();
+
     }
 
     @Override
@@ -188,4 +255,9 @@ public class FoodNotificationsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
 }

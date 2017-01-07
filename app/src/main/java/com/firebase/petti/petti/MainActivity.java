@@ -1,13 +1,18 @@
 package com.firebase.petti.petti;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,12 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.firebase.petti.petti.utils.UtilsDBHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem mainMenuItem;
     private TextView dogNameHederText;
 
+    //DB
+    public static UtilsDBHelper m_dbHelper;
+
+
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
     private ActionBarDrawerToggle drawerToggle;
@@ -59,16 +67,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_main);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         API.initDatabaseApi();
         editUserProfile = false;
         editDogProfile = false;
+
+        m_dbHelper =  new UtilsDBHelper(this);
 
         dogNameHederText = (TextView) findViewById(R.id.dog_name_header); 
 
@@ -96,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-        ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
     }
 
@@ -153,11 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 dogIntent.putExtra("edit",true);
                 startActivityForResult(dogIntent,0);
                 return;
-            case R.id.friends:
-                Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
-                startActivity(chatFriendsIntent);
-                return;
-
 
 
             default:
@@ -386,4 +386,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+
 }
