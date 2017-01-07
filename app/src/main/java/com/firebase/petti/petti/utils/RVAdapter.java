@@ -1,5 +1,7 @@
 package com.firebase.petti.petti.utils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,15 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.classes.User;
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.R;
+import com.firebase.petti.petti.UserChatActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
-
-    public static class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    Context context;
+    public  class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CardView cv;
         TextView personName;
@@ -45,15 +49,21 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
                 Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             } else {
+                Intent myIntent = new Intent(context, UserChatActivity.class);
+                String message = RVAdapter.this.mFriends.get(getAdapterPosition()).getTempUid();
+                myIntent.putExtra("USER_ID", message);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(myIntent);
                 Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
         }
 
     }
 
-    public List<Dog> mFriends;
+    public List<User> mFriends;
 
-    public RVAdapter(List<Dog> mFriends){
+    public RVAdapter(List<User> mFriends, Context con){
+        context = con;
         this.mFriends = mFriends;
     }
 
@@ -71,7 +81,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
-        Dog currDogData = mFriends.get(i);
+        Dog currDogData = mFriends.get(i).getDog();
         personViewHolder.personName.setText(currDogData.getName());
         personViewHolder.personAge.setText(currDogData.getAge());
         ImageView petImage = personViewHolder.personPhoto;

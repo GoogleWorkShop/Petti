@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.firebase.petti.db.API;
+import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.RVAdapter;
 
 import com.firebase.petti.db.classes.User.Dog;
@@ -20,7 +21,7 @@ import java.util.Set;
 
 public class MatchedFriendsActivity extends Activity {
 
-    private List<Dog> mFriends;
+    private List<User> mFriends;
     private RVAdapter mAdapter;
     private RecyclerView rv;
 
@@ -37,7 +38,7 @@ public class MatchedFriendsActivity extends Activity {
         rv.setHasFixedSize(true);
 
         mFriends = new ArrayList<>();
-        mAdapter = new RVAdapter(mFriends);
+        mAdapter = new RVAdapter(mFriends, this.getApplicationContext());
         rv.setAdapter(mAdapter);
 
         Map<String, Boolean> msgTracker = API.getCurrMsgTracker();
@@ -49,8 +50,9 @@ public class MatchedFriendsActivity extends Activity {
                     for (String friendUid: API.currUserData.getMsgTracker().keySet()){
                         DataSnapshot currFriend = dataSnapshot.child(friendUid);
                         if (currFriend.exists() && currFriend.hasChild("dog")){
-                            Dog currDogData = currFriend.child("dog").getValue(Dog.class);
-                            mAdapter.mFriends.add(currDogData);
+                            User currUser = currFriend.getValue(User.class);
+                            currUser.setTempUid(friendUid);
+                            mAdapter.mFriends.add(currUser);
                             mAdapter.notifyItemInserted(mFriends.size() - 1);
                         }
                     }
