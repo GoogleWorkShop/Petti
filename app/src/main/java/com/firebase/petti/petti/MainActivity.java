@@ -119,12 +119,14 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+
         //get widgets from drawer( profile pic and name)
-        final LayoutInflater factory = getLayoutInflater();
-        final View drwaerProfileHeader = factory.inflate(R.layout.main_nav_header, null);
+//        final LayoutInflater factory = getLayoutInflater();
+        final View drwaerProfileHeader = nvDrawer.inflateHeaderView(R.layout.main_nav_header);
         drawerDogNameTextView = (TextView) drwaerProfileHeader.findViewById(R.id.dog_name_header);
         drawerProfilePicImageView = (ImageView) drwaerProfileHeader.findViewById(R.id.profile_pic);
-        setDrawerProfileInfo();
+//        drawerDogNameTextView.setText("jdskadhaskd");
+//        setDrawerProfileInfo();
 
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         if (drawerDogNameTextView != null && drawerProfilePicImageView != null) {
             String defaultDog = getString(R.string.default_dog_name);
             if (dogPhotoUrl != null && !dogPhotoUrl.isEmpty()) {
-                ImageLoaderUtils.setImage(dogPhotoUrl, drawerProfilePicImageView, R.drawable.anonymous_prpl);
+                ImageLoaderUtils.setImage(dogPhotoUrl, drawerProfilePicImageView, R.drawable.anonymous_grn);
             } else {
                 drawerProfilePicImageView.setImageResource(R.drawable.anonymous_prpl);
             }
@@ -144,11 +146,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 drawerDogNameTextView.setText(defaultDog);
             }
-        } else {
-            // TODO: remove this when fixed
-            Toast.makeText(this, "Profile views are not set", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void setDrawerProfileInfo(){
@@ -403,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
         API.detachCurrUserDataReadListener();
         API.currUserUid = null;
         API.currUserData = null;
-        setDrawerProfileInfo();
+        setDrawerProfileInfo("", "");
     }
 
 
