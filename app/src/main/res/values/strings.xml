@@ -175,4 +175,5 @@
     <string name="show_owner">Show Owner</string>
     <string name="show_dog">Show Dog</string>
     <string name="searching_matches">I\'m searching for other dogs DWAG...\nSo chilex!!!</string>
+    <string name="default_dog_name">John Doggo</string>
 </resources>
