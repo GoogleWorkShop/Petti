@@ -1,15 +1,13 @@
 package com.firebase.petti.petti;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,7 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+import com.firebase.petti.petti.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +34,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "DogRegistrationActivity";
-
-    //TODO YAHAV: Fields to upload
 
     Dog currDogData = new Dog();
 
@@ -50,7 +46,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
     String dogDescreption;
     String preferedPartners;
     String commonWalkPlaces;
-    //TODO picture....
 
     boolean isEditState;
 
@@ -324,6 +319,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         currDogData.setDescription(dogDescreption);
         currDogData.setWalkWith(preferedPartners);
         currDogData.setWalkWhere(commonWalkPlaces);
+
 
         API.setDog(currDogData);
 

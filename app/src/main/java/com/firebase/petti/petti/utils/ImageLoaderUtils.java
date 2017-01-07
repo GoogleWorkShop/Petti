@@ -41,11 +41,17 @@ public class ImageLoaderUtils {
 
     }
 
-    public static void setImage(String photoUrl, ImageView imageView) {
-        imageLoader.displayImage(photoUrl, imageView);
+    public static boolean setImage(String photoUrl, ImageView imageView) {
+        if (imageView != null) {
+            imageLoader.displayImage(photoUrl, imageView);
+            return true;
+        } else {
+            // IMAGE VIEW IS NULL - NEED TO PRINT MESSAGE
+            return false;
+        }
     }
 
-    public static void setImage(String photoUrl, ImageView imageView, int defaultPic) {
+    public static boolean setImage(String photoUrl, ImageView imageView, int defaultPic) {
         DisplayImageOptions matchesOptions = new DisplayImageOptions.Builder()
                 .showImageOnFail(defaultPic)
                 .showImageForEmptyUri(defaultPic)
@@ -53,6 +59,12 @@ public class ImageLoaderUtils {
                 .cacheOnDisk(true)
                 .build();
 
-        imageLoader.displayImage(photoUrl, imageView, matchesOptions);
+        if (imageView != null) {
+            imageLoader.displayImage(photoUrl, imageView, matchesOptions);
+            return true;
+        } else {
+            // IMAGE VIEW IS NULL - NEED TO PRINT MESSAGE
+            return false;
+        }
     }
 }
