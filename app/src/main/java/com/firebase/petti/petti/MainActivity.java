@@ -387,9 +387,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void EditDogProfile(View view) {
-        Intent intent = new Intent(this, DogRegistrationActivity.class);
-        intent.putExtra("edit",true);
-        startActivity(intent);
-    }
+
 }
