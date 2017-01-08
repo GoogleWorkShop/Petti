@@ -192,8 +192,11 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = VaccinationCardFragment.class;
                 break;
             case R.id.find_near_dog_parks:
-                fragmentClass = FindNearDogParksFragment.class;
-                break;
+                Intent mapsIntent = new Intent(this, MapsActivity.class);
+                startActivity(mapsIntent);
+                return;
+//                fragmentClass = FindNearDogParksFragment.class;
+//                break;
             case R.id.find_near_veterinarians:
                 fragmentClass = FindNearVeterinariansFragment.class;
                 break;
