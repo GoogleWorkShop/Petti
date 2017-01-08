@@ -33,6 +33,7 @@
                 android:id="@+id/person_name"
                 android:layout_toRightOf="@+id/person_photo"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
                 android:textSize="30sp"
                 />
 
@@ -61,6 +62,7 @@
                 android:id="@+id/delete_bt"
                 style="@style/FirebaseUI.Button"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
 
