@@ -176,4 +176,10 @@
     <string name="show_dog">Show Dog</string>
     <string name="searching_matches">I\'m searching for other dogs DWAG...\nSo chilex!!!</string>
     <string name="default_dog_name">John Doggo</string>
+
+    <string name="google_maps_key">AIzaSyDvUvdoaoeBTVjQ1Jgvcu6PUHdcAjLLMUE</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="find_vets">Find Nearby veterinary cares</string>
+    <string name="find_parks">Find Nearby parks</string>
+    <string name="find_pet_stores">Find Nearby pet stores</string>
 </resources>

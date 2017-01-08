@@ -122,7 +122,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 dog_type[0] = adapterView.getItemAtPosition(pos).toString();
-                Toast.makeText(adapterView.getContext(), "type :" + dog_type[0], Toast.LENGTH_SHORT).show();
+//                Toast.makeText(adapterView.getContext(), "type :" + dog_type[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -145,7 +145,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 dog_charater[0] = adapterView.getItemAtPosition(pos).toString();
-                Toast.makeText(adapterView.getContext(), "character :" + dog_charater[0], Toast.LENGTH_SHORT).show();
+//                Toast.makeText(adapterView.getContext(), "character :" + dog_charater[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -307,7 +307,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         dogName = nameView.getText().toString();
 
         if (dogName.length() < 2) {
-            Toast.makeText(this, "Must add atleast name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Must add at least name", Toast.LENGTH_SHORT).show();
             return;
         }
 
