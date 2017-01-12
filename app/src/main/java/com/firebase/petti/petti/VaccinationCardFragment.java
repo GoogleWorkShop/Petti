@@ -91,8 +91,10 @@ public class VaccinationCardFragment extends Fragment {
                         if (VAC.equals("Check")){
                             daysUntilNotif = 5000;
                         }
-//                        long daysUntilNotif = 1000;
-                        scheduleNotification(getNotification("It's time for " + VAC + " again next week"), daysUntilNotif);
+                        NotificationPublisher.scheduleNotification(
+                                "It's time for " + VAC + " again next week",
+                                daysUntilNotif,
+                                getActivity());
                         Toast.makeText(getActivity(),
                                 "A notification has been set for the a week before next: " + VAC,
                                 Toast.LENGTH_LONG).show();
@@ -110,27 +112,6 @@ public class VaccinationCardFragment extends Fragment {
 
 
         return rootView;
-    }
-
-
-    private void scheduleNotification(Notification notification, long delay) {
-
-        Intent notificationIntent = new Intent(getActivity(), NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(getActivity());
-        builder.setContentTitle("Scheduled Notification");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        return builder.build();
     }
 
     @Override
