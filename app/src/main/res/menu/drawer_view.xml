@@ -19,18 +19,9 @@
             android:icon="@drawable/ic_action_vaccinetion"
             android:title="Vaccinetion Card" />
         <item
-            android:id="@+id/find_near_dog_parks"
-            android:icon="@drawable/ic_action_dog_parks"
-            android:title="Find Near Dog Parks" />
-        <item
-            android:id="@+id/find_near_veterinarians"
-            android:icon="@drawable/ic_action_veterinarians"
-            android:title="Find Near Veterinarians"
-            android:checked="true"/>
-        <item
-            android:id="@+id/find_near_pet_stores"
-            android:icon="@drawable/ic_action_pet_store"
-            android:title="Find Near Pet Stores" />
+            android:id="@+id/find_near_map"
+            android:icon="@drawable/ic_map_btn"
+            android:title="Find Parks, Vets, Shops map" />
         <item
             android:id="@+id/edit_user_profile"
             android:icon="@drawable/ic_action_edit_profile"
@@ -40,9 +31,9 @@
             android:icon="@drawable/ic_action_edit_dog_profile"
             android:title="Edit Dog Profile" />
         <item
-            android:id="@+id/my_preferences"
-            android:icon="@drawable/ic_action_preferences"
-            android:title="Settings" />
+            android:id="@+id/sign_out"
+            android:icon="@drawable/sign_out_btn"
+            android:title="Sign Out" />
 
     </group>
 </menu>

@@ -6,9 +6,18 @@
         <!-- Customize your theme here. -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="color">#512DA8</item>
         <item name="colorPrimary">#673AB7</item>
         <item name="colorPrimaryDark">#512DA8</item>
         <item name="colorAccent">#FF4081</item>
+        <item name="actionMenuTextColor">#512DA8</item>
+        <item name="android:actionMenuTextColor">#512DA8</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">#512DA8</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,7 +29,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-
+    <!--Style used in android.support.design.widget.AppBarLayout-->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="colorPrimary">#673AB7</item>
@@ -28,6 +37,7 @@
         <item name="colorAccent">#FF4081</item>
     </style>
 
+    <!--Style used in android.support.v7.widget.Toolbar-->
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="colorPrimary">#673AB7</item>
@@ -58,15 +68,21 @@
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
     </style>
 
-    <style name="Theme.Custom" parent="@style/Theme.AppCompat">
-        <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-    </style>
-
     <style name="CustomActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
+        <item name="color">#512DA8</item>
+        <item name="android:color">#512DA8</item>
+        <item name="colorPrimary">#512DA8</item>
+        <item name="colorPrimaryDark">#512DA8</item>
         <item name="windowActionBarOverlay">true</item>
+        <item name="actionMenuTextColor">#512DA8</item>
+        <item name="android:actionMenuTextColor">#512DA8</item>
+        <item name="android:actionOverflowButtonStyle">@style/CustomActionBar.OverFlow</item>
     </style>
+
+    <style name="CustomActionBar.OverFlow">
+        <item name="android:src">@drawable/ic_settings_menu</item>
+    </style>
+
 </resources>
