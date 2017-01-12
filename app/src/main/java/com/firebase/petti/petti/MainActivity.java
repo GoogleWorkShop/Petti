@@ -6,9 +6,11 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.firebase.petti.petti.utils.PagerAdapter;
 import com.firebase.petti.petti.utils.UtilsDBHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -105,23 +108,47 @@ public class MainActivity extends AppCompatActivity {
 
         mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_container, new MainFragment())
-                    .commit();
-        }
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Dogs Around My House"));
+        tabLayout.addTab(tabLayout.newTab().setText("Who Wants To Travel Now"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        //get widgets from drawer( profile pic and name)
-//        final LayoutInflater factory = getLayoutInflater();
-        final View drwaerProfileHeader = nvDrawer.inflateHeaderView(R.layout.main_nav_header);
-        drawerDogNameTextView = (TextView) drwaerProfileHeader.findViewById(R.id.dog_name_header);
-        drawerProfilePicImageView = (ImageView) drwaerProfileHeader.findViewById(R.id.profile_pic);
-//        drawerDogNameTextView.setText("jdskadhaskd");
-//        setDrawerProfileInfo();
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        //get widgets from drawer( profile pic and name)a
+        final View drawerProfileHeader = nvDrawer.inflateHeaderView(R.layout.main_nav_header);
+        drawerDogNameTextView = (TextView) drawerProfileHeader.findViewById(R.id.dog_name_header);
+        drawerProfilePicImageView = (ImageView) drawerProfileHeader.findViewById(R.id.profile_pic);
 
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
+
+        // We want this to be the last so we will initiate every thing and then set the fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main_container, new MatchesFragment())
+                    .commit();
+        }
     }
 
 
@@ -175,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch (menuItem.getItemId()) {
             case R.id.default_fragment:
-                fragmentClass = MainFragment.class;
+                fragmentClass = MatchesFragment.class;
                 break;
             case R.id.food_notifications:
                 fragmentClass = FoodNotificationsFragment.class;
@@ -297,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         if(fragment.getClass() != MainFragment.class) {
-            fragment = new MainFragment();
+            fragment = new MatchesFragment();
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
             // Highlight the selected item has been done by NavigationView
             mainMenuItem.setChecked(true);

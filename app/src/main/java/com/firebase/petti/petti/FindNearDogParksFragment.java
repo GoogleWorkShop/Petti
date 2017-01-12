@@ -54,7 +54,7 @@ public class FindNearDogParksFragment extends Fragment {
         if (id == R.id.action_settings) {
             Fragment myPrefrences = new MyPreferencesFragment();
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.main_container, myPrefrences)
+            fragmentManager.beginTransaction().replace(R.id.pager, myPrefrences)
                     .addToBackStack( "tag" ).commit();
             return true;
         }
