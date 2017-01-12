@@ -1,18 +1,17 @@
 package com.firebase.petti.petti;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.firebase.petti.db.API;
@@ -30,7 +30,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 
 public class UserRegistrationActivitey extends AppCompatActivity {
@@ -41,7 +40,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     Owner currOwnerData = new Owner();
 
     String userName;
-    String userAge;
+    String userBD;
     Boolean user_is_female;
     String cityStr;
     List<String> lookingForList = new ArrayList<String>();
@@ -55,7 +54,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "UserRegActivity";
     EditText nameView;
-    EditText ageView;
+    TextView BDView;
     Button uploadButton;
     ImageView userImage;
     final String[] city = new String[1];
@@ -65,6 +64,20 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     Button moveToMainButton;
 
     boolean isEditState;
+
+    public void ShowDatePicker(View view) {
+        DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                userBD = Integer.toString(dayOfMonth)+"/" + Integer.toString(month+1) + "/" + Integer.toString(year);
+                BDView.setText(userBD);
+            }
+        };
+        Calendar now = Calendar.getInstance();
+        new DatePickerDialog(UserRegistrationActivitey.this,dateListener, now
+                .get(Calendar.YEAR), now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)).show();
+    }
 
 
     enum Gender {Male, Female}
@@ -84,7 +97,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         //init views
         nameView = (EditText) findViewById(R.id.user_name);
-        ageView = (EditText) findViewById(R.id.user_age);
+        BDView = (TextView) findViewById(R.id.user_BD);
         uploadButton = (Button) findViewById(R.id.user_uploadButton);
         userImage = (ImageView) findViewById(R.id.user_image);
         userDescreptionView = (TextInputEditText) findViewById(R.id.user_descreption);
@@ -115,9 +128,9 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 nameView.setText(userName);
             }
             //age
-            userAge = currOwnerData.getAge();
-            if (userAge != null) {
-                ageView.setText(userAge);
+            userBD = currOwnerData.getAge();
+            if (userBD != null) {
+                BDView.setText(userBD);
             }
             //email
             userEmail = currOwnerData.getMail();
@@ -297,7 +310,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         //fill fields to pass to db
         userName = nameView.getText().toString();
-        userAge = ageView.getText().toString();
+        userBD = BDView.getText().toString();
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
         cityStr = city[0];
         lookingForList.add(looking4[0]);
@@ -305,7 +318,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         userNickname = nicknameView.getText().toString();
 
         currOwnerData.setName(userName);
-        currOwnerData.setAge(userAge);
+        currOwnerData.setAge(userBD);
         currOwnerData.setFemale(user_is_female);
         currOwnerData.setCity(cityStr);
         currOwnerData.setLookingForList(lookingForList);
