@@ -1,6 +1,7 @@
 package com.firebase.petti.petti;
 
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,7 +49,6 @@ public class FoodNotificationsFragment extends Fragment {
     private static final long DAY_IN_MILLIES = MILLIES_IN_SECOND*SECONDS_IN_MINUTE*MINUTES_IN_HOUR*HOURS_IN_DAY;
 
     SQLiteDatabase db;
-
 
     public FoodNotificationsFragment() {
     }
@@ -94,7 +95,9 @@ public class FoodNotificationsFragment extends Fragment {
                 int per_day_int = Integer.parseInt(per_meal_str);
                 long daysUntilNotif = Math.round(( amount_int - ((amount_int*20)/100) ) / per_day_int);
 
-                scheduleNotification(getNotification("Buy FOOOOOOOOOD"), DAY_IN_MILLIES * daysUntilNotif);
+                NotificationPublisher.scheduleNotification("Buy FOOOOOOOOOD",
+                                                            DAY_IN_MILLIES * daysUntilNotif,
+                                                            getActivity());
 
                 Toast.makeText(getActivity(),
                         "A notification has been set to when food is at 30% captain!",
@@ -112,6 +115,7 @@ public class FoodNotificationsFragment extends Fragment {
 
 
                 // Insert the new row, returning the primary key value of the new row
+                //TODO Raz - do we need this veriable?
                 long newRowId = db.insert(UtilsContract.FoodEntry.TABLE_NAME, null, values);
                 Cursor cursor = db.query(UtilsContract.FoodEntry.TABLE_NAME, null, null, null, null, null, null);
                 if(cursor.getCount() >= 4) {
@@ -129,6 +133,7 @@ public class FoodNotificationsFragment extends Fragment {
 
         });
 
+        //TODO Raz - What about this?
 //        //delete all table
 //        while(true){
 //            Cursor cursor = db.query(UtilsContract.FoodEntry.TABLE_NAME, null, null, null, null, null, null);
@@ -139,7 +144,7 @@ public class FoodNotificationsFragment extends Fragment {
 //            }
 //        }
 
-//            //read DB data to put in table
+        //read DB data to put in table
         Cursor cursor = db.rawQuery("SELECT * from "+ UtilsContract.FoodEntry.TABLE_NAME,null);
         cursor.moveToNext();
 
@@ -147,36 +152,10 @@ public class FoodNotificationsFragment extends Fragment {
             updateFoodTable(cursor.getString(1), cursor.getString(2)); //name, amount
         }
 
-
-//
            return rootView;
         }
 
 
-
-
-
-
-
-    private void scheduleNotification(Notification notification, long delay) {
-
-        Intent notificationIntent = new Intent(getActivity(), NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(getActivity());
-        builder.setContentTitle("Scheduled Notification");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        return builder.build();
-    }
 
     /*
     * This function steps down the rows in the table to allow a new line in the top for

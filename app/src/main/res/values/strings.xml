@@ -1,4 +1,4 @@
-<resources> 
+<resources>
     <string name="app_name">Petti</string>
 
     <!-- Strings related to login -->
@@ -176,4 +176,11 @@
     <string name="show_dog">Show Dog</string>
     <string name="searching_matches">I\'m searching for other dogs DWAG...\nSo chilex!!!</string>
     <string name="default_dog_name">John Doggo</string>
+
+    <string name="google_maps_key">AIzaSyBZyRKaA1u5_zERTtpj-jfhteacAw0YgB0</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="find_vets">View Veterinary Cares</string>
+    <string name="find_parks">View Parks</string>
+    <string name="find_pet_stores">View Pet Stores</string>
+    <string name="title_activity_maps2">Map</string>
 </resources>

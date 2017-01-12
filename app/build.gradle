@@ -33,6 +33,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'com.takisoft.fix:preference-v7:25.0.1.0'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:preference-v7:25.1.0'
@@ -40,10 +41,9 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.takisoft.fix:preference-v7:25.0.1.0'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.google.firebase:firebase-storage:10.0.1'
-    compile 'com.takisoft.fix:preference-v7:25.0.1.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.firebaseui:firebase-ui-auth:1.0.1'
     compile 'com.firebase:geofire-android:2.1.1'
