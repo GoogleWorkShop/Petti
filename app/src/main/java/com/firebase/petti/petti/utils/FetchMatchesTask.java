@@ -1,14 +1,13 @@
 package com.firebase.petti.petti.utils;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.GridView;
-import android.widget.TextView;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
-import com.firebase.petti.petti.R;
+import com.firebase.petti.petti.MatchesFragment;
+import com.firebase.petti.petti.MatchesFragment.TaskParams;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,13 +18,21 @@ import java.util.Map;
  * Created by barjon on 09-Jan-17.
  */
 
-class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
+public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void, ArrayList<User>> {
 
     private static final String tag = "FETCH-MATCHES-TASK";
+    private static final long HALF_HOUR_MILLSEC = 30*60*1000;
+
+    boolean bark;
+    Location location;
 
     @Override
+    protected ArrayList<User> doInBackground(TaskParams... params) {
 
-    protected ArrayList<User> doInBackground(Void... voids) {
+        bark = params[0].bark;
+        location = params[0].location;
+
+
         int timeout = 10; // five seconds of timeout until we decide there are no matches
         do {
             try {
@@ -35,7 +42,7 @@ class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException ex){
-                return new ArrayList<>();
+                return null;
             }
         }
         while (timeout-- != 0 && !API.queryReady);
@@ -56,6 +63,11 @@ class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
             }
         }
 
+        /**
+         * this is a check and logging of reciving an empty matches because of  API.ready
+         * before timeout - this sometimes happen although there ARE matches
+         * TODO remove after bug is fixed
+          */
         if (timeout !=0 && mMatchesArray.isEmpty()){
             Log.d(tag, "in 'timeout !=0 && mMatchesArray.isEmpty()' - timeout: " + timeout);
         }
@@ -78,7 +90,15 @@ class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
         return mMatchesArray;
     }
 
-    class MatchedUserComparator implements Comparator<User> {
+    /**
+     * returning a user with
+     */
+    private User createFalseUser(){
+        User falseUser = new User();
+        return falseUser;
+    }
+
+    private static class MatchedUserComparator implements Comparator<User> {
         @Override
         public int compare(User a, User b) {
 
@@ -100,34 +120,6 @@ class FetchMatchesTask extends AsyncTask<Void, Void, ArrayList<User>> {
                 return -1;
             }
 
-        }
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<User> result) {
-
-        if (isCancelled()){
-            return;
-        }
-
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
-        TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
-        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
-
-        if (result != null) {
-            mMatchesAdapter.clear();
-            mMatchesAdapter.refresh(result);
-            // New data is back from the server.  Hooray!
-        }
-
-        searchingView.setVisibility(View.GONE);
-        if(mMatchesAdapter.isEmpty()){
-            gridView.setVisibility(View.GONE);
-            textView.setVisibility(View.VISIBLE);
-
-        } else {
-            gridView.setVisibility(View.VISIBLE);
-            textView.setVisibility(View.GONE);
         }
     }
 }

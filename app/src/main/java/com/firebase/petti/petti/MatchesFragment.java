@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,14 +27,10 @@ import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
-import com.google.android.gms.plus.model.people.Person;
+import com.firebase.petti.petti.utils.FetchMatchesTask;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -55,9 +49,8 @@ public class MatchesFragment extends Fragment {
 
     // GPSTracker class
     GPSTracker gps;
-    Location location; // location
-
-    private static final long HALF_HOUR_MILLSEC = 30*60*1000;
+    // location
+    Location location;
 
 
     public MatchesFragment() {
@@ -67,9 +60,7 @@ public class MatchesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        // create class object
 
-        //TODO: Yahav: this returns null after we go to settings and back
         if (getArguments() != null) {
             if (getArguments().isEmpty()) {
                 bark = false;
@@ -144,8 +135,39 @@ public class MatchesFragment extends Fragment {
     }
 
     private void updateMatches() {
+        ArrayList<User> result;
+
+        TaskParams taskParams = new TaskParams(bark, location);
         matchesTask = new FetchMatchesTask();
-        matchesTask.execute();
+        try {
+            result = matchesTask.execute(taskParams).get();
+        } catch (InterruptedException | ExecutionException e) {
+            result = null;
+        }
+        // TODO deal with cancellations
+        /*if (isCancelled()){
+            return;
+        }*/
+
+        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+        TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
+        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+
+        if (result != null) {
+            mMatchesAdapter.clear();
+            mMatchesAdapter.refresh(result);
+            // New data is back from the server.  Hooray!
+        }
+
+        searchingView.setVisibility(View.GONE);
+        if(mMatchesAdapter.isEmpty()){
+            gridView.setVisibility(View.GONE);
+            textView.setVisibility(View.VISIBLE);
+
+        } else {
+            gridView.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -208,6 +230,16 @@ public class MatchesFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
         return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
+    }
+
+    public static class TaskParams{
+        public boolean bark;
+        public Location location;
+
+        TaskParams(boolean bark, Location location) {
+            this.bark = bark;
+            this.location = location;
+        }
     }
 
 }
