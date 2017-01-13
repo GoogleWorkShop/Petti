@@ -52,6 +52,10 @@ public class MatchesFragment extends Fragment {
     // location
     Location location;
 
+    GridView gridView;
+    TextView notFoundView;
+    TextView searchingView;
+
 
     public MatchesFragment() {
     }
@@ -106,9 +110,9 @@ public class MatchesFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_matches, container, false);
 
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
-        TextView notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
-        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+        gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+        notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
+        searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
 
         gridView.setVisibility(View.GONE);
         notFoundView.setVisibility(View.GONE);
@@ -135,39 +139,13 @@ public class MatchesFragment extends Fragment {
     }
 
     private void updateMatches() {
-        ArrayList<User> result;
-
         TaskParams taskParams = new TaskParams(bark, location);
-        matchesTask = new FetchMatchesTask();
-        try {
-            result = matchesTask.execute(taskParams).get();
-        } catch (InterruptedException | ExecutionException e) {
-            result = null;
-        }
+        matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
+        matchesTask.execute(taskParams);
         // TODO deal with cancellations
         /*if (isCancelled()){
             return;
         }*/
-
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
-        TextView textView = (TextView) rootView.findViewById(R.id.no_matches_str);
-        TextView searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
-
-        if (result != null) {
-            mMatchesAdapter.clear();
-            mMatchesAdapter.refresh(result);
-            // New data is back from the server.  Hooray!
-        }
-
-        searchingView.setVisibility(View.GONE);
-        if(mMatchesAdapter.isEmpty()){
-            gridView.setVisibility(View.GONE);
-            textView.setVisibility(View.VISIBLE);
-
-        } else {
-            gridView.setVisibility(View.VISIBLE);
-            textView.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -211,7 +189,7 @@ public class MatchesFragment extends Fragment {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_settings:
+            case R.id.settings_menu:
                 Fragment myPrefrences = new MyPreferencesFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)

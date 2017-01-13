@@ -3,6 +3,9 @@ package com.firebase.petti.petti.utils;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.GridView;
+import android.widget.TextView;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
@@ -23,14 +26,25 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
     private static final String tag = "FETCH-MATCHES-TASK";
     private static final long HALF_HOUR_MILLSEC = 30*60*1000;
 
-    boolean bark;
-    Location location;
+    private GridViewAdapter mMatchesAdapter;
+
+    private GridView gridView;
+    private TextView notFoundView;
+    private TextView searchingView;
+
+    public FetchMatchesTask(GridViewAdapter mMatchesAdapter, GridView gridView,
+                            TextView notFoundView, TextView searchingView) {
+        this.mMatchesAdapter = mMatchesAdapter;
+        this.gridView = gridView;
+        this.notFoundView = notFoundView;
+        this.searchingView = searchingView;
+    }
 
     @Override
     protected ArrayList<User> doInBackground(TaskParams... params) {
 
-        bark = params[0].bark;
-        location = params[0].location;
+        boolean bark = params[0].bark;
+        Location location = params[0].location;
 
 
         int timeout = 10; // five seconds of timeout until we decide there are no matches
@@ -46,6 +60,11 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
             }
         }
         while (timeout-- != 0 && !API.queryReady);
+
+        /* ensuring we have any results before iterating over them */
+        if(API.nearbyUsers == null){
+            return null;
+        }
 
         ArrayList<User> mMatchesArray = new ArrayList<>();
         for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
@@ -88,6 +107,27 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
 //            mMatchesArray = new ArrayList<>(tmpFriendsListByLocation);
 //            mMatchesArray.addAll(tmpNotFriendsListByLocation);
         return mMatchesArray;
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<User> users) {
+
+        if (users != null) {
+            mMatchesAdapter.clear();
+            mMatchesAdapter.refresh(users);
+            // New data is back from the server.  Hooray!
+        }
+
+        searchingView.setVisibility(View.GONE);
+        if(mMatchesAdapter.isEmpty()){
+            gridView.setVisibility(View.GONE);
+            notFoundView.setVisibility(View.VISIBLE);
+
+        } else {
+            gridView.setVisibility(View.VISIBLE);
+            notFoundView.setVisibility(View.GONE);
+        }
+        super.onPostExecute(users);
     }
 
     /**

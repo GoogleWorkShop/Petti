@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +23,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,40 +46,39 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
 
     private Toolbar toolbar;
-    private NavigationView nvDrawer;
     private MenuItem mainMenuItem;
-    private LinearLayout profileHeaderLayout;
-
-    private TextView drawerDogNameTextView;
-    private ImageView drawerProfilePicImageView;
 
     //DB
     public static UtilsDBHelper m_dbHelper;
 
-
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
     private ActionBarDrawerToggle drawerToggle;
+    private NavigationView nvDrawer;
+
+    private boolean editUserProfile;
+    private boolean editDogProfile;
+
+    private TextView drawerDogNameTextView;
+    private ImageView drawerProfilePicImageView;
 
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-    private boolean editUserProfile;
-    private boolean editDogProfile;
 
-
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* MUST BE FIRST! MUST HAPPEN FIRST! */
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        /* REST OF CREATION CODE BELLOW */
+        /* ---REST OF CREATION CODE BELLOW--- */
         super.onCreate(savedInstanceState);
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
 
@@ -108,11 +107,35 @@ public class MainActivity extends AppCompatActivity {
 
         mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Dogs Around My House"));
-        tabLayout.addTab(tabLayout.newTab().setText("Who Wants To Travel Now"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        //get widgets from drawer( profile pic and name)
+        final View drawerProfileHeader = nvDrawer.inflateHeaderView(R.layout.main_nav_header);
+        drawerDogNameTextView = (TextView) drawerProfileHeader.findViewById(R.id.dog_name_header);
+        drawerProfilePicImageView = (ImageView) drawerProfileHeader.findViewById(R.id.profile_pic);
 
+        /* tab creation area */
+/*        final ActionBar actionBar = getActionBar();
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // show the given tab
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // hide the given tab
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };*/
+
+
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.getTabAt(0).setTag(0);
+        tabLayout.getTabAt(1).setTag(1);
+//        tabLayout.addTab(tabLayout.newTab().setTag(1));
+//        tabLayout.addTab(tabLayout.newTab().setsetTag(2));
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
@@ -121,7 +144,22 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                switch (tab.getPosition()) {
+                    case 0:
+//                        viewPager.setCurrentItem(tab.getPosition());
+                        Log.d(LOG_TAG, "********************** - " + 0 + "*");
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(0).select();
+//                        viewPager.setCurrentItem(tab.getPosition());
+                        Log.d(LOG_TAG, "********************** - " + 1 + "*");
+                        break;
+                }
+////                if(tab.get == R.id.bark_tab){
+//                    Log.d(LOG_TAG, "********************** - " + tab.getPosition() + "*");
+//                    return;
+//                }
+//                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -134,11 +172,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //get widgets from drawer( profile pic and name)a
-        final View drawerProfileHeader = nvDrawer.inflateHeaderView(R.layout.main_nav_header);
-        drawerDogNameTextView = (TextView) drawerProfileHeader.findViewById(R.id.dog_name_header);
-        drawerProfilePicImageView = (ImageView) drawerProfileHeader.findViewById(R.id.profile_pic);
 
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
@@ -200,41 +233,50 @@ public class MainActivity extends AppCompatActivity {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass;
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+
+
         switch (menuItem.getItemId()) {
             case R.id.default_fragment:
                 fragmentClass = MatchesFragment.class;
+                tabLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.food_notifications:
                 fragmentClass = FoodNotificationsFragment.class;
+                tabLayout.setVisibility(View.GONE);
                 break;
             case R.id.vaccinetion_card:
                 fragmentClass = VaccinationCardFragment.class;
+                tabLayout.setVisibility(View.GONE);
                 break;
             case R.id.find_near_map:
+                mDrawer.closeDrawers();
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 startActivity(mapsIntent);
                 return;
             case R.id.sign_out:
+                mDrawer.closeDrawers();
                 AuthUI.getInstance().signOut(this);
                 mDrawer.closeDrawers();
                 return;
             case R.id.edit_user_profile:
+                mDrawer.closeDrawers();
                 Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
                 userIntent.putExtra("edit",true);
                 startActivity(userIntent);
                 return;
             case R.id.edit_dog_profile:
+                mDrawer.closeDrawers();
                 Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
                 dogIntent.putExtra("edit",true);
                 startActivityForResult(dogIntent,0);
                 return;
             case R.id.friends:
+                mDrawer.closeDrawers();
                 Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
                 return;
-
-
-
             default:
                 fragmentClass = MainFragment.class;
         }
@@ -252,7 +294,11 @@ public class MainActivity extends AppCompatActivity {
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
         // Set action bar title
-        setTitle(menuItem.getTitle());
+        if(menuItem.getItemId() != R.id.default_fragment) {
+            setTitle(menuItem.getTitle());
+        } else {
+            setTitle(getResources().getString(R.string.app_name));
+        }
         // Close the navigation drawer
         mDrawer.closeDrawers();
     }
@@ -323,13 +369,15 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
-        if(fragment.getClass() != MainFragment.class) {
+        if(fragment.getClass() != MatchesFragment.class) {
+            TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
+            tabLayout.setVisibility(View.VISIBLE);
             fragment = new MatchesFragment();
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
             // Highlight the selected item has been done by NavigationView
             mainMenuItem.setChecked(true);
             // Set action bar title
-            setTitle(mainMenuItem.getTitle());
+            setTitle(getResources().getString(R.string.app_name));
             return;
         }
         super.onBackPressed();
