@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class MatchedFriendsActivity extends AppCompatActivity {
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
-        mFriends = new ArrayList<>();
+        mFriends = new LinkedList<>();
         mAdapter = new RVAdapter(mFriends, this.getApplicationContext());
         rv.setAdapter(mAdapter);
 
@@ -57,13 +58,19 @@ public class MatchedFriendsActivity extends AppCompatActivity {
             API.mDatabaseUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (String friendUid: API.currUserData.getMsgTracker().keySet()){
+                    for (Map.Entry<String, Boolean> entry: API.currUserData.getMsgTracker().entrySet()){
+                        String friendUid = entry.getKey();
                         DataSnapshot currFriend = dataSnapshot.child(friendUid);
                         if (currFriend.exists() && currFriend.hasChild("dog")){
                             User currUser = currFriend.getValue(User.class);
                             currUser.setTempUid(friendUid);
-                            mAdapter.mFriends.add(currUser);
-                            mAdapter.notifyItemInserted(mFriends.size() - 1);
+                            if (entry.getValue()) {
+                                mAdapter.mFriends.add(currUser);
+                                mAdapter.notifyItemInserted(mFriends.size() - 1);
+                            } else {
+                                mAdapter.mFriends.add(0, currUser);
+                                mAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }

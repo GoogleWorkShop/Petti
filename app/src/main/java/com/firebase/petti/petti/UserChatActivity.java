@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.ChatApi;
+import com.firebase.petti.db.NewMessagesHandler;
 import com.firebase.petti.db.classes.ChatMessage;
 import com.firebase.petti.petti.R;
 import com.firebase.petti.petti.utils.chatAdapter;
@@ -61,7 +62,7 @@ public class UserChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_activity);
         mainListView = (ListView) findViewById( R.id.mainListView );
 
-        mMessageViewedTracker = API.getCurrUserRef().child("msgTracker").child(otherUserId);
+        mMessageViewedTracker = NewMessagesHandler.getCurrMsgTracker().child(otherUserId);
         mMessagesDatabaseReference = ChatApi.getMsgRefById(otherUserId);
         mMessageEditText = (EditText) findViewById(R.id.messageInput);
         final ImageButton mSendButton = (ImageButton) findViewById(R.id.sendButton);
@@ -115,6 +116,7 @@ public class UserChatActivity extends AppCompatActivity {
 
 
         private void attachDatabaseReadListener() {
+        NewMessagesHandler.setCurrentlyChatting(otherUserId);
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
@@ -145,5 +147,6 @@ public class UserChatActivity extends AppCompatActivity {
             mMessagesDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
+        NewMessagesHandler.unsetCurrentlyChatting();
     }
 }

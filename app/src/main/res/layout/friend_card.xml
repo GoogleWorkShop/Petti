@@ -24,7 +24,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 />
 
             <TextView
@@ -32,9 +32,9 @@
                 android:layout_height="40dp"
                 android:id="@+id/person_name"
                 android:layout_toRightOf="@+id/person_photo"
+                android:layout_toLeftOf="@+id/chat_bt"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 />
 
             <TextView
@@ -44,26 +44,45 @@
                 android:layout_toRightOf="@+id/person_photo"
                 android:layout_below="@+id/person_name"
                 />
-            <Button
+
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button1"
+                android:src="@drawable/chat_outline"
                 android:id="@+id/chat_bt"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:paddingBottom="5dip"
+                android:background="@color/tw__transparent"
+                />
 
-                style="@style/FirebaseUI.Button" />
+            <!--<Button-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/button1"-->
+                <!--android:id="@+id/chat_bt"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:paddingBottom="5dip"-->
+                <!--style="@style/FirebaseUI.Button" />-->
 
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button2"
+                android:src="@drawable/trash_can"
                 android:id="@+id/delete_bt"
-                style="@style/FirebaseUI.Button"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_below="@+id/chat_bt"
+                android:background="@color/tw__transparent"
+                />
+
+            <!--<Button-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/button2"-->
+                <!--android:id="@+id/delete_bt"-->
+                <!--style="@style/FirebaseUI.Button"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_alignParentRight="true" />-->
 
 
         </RelativeLayout>

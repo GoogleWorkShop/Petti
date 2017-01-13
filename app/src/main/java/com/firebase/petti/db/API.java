@@ -30,6 +30,7 @@ import java.util.Map;
 public class API {
 
     private static final String tag = "***FIREBASE API***";
+
     protected static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseStorage mFirebaseStorage;
     public static GeoFire geoFire;
@@ -50,6 +51,8 @@ public class API {
     private static GeoQuery geoQuery;
     public static boolean queryReady;
 
+    public static final long HALF_HOUR_MILLSEC = 30*60*1000;
+
     public static void initDatabaseApi() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
@@ -67,6 +70,7 @@ public class API {
         mUserEventListener = null;
 
         ChatApi.initChatDb();
+//        NewMessagesHandler.initNewMessagesHandler();
 
         currUserUid = null;
         currUserData = null;
@@ -241,9 +245,9 @@ public class API {
     }
 
     public static boolean isMatchedWith(String uid){
-        return (currUserData.getMsgTracker() != null &&
+        return (getCurrMsgTracker() != null &&
                 uid != null &&
-                currUserData.getMsgTracker().containsKey(uid));
+                getCurrMsgTracker().containsKey(uid));
     }
 
     public static Map<String, Boolean> getCurrMsgTracker(){
