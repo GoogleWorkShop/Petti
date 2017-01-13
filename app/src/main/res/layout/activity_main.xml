@@ -23,7 +23,43 @@
         <FrameLayout
             android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hapticFeedbackEnabled="true"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:elevation="6dp"
+                android:minHeight="?attr/actionBarSize"
+                android:visibility="visible"
+                app:tabTextColor="#512DA8"
+                app:tabSelectedTextColor="#8c6bc6"
+                app:tabIndicatorColor="#8c6bc6">
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/dogs_neighbours_tab"
+                    android:tag="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dogs Around My House"/>
+                <android.support.design.widget.TabItem
+                    android:id="@+id/bark_tab"
+                    android:tag="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Who Wants To Travel Now"/>
+
+            </android.support.design.widget.TabLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:visibility="visible" />
+        </FrameLayout>
     </LinearLayout>
 
     <!-- The navigation drawer that comes from the left -->

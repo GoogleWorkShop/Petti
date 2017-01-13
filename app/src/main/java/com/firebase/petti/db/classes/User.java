@@ -7,6 +7,9 @@ import java.util.Map;
 
 /**
  * Created by yahav on 12/26/2016.
+ *
+ * Because the {@link com.firebase.petti.petti.utils.FetchMatchesTask} always returns A user with nullified fields
+ * will indicate for us a problam in
  */
 
 public class User implements Serializable{
