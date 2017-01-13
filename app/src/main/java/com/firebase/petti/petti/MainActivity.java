@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.NewMessagesHandler;
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.firebase.petti.petti.utils.UtilsDBHelper;
@@ -358,6 +359,8 @@ public class MainActivity extends AppCompatActivity {
         final String email = user.getEmail();
         API.currUserUid = user_id;
 
+//        NewMessagesHandler.initNewMessagesHandler();
+
         ValueEventListener mNewUserListener = new ValueEventListener() {
 
             @Override
@@ -385,12 +388,14 @@ public class MainActivity extends AppCompatActivity {
         };
         API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
         API.attachCurrUserDataReadListener();
+        NewMessagesHandler.trackNewMessages(getApplicationContext());
     }
 
     private void onSignedOutCleanup() {
         // clear adapters if any populated
         // currently none is populated
         API.detachCurrUserDataReadListener();
+        NewMessagesHandler.untrackNewMessages();
         API.currUserUid = null;
         API.currUserData = null;
         setDrawerProfileInfo("", "");

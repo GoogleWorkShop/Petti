@@ -57,8 +57,6 @@ public class MatchesFragment extends Fragment {
     GPSTracker gps;
     Location location; // location
 
-    private static final long HALF_HOUR_MILLSEC = 30*60*1000;
-
 
     public MatchesFragment() {
     }
@@ -229,7 +227,7 @@ public class MatchesFragment extends Fragment {
             for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
                 User userCandidate = item.getValue();
                 Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
-                long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
+                long minBarkTimeLimit = (location.getTime() - API.HALF_HOUR_MILLSEC);
                 if (bark && (userLastWalkTimestamp == null ||
                         userLastWalkTimestamp < minBarkTimeLimit)){
                     continue;
