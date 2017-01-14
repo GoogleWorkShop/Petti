@@ -75,7 +75,7 @@ public class SplashActivity extends AppCompatActivity {
         public void run() {
             try {
                 // Sleeping
-                Thread.sleep(SLEEP_TIME*1000);
+                Thread.sleep(SLEEP_TIME*1010);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
