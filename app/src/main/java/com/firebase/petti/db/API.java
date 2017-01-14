@@ -54,26 +54,28 @@ public class API {
     public static final long HALF_HOUR_MILLSEC = 30*60*1000;
 
     public static void initDatabaseApi() {
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseStorage = FirebaseStorage.getInstance();
+        if (mFirebaseDatabase == null) {
+            mFirebaseDatabase = FirebaseDatabase.getInstance();
+            mFirebaseStorage = FirebaseStorage.getInstance();
 
 
-        mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
-        mPetPhotos = mFirebaseStorage.getReference().child("pet_photos");
-        mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
+            mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
+            mPetPhotos = mFirebaseStorage.getReference().child("pet_photos");
+            mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
 
-        mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
-        geoFire = new GeoFire(mDatabaseLocationsRef);
-        geoQuery = null;
-        queryReady = false;
+            mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
+            geoFire = new GeoFire(mDatabaseLocationsRef);
+            geoQuery = null;
+            queryReady = false;
 
-        mUserEventListener = null;
+            mUserEventListener = null;
 
-        ChatApi.initChatDb();
+            ChatApi.initChatDb();
 //        NewMessagesHandler.initNewMessagesHandler();
 
-        currUserUid = null;
-        currUserData = null;
+            currUserUid = null;
+            currUserData = null;
+        }
 
     }
 
