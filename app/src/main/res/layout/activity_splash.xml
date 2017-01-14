@@ -12,6 +12,17 @@
     tools:context="com.firebase.petti.petti.SplashActivity">
 
     <ImageView
+<<<<<<< HEAD
+=======
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/splash_header"
+        android:src="@drawable/petti_header"
+        android:visibility="invisible"
+        android:layout_alignParentTop="true"/>
+
+    <ImageView
+>>>>>>> Added splash screen
         android:visibility="invisible"
         android:id="@+id/splash_pic"
         android:layout_width="wrap_content"
