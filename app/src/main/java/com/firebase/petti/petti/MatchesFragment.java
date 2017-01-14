@@ -96,12 +96,12 @@ public class MatchesFragment extends Fragment {
             }
         }
 
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
 
-//        API.attachNearbyUsersListener(location, mRadius);
+//        while (API.currUserUid == null);
+        API.attachNearbyUsersListener(location, mRadius);
     }
 
     @Override
