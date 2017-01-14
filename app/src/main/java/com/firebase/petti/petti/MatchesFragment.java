@@ -29,7 +29,6 @@ import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
 import com.firebase.petti.petti.utils.FetchMatchesTask;
-import com.firebase.petti.petti.utils.UpdateableFragment;
 
 
 /**
@@ -76,7 +75,7 @@ public class MatchesFragment extends Fragment {
             bark = false;
         }
 
-        Log.d(LOG_TAG, "****** bark is: " + bark + " ********");
+        Log.d(LOG_TAG, "****** created new matches fragment -  bark is: " + bark + " ********");
 
         if (!bark){
             //TODO change to location from address
@@ -92,7 +91,7 @@ public class MatchesFragment extends Fragment {
 
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
 
-//        API.attachNearbyUsersListener(location, mRadius);
+        API.attachNearbyUsersListener(location, mRadius);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class MatchesFragment extends Fragment {
 
     private void updateMatches() {
         if ((canAccessLocation() && bark) || !bark) {
-            Log.d(LOG_TAG, "****** bark is: " + bark + " AND " + canAccessLocation() + " ********");
+            Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " AND canAccessLocation(): " + canAccessLocation() + " ********");
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.GONE);
             searchingView.setVisibility(View.VISIBLE);
@@ -139,19 +138,13 @@ public class MatchesFragment extends Fragment {
             matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
             matchesTask.execute(taskParams);
         } else {
-            Log.d(LOG_TAG, "****** bark is: " + bark + " IN HAS NNNNNNOOOOOO PERMISSION ********");
+            Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " IN HAS NNNNNNOOOOOO PERMISSION ********");
             searchingView.setVisibility(View.GONE);
         }
         // TODO deal with cancellations
         /*if (isCancelled()){
             return;
         }*/
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateMatches();
     }
 
     @Override
@@ -179,16 +172,11 @@ public class MatchesFragment extends Fragment {
         boolean needUpdate = false;
         int radius;
         String stringRadius;
-        //TODO restore after there is address
-//        if (!bark || canAccessLocation() && !attachedNearbyList) {
-//            API.attachNearbyUsersListener(location, mRadius);
-//            needUpdate = true;
-//        }
-        //TODO delete this if after upper if is restored
-        if (bark && canAccessLocation() && !attachedNearbyList){
+        if ((!bark || canAccessLocation()) && !attachedNearbyList) {
             attachedNearbyList = API.attachNearbyUsersListener(location, mRadius);
             needUpdate = true;
         }
+
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         stringRadius = pref.getString("matchDistance", "1");
         radius = Integer.parseInt(stringRadius);
@@ -199,7 +187,7 @@ public class MatchesFragment extends Fragment {
             needUpdate = true;
         }
 
-        /* if one of the above is true - call upfate function */
+        /* if one of the above is true - call update function */
         if (needUpdate){
             updateMatches();
         }

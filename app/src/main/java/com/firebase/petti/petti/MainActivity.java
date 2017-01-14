@@ -1,26 +1,23 @@
 package com.firebase.petti.petti;
 
 
-import android.app.ProgressDialog;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,23 +28,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.petti.db.NewMessagesHandler;
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
-import com.firebase.petti.petti.utils.PagerAdapter;
 import com.firebase.petti.petti.utils.UtilsDBHelper;
 import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 import com.firebase.petti.db.API;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
+
+    final Context contex = this;
 
     private DrawerLayout mDrawer;
 
@@ -61,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView nvDrawer;
+
+    private boolean editUserProfile;
+    private boolean editDogProfile;
 
     private TextView drawerDogNameTextView;
     private ImageView drawerProfilePicImageView;
@@ -131,37 +124,13 @@ public class MainActivity extends AppCompatActivity {
         drawerDogNameTextView = (TextView) drawerProfileHeader.findViewById(R.id.dog_name_header);
         drawerProfilePicImageView = (ImageView) drawerProfileHeader.findViewById(R.id.profile_pic);
 
-        /* tab creation area */
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.getTabAt(0).setTag(0);
-        tabLayout.getTabAt(1).setTag(1);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                        tabLayout.getTabAt(0).select();
-                }
-                adapter.update(tab.getPosition());
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
-        initAuthStateListener();
+
+        Menu menuNav = nvDrawer.getMenu();
+        MenuItem defaultFragmentItem = menuNav.findItem(R.id.default_fragment);
+        defaultFragmentItem.setChecked(true);
+        // Set action bar title
+        setTitle(defaultFragmentItem.getTitle());
 
         // We want this to be the last so we will initiate every thing and then set the fragment
         if (savedInstanceState == null) {
@@ -189,6 +158,20 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == INITIAL_REQUEST) {
             if (grantResults.length == 1 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (canAccessLocation()) {
+                    Toast.makeText(contex, R.string.get_ready_for_a_walk,
+                            Toast.LENGTH_SHORT).show();
+                    MatchesFragment matchesFragment = new MatchesFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("bark", true);
+                    matchesFragment.setArguments(bundle);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.main_container,
+                            matchesFragment).commit();
+
+                    mDrawer.closeDrawers();
+                    setTitle("Who Want To Walk Now");
+                }
             } else {
                 Toast.makeText(this,
                         "We can not play with you without your permission...",
@@ -249,53 +232,79 @@ public class MainActivity extends AppCompatActivity {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass;
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-
+        Bundle bundle = null;
 
         switch (menuItem.getItemId()) {
             case R.id.default_fragment:
                 fragmentClass = MatchesFragment.class;
-                tabLayout.setVisibility(View.VISIBLE);
+                bundle = new Bundle();
+                bundle.putBoolean("bark", false);
+                mainMenuItem = menuItem;
+                break;
+            case R.id.bark_fragment:
+                if (canAccessLocation()) {
+                    Toast.makeText(contex, R.string.get_ready_for_a_walk,
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(contex,
+                            "All locations and no permissions makes Johnny a dull boy",
+                            Toast.LENGTH_SHORT).show();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+                    }
+                    // TODO deal with no permission
+                    setTitle(mainMenuItem.getTitle());
+                    mainMenuItem.setChecked(true);
+                    return;
+                }
+                fragmentClass = MatchesFragment.class;
+                bundle = new Bundle();
+                bundle.putBoolean("bark", true);
                 break;
             case R.id.food_notifications:
                 fragmentClass = FoodNotificationsFragment.class;
-                tabLayout.setVisibility(View.GONE);
+                mainMenuItem = menuItem;
                 break;
             case R.id.vaccinetion_card:
                 fragmentClass = VaccinationCardFragment.class;
-                tabLayout.setVisibility(View.GONE);
+                mainMenuItem = menuItem;
                 break;
             case R.id.find_near_map:
                 mDrawer.closeDrawers();
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 startActivity(mapsIntent);
+                mainMenuItem = menuItem;
                 return;
             case R.id.sign_out:
                 mDrawer.closeDrawers();
                 AuthUI.getInstance().signOut(this);
                 Intent signOutIntent = new Intent(this,SplashActivity.class);
                 startActivityForResult(signOutIntent, 888);
+                mainMenuItem = menuItem;
                 return;
             case R.id.edit_user_profile:
                 mDrawer.closeDrawers();
                 Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
                 userIntent.putExtra("edit",true);
                 startActivity(userIntent);
+                mainMenuItem = menuItem;
                 return;
             case R.id.edit_dog_profile:
                 mDrawer.closeDrawers();
                 Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
                 dogIntent.putExtra("edit",true);
                 startActivityForResult(dogIntent,0);
+                mainMenuItem = menuItem;
                 return;
             case R.id.friends:
                 mDrawer.closeDrawers();
                 Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
+                mainMenuItem = menuItem;
                 return;
             default:
                 fragmentClass = MainFragment.class;
+                mainMenuItem = menuItem;
         }
 
         try {
@@ -304,6 +313,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        /* if this is a matches fragment we need to pass the bark variable */
+        if (menuItem.getItemId() == R.id.default_fragment ||
+                menuItem.getItemId() == R.id.bark_fragment){
+            fragment.setArguments(bundle);
+        }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
@@ -375,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
                 && keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0
-                && fragment.getClass() != MainFragment.class) {
+                && fragment.getClass() != MatchesFragment.class) {
             onBackPressed();
             return true;
         }
@@ -387,14 +401,17 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         if(fragment.getClass() != MatchesFragment.class) {
-            TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
-            tabLayout.setVisibility(View.VISIBLE);
             fragment = new MatchesFragment();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("bark", false);
+            fragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
             // Highlight the selected item has been done by NavigationView
-            mainMenuItem.setChecked(true);
+            Menu menuNav = nvDrawer.getMenu();
+            MenuItem defaultFragmentItem = menuNav.findItem(R.id.default_fragment);
+            defaultFragmentItem.setChecked(true);
             // Set action bar title
-            setTitle(getResources().getString(R.string.app_name));
+            setTitle(defaultFragmentItem.getTitle());
             return;
         }
         super.onBackPressed();

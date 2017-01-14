@@ -87,8 +87,8 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
          * before timeout - this sometimes happen although there ARE matches
          * TODO remove after bug is fixed
           */
-        if (timeout !=0 && mMatchesArray.isEmpty()){
-            Log.d(tag, "in 'timeout !=0 && mMatchesArray.isEmpty()' - timeout: " + timeout);
+        if (timeout !=-1 && mMatchesArray.isEmpty()){
+            Log.d(tag, "in 'timeout !=-1 && mMatchesArray.isEmpty()' - timeout: " + timeout);
         }
 
         // sort list by distance to current user
