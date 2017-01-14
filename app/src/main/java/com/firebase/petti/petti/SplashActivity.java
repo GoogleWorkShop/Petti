@@ -39,8 +39,11 @@ public class SplashActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    ImageView splashHeader;
     ImageView splashImage;
     TextView splashText;
+
+    Intent nextActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
+        splashHeader = (ImageView) findViewById(R.id.splash_header);
         splashImage = (ImageView) findViewById(R.id.splash_pic);
         splashText = (TextView) findViewById(R.id.splash_text);
 
@@ -76,9 +80,13 @@ public class SplashActivity extends AppCompatActivity {
                 Log.e(TAG, e.getMessage());
             }
 
-            // Start main activity
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-            SplashActivity.this.startActivity(intent);
+            if (editDogProfile || editUserProfile){
+                nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
+            } else {
+                // Start main activity
+                nextActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
+            }
+            SplashActivity.this.startActivity(nextActivityIntent);
             SplashActivity.this.finish();
         }
     }
@@ -99,7 +107,8 @@ public class SplashActivity extends AppCompatActivity {
 
                     Animation fadeInImage = new AlphaAnimation(0, 1);
                     fadeInImage.setInterpolator(new DecelerateInterpolator()); //add this
-                    fadeInImage.setDuration(2000);
+                    fadeInImage.setDuration(1000);
+                    fadeInImage.setStartOffset(500);
 
                     Animation fadeInText = new AlphaAnimation(0, 1);
                     fadeInText.setInterpolator(new DecelerateInterpolator()); //add this
@@ -119,6 +128,7 @@ public class SplashActivity extends AppCompatActivity {
                     textAnim.addAnimation(fadeInImage);
                     textAnim.addAnimation(fadeOut);
 
+                    splashHeader.setAnimation(imageAnim);
                     splashImage.setAnimation(imageAnim);
                     splashText.startAnimation(textAnim);
 
@@ -240,9 +250,9 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-//    private void startEditProfileActivity() {
-//        Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(this, DogRegistrationActivity.class);
-//        startActivity(intent);
-//    }
+    private void startEditProfileActivity() {
+        Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DogRegistrationActivity.class);
+        SplashActivity.this.startActivity(intent);
+    }
 }
