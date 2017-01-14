@@ -4,8 +4,12 @@
         <item
             android:id="@+id/default_fragment"
             android:icon="@drawable/ic_action_walking_together"
-            android:title="Walking and Barking"
+            android:title="Neighbour Dogs"
             android:checked="true"/>
+        <item
+            android:id="@+id/bark_fragment"
+            android:icon="@drawable/ic_action_walk"
+            android:title="Who Want To Walk Now"/>
         <item
             android:id="@+id/friends"
             android:icon="@drawable/ic_action_friends"

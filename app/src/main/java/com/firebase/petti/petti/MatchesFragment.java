@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,9 +30,6 @@ import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
 import com.firebase.petti.petti.utils.FetchMatchesTask;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +38,7 @@ public class MatchesFragment extends Fragment {
 
     View rootView;
 
-    private static final String tag = "***MATCHES-FRAGMENT***";
+    private static final String LOG_TAG = MatchesFragment.class.getSimpleName();
 
     GridViewAdapter mMatchesAdapter;
     FetchMatchesTask matchesTask;
@@ -50,11 +48,13 @@ public class MatchesFragment extends Fragment {
     // GPSTracker class
     GPSTracker gps;
     // location
-    Location location;
+    Location location = null;
 
     GridView gridView;
     TextView notFoundView;
     TextView searchingView;
+
+    private boolean attachedNearbyList;
 
 
     public MatchesFragment() {
@@ -75,32 +75,14 @@ public class MatchesFragment extends Fragment {
             bark = false;
         }
 
-        if(!bark){
-            gps = new GPSTracker(getActivity());
+        Log.d(LOG_TAG, "****** created new matches fragment -  bark is: " + bark + " ********");
 
-            // check if GPS enabled
-            if (gps.canGetLocation()) {
-
-                location = gps.getLocation();
-                if (location == null){
-                    Toast.makeText(getActivity(),
-                            "All locations and no permissions makes Johnny a dull boy",
-                            Toast.LENGTH_LONG).show();
-                    getActivity().finish();
-                }
-            } else {
-                // can't get location
-                // GPS or Network is not enabled
-                // Ask user to enable GPS/network in settings
-                gps.showSettingsAlert();
-            }
-        }
+        setUpLocation();
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
 
-//        while (API.currUserUid == null);
         API.attachNearbyUsersListener(location, mRadius);
     }
 
@@ -139,19 +121,23 @@ public class MatchesFragment extends Fragment {
     }
 
     private void updateMatches() {
-        TaskParams taskParams = new TaskParams(bark, location);
-        matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
-        matchesTask.execute(taskParams);
+        if ((canAccessLocation() && bark) || !bark) {
+            setUpLocation();
+            Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " AND LOCATION = " + (location==null) + " ********");
+            gridView.setVisibility(View.GONE);
+            notFoundView.setVisibility(View.GONE);
+            searchingView.setVisibility(View.VISIBLE);
+            TaskParams taskParams = new TaskParams(bark, location);
+            matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
+            matchesTask.execute(taskParams);
+        } else {
+            Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " IN HAS NNNNNNOOOOOO PERMISSION ********");
+            searchingView.setVisibility(View.GONE);
+        }
         // TODO deal with cancellations
         /*if (isCancelled()){
             return;
         }*/
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateMatches();
     }
 
     @Override
@@ -164,14 +150,38 @@ public class MatchesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        checkAndUpdate();
+    }
+
+    /**
+     *  We want to check if we have been given a permission to search location for the first time.
+     * If so, we need to attach the location listener run the match task
+     * for bark it will be while having location permission and for neighbour it will be only
+     * having no listener before.
+     *
+     * Another event that we want to reattach the listener ad update is when radius preference is changed.
+     */
+    public void checkAndUpdate(){
+        boolean needUpdate = false;
+        int radius;
+        String stringRadius;
+        if ((!bark || canAccessLocation()) && !attachedNearbyList) {
+            attachedNearbyList = API.attachNearbyUsersListener(location, mRadius);
+            needUpdate = true;
+        }
+
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            SharedPreferences pref = getActivity().getSharedPreferences(DEFAULT_PREFERENCE_STRING, 0);
-        String s = pref.getString("matchDistance", "1");
-        int radius = Integer.parseInt(s);
+        stringRadius = pref.getString("matchDistance", "1");
+        radius = Integer.parseInt(stringRadius);
         if (radius != mRadius) {
             mRadius = radius;
             API.detachNearbyUsersListener();
-            API.attachNearbyUsersListener(location, mRadius);
+            attachedNearbyList = API.attachNearbyUsersListener(location, mRadius);
+            needUpdate = true;
+        }
+
+        /* if one of the above is true - call update function */
+        if (needUpdate){
             updateMatches();
         }
     }
@@ -192,7 +202,8 @@ public class MatchesFragment extends Fragment {
             case R.id.settings_menu:
                 Fragment myPrefrences = new MyPreferencesFragment();
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)
+                fragmentManager.beginTransaction()
+                        .replace(((ViewGroup)getView().getParent()).getId(), myPrefrences)
                         .addToBackStack( "tag" ).commit();
                 return true;
             default:
@@ -208,6 +219,32 @@ public class MatchesFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
         return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
+    }
+
+    private void setUpLocation() {
+        if (bark) {
+            gps = new GPSTracker(getActivity());
+
+            // check if GPS enabled
+            if (gps.canGetLocation()) {
+
+                location = gps.getLocation();
+                if (location == null) {
+                    Toast.makeText(getActivity(),
+                            "All locations and no permissions makes Johnny a dull boy",
+                            Toast.LENGTH_LONG).show();
+                    Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
+                }
+            } else {
+                // can't get location
+                // GPS or Network is not enabled
+                // Ask user to enable GPS/network in settings
+                gps.showSettingsAlert();
+            }
+        } else {
+            //TODO replace with location from address in this case
+            location = null;
+        }
     }
 
     public static class TaskParams{
