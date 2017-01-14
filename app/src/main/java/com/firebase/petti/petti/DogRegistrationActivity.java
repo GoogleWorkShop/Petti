@@ -94,19 +94,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
         commonWalkPlacesText = (TextInputEditText) findViewById(R.id.common_walk_places_text);
         dogMaleButton = (RadioButton) findViewById(R.id.pet_gender_male_radio);
         dogFemaleButton = (RadioButton) findViewById(R.id.pet_gender_female_radio);
-        moveToEditButton = (Button) findViewById(R.id.moveToEditProfileButton);
 
         //change button text acoording to ui flow, it its from initail registration: move to user reg,
         //if it is from editing profile, go back to main
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        if(bundle != null){
-            isEditState = (Boolean) bundle.get("edit");
-        }
-
-        if(isEditState){
-            moveToEditButton.setText("Done Editing");
-        }
 
 
         //dog type spinner

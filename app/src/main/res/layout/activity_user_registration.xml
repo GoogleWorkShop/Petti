@@ -29,19 +29,19 @@
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_weight="0.12"
                 android:id="@+id/user_image"
                 android:background="@drawable/dog_person_pic"
                 android:scaleType="centerCrop"
                 />
 
             <Button
-                android:layout_width="165dp"
+                android:layout_width="150dp"
                 android:layout_height="49dp"
+                android:drawableLeft="@drawable/upload_picture"
                 android:id="@+id/user_uploadButton"
                 android:layout_gravity="fill_vertical"
-                android:text="user_UPLOAD IMAGE"
-                android:layout_weight="0.01"
+                android:text="Upload"
+                android:layout_below="@+id/user_image"
                 android:onClick="uploadImageMethod"
                 />
 
@@ -108,6 +108,7 @@
                 android:scrollbarStyle="outsideInset"
                 android:scrollbarSize="20dp"
                 android:choiceMode="multipleChoice"
+
                 />
 
 
@@ -131,14 +132,6 @@
             android:orientation="horizontal"
             android:weightSum="1"
             android:layout_weight="1">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="20dp"
-                android:layout_gravity="top"
-                android:id="@+id/user_email_view"
-                android:layout_weight="0.3"
-                />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,6 +140,15 @@
                 android:layout_weight="0.7"
                 android:textSize="20dp"
                 />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:layout_gravity="top"
+                android:id="@+id/user_email_view"
+                android:layout_weight="0.3"
+                />
+
         </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -178,24 +180,22 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:weightSum="1"
             android:orientation="horizontal">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:text="Find Partners"
-                android:textSize="20dp"
-                android:onClick="MoveToMainAndUploodUserToDB"
-                android:background="@color/colorPrimary"
-                android:id="@+id/FindPartnersButton" />
-
-            <android.support.v7.widget.AppCompatImageButton
-                android:layout_width="match_parent"
+            <ImageButton
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:background="@drawable/walking_paws_pic"/>
+                android:src="@drawable/done_edit"
+                android:id="@+id/delete_bt"
+                android:background="@color/tw__transparent"
+                android:onClick="MoveToMainAndUploodUserToDB"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_centerInParent="true"
+                />
+
 
 
 

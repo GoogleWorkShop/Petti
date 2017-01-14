@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="com.firebase.petti.petti.MatchedDogActivity"
-    android:background="@drawable/grass_and_sky">
+    >
 
     <LinearLayout
         android:id="@+id/activity_registration"
@@ -39,20 +39,19 @@
                     android:id="@+id/pet_image"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_weight="0.12"
                     android:background="@drawable/pet_pic"
                     android:scaleType="centerCrop" />
 
                 <Button
                     android:id="@+id/uploadButton"
-                    android:layout_width="165dp"
+                    android:layout_width="150dp"
                     android:layout_height="49dp"
+                    android:drawableLeft="@drawable/upload_picture"
                     android:layout_gravity="fill_vertical"
-                    android:layout_weight="0.01"
                     android:onClick="uploadImageMethod"
-                    android:text="pet_UPLOAD IMAGE"
-                    android:background="@drawable/our_button"
-                    android:textColor="@color/tw__composer_white"/>
+                    android:text="UPLOAD"
+                 />
+
 
 
             </LinearLayout>
@@ -177,22 +176,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="1">
+                android:layout_gravity="center"
+                android:weightSum="1"
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/moveToEditProfileButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/done_edit"
+                    android:background="@color/tw__transparent"
                     android:onClick="MoveToEditProfileAndUploadPet"
-                    android:text="Edit Your profile"
-                    android:textSize="20dp"
-                    android:background="@drawable/our_button"
-                    android:textColor="@color/tw__composer_white"
-                    android:paddingRight="5dp"
-                    android:paddingLeft="5dp"/>
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:layout_centerInParent="true"
+                    />
 
 
             </LinearLayout>
