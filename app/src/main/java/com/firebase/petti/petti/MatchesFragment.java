@@ -77,15 +77,7 @@ public class MatchesFragment extends Fragment {
 
         Log.d(LOG_TAG, "****** created new matches fragment -  bark is: " + bark + " ********");
 
-        if (!bark){
-            //TODO change to location from address
-            location = null;
-        } else if(canAccessLocation()){
-            setUpGPS();
-        } else {
-            Log.d(LOG_TAG, "neither bark nor bark with params");
-        }
-
+        setUpLocation();
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -130,7 +122,8 @@ public class MatchesFragment extends Fragment {
 
     private void updateMatches() {
         if ((canAccessLocation() && bark) || !bark) {
-            Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " AND canAccessLocation(): " + canAccessLocation() + " ********");
+            setUpLocation();
+            Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " AND LOCATION = " + (location==null) + " ********");
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.GONE);
             searchingView.setVisibility(View.VISIBLE);
@@ -228,24 +221,29 @@ public class MatchesFragment extends Fragment {
         return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(getContext(),perm));
     }
 
-    private void setUpGPS() {
-        gps = new GPSTracker(getActivity());
+    private void setUpLocation() {
+        if (bark) {
+            gps = new GPSTracker(getActivity());
 
-        // check if GPS enabled
-        if (gps.canGetLocation()) {
+            // check if GPS enabled
+            if (gps.canGetLocation()) {
 
-            location = gps.getLocation();
-            if (location == null){
-                Toast.makeText(getActivity(),
-                        "All locations and no permissions makes Johnny a dull boy",
-                        Toast.LENGTH_LONG).show();
-                getActivity().finish();
+                location = gps.getLocation();
+                if (location == null) {
+                    Toast.makeText(getActivity(),
+                            "All locations and no permissions makes Johnny a dull boy",
+                            Toast.LENGTH_LONG).show();
+                    Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
+                }
+            } else {
+                // can't get location
+                // GPS or Network is not enabled
+                // Ask user to enable GPS/network in settings
+                gps.showSettingsAlert();
             }
         } else {
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
+            //TODO replace with location from address in this case
+            location = null;
         }
     }
 

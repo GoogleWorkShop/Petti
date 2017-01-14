@@ -158,25 +158,27 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == INITIAL_REQUEST) {
             if (grantResults.length == 1 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (canAccessLocation()) {
-                    Toast.makeText(contex, R.string.get_ready_for_a_walk,
-                            Toast.LENGTH_SHORT).show();
-                    MatchesFragment matchesFragment = new MatchesFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("bark", true);
-                    matchesFragment.setArguments(bundle);
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.main_container,
-                            matchesFragment).commit();
-
-                    mDrawer.closeDrawers();
-                    setTitle("Who Want To Walk Now");
-                }
+//                if (canAccessLocation()) {
+//                    Toast.makeText(contex, R.string.get_ready_for_a_walk,
+//                            Toast.LENGTH_SHORT).show();
+//                    MatchesFragment matchesFragment = new MatchesFragment();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putBoolean("bark", true);
+//                    matchesFragment.setArguments(bundle);
+//                    FragmentManager fragmentManager = getSupportFragmentManager();
+//                    fragmentManager.beginTransaction().replace(R.id.main_container,
+//                            matchesFragment).commit();
+//
+//                    mDrawer.closeDrawers();
+//                    setTitle("Who Want To Walk Now");
+//                }
             } else {
                 Toast.makeText(this,
                         "We can not play with you without your permission...",
                         Toast.LENGTH_SHORT).show();
             }
+            setTitle(mainMenuItem.getTitle());
+            mainMenuItem.setChecked(true);
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -242,10 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 mainMenuItem = menuItem;
                 break;
             case R.id.bark_fragment:
-                if (canAccessLocation()) {
-                    Toast.makeText(contex, R.string.get_ready_for_a_walk,
-                            Toast.LENGTH_SHORT).show();
-                } else {
+                if (!canAccessLocation()) {
                     Toast.makeText(contex,
                             "All locations and no permissions makes Johnny a dull boy",
                             Toast.LENGTH_SHORT).show();
@@ -257,6 +256,8 @@ public class MainActivity extends AppCompatActivity {
                     mainMenuItem.setChecked(true);
                     return;
                 }
+                Toast.makeText(contex, R.string.get_ready_for_a_walk,
+                        Toast.LENGTH_SHORT).show();
                 fragmentClass = MatchesFragment.class;
                 bundle = new Bundle();
                 bundle.putBoolean("bark", true);
@@ -325,11 +326,7 @@ public class MainActivity extends AppCompatActivity {
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
         // Set action bar title
-        if(menuItem.getItemId() != R.id.default_fragment) {
-            setTitle(menuItem.getTitle());
-        } else {
-            setTitle(getResources().getString(R.string.app_name));
-        }
+        setTitle(menuItem.getTitle());
         // Close the navigation drawer
         mDrawer.closeDrawers();
     }
