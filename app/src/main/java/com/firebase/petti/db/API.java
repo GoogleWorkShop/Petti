@@ -147,11 +147,15 @@ public class API {
         return tempDog == null ? new Dog() : tempDog;
     }
 
-    public static void attachNearbyUsersListener(Location location, int radius) {
+    public static boolean attachNearbyUsersListener(Location location, int radius) {
 
         nearbyUsers = new HashMap<>();
 
         //first set the location for the user
+        if(location == null){
+            Log.d("**** PETTI API ****", "Got a null value in location parameter");
+            return false;
+        }
 
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
@@ -231,6 +235,7 @@ public class API {
             };
             geoQuery.addGeoQueryEventListener(mLocationsListener);
         }
+        return true;
     }
 
 

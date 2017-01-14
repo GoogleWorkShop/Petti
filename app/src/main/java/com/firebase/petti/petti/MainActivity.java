@@ -2,9 +2,12 @@ package com.firebase.petti.petti;
 
 
 import android.app.ProgressDialog;
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -70,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
 //    private FirebaseAuth.AuthStateListener mAuthStateListener;
 //    ProgressDialog pd;
 
+    /* this are for the location permission request */
+    private static final String[] INITIAL_PERMS={
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int INITIAL_REQUEST = 1337;
+
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -122,56 +131,22 @@ public class MainActivity extends AppCompatActivity {
         drawerDogNameTextView = (TextView) drawerProfileHeader.findViewById(R.id.dog_name_header);
         drawerProfilePicImageView = (ImageView) drawerProfileHeader.findViewById(R.id.profile_pic);
 
-        setDrawerProfileInfo();
-
         /* tab creation area */
-/*        final ActionBar actionBar = getActionBar();
-
-        // Create a tab listener that is called when the user changes tabs.
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // show the given tab
-            }
-
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // hide the given tab
-            }
-
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // probably ignore this event
-            }
-        };*/
-
-
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.getTabAt(0).setTag(0);
         tabLayout.getTabAt(1).setTag(1);
-//        tabLayout.addTab(tabLayout.newTab().setTag(1));
-//        tabLayout.addTab(tabLayout.newTab().setsetTag(2));
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-//                        viewPager.setCurrentItem(tab.getPosition());
-                        Log.d(LOG_TAG, "********************** - " + 0 + "*");
-                        break;
-                    case 1:
                         tabLayout.getTabAt(0).select();
-//                        viewPager.setCurrentItem(tab.getPosition());
-                        Log.d(LOG_TAG, "********************** - " + 1 + "*");
-                        break;
                 }
-////                if(tab.get == R.id.bark_tab){
-//                    Log.d(LOG_TAG, "********************** - " + tab.getPosition() + "*");
-//                    return;
-//                }
-//                viewPager.setCurrentItem(tab.getPosition());
+                adapter.update(tab.getPosition());
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -185,11 +160,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ImageLoaderUtils.initImageLoader(this.getApplicationContext());
+        initAuthStateListener();
+
         // We want this to be the last so we will initiate every thing and then set the fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.main_container, new MatchesFragment())
                     .commit();
+        }
+    }
+
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(this, perm));
+    }
+
+    // Callback with the request from calling requestPermissions
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        // Make sure it's our original GET_LOCATION request
+        if (requestCode == INITIAL_REQUEST) {
+            if (grantResults.length == 1 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                Toast.makeText(this,
+                        "We can not play with you without your permission...",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -268,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.sign_out:
                 mDrawer.closeDrawers();
                 AuthUI.getInstance().signOut(this);
-                mDrawer.closeDrawers();
                 Intent signOutIntent = new Intent(this,SplashActivity.class);
                 startActivityForResult(signOutIntent, 888);
                 return;
@@ -533,16 +538,4 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("edit", true);
         startActivity(intent);
     }
-
-//    private void startProgressBar(){
-//        if (API.currUserData == null) {
-//            pd.show();
-//        }
-//    }
-//
-//    private void stopProgressBar(){
-//        if (pd.isShowing()) {
-//            pd.hide();
-//        }
-//    }
 }

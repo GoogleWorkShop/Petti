@@ -94,6 +94,7 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         // sort list by distance to current user
         Collections.sort(mMatchesArray, new MatchedUserComparator());
 
+        // TODO YAHAV - can we delete this?
 //            //put friends before non-friends
 //            ArrayList<User> tmpFriendsListByLocation = new ArrayList<>();
 //            ArrayList<User> tmpNotFriendsListByLocation = new ArrayList<>();
