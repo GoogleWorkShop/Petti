@@ -12,8 +12,6 @@
     tools:context="com.firebase.petti.petti.SplashActivity">
 
     <ImageView
-<<<<<<< HEAD
-=======
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/splash_header"
@@ -22,7 +20,7 @@
         android:layout_alignParentTop="true"/>
 
     <ImageView
->>>>>>> Added splash screen
+
         android:visibility="invisible"
         android:id="@+id/splash_pic"
         android:layout_width="wrap_content"
@@ -38,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/splash_pic"
         android:layout_centerHorizontal="true"
-        android:text="You'll Never Walk Alone"
+        android:text="@string/slogen"
         android:textSize="30sp"
         android:typeface="sans"
         android:textColor="@color/tw__light_gray"/>
