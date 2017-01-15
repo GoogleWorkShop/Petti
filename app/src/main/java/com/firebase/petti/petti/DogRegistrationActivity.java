@@ -99,6 +99,10 @@ public class DogRegistrationActivity extends AppCompatActivity {
         //if it is from editing profile, go back to main
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            isEditState = (Boolean) bundle.get("edit");
+                  }
+
 
 
         //dog type spinner
