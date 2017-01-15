@@ -99,6 +99,10 @@ public class DogRegistrationActivity extends AppCompatActivity {
         //if it is from editing profile, go back to main
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            isEditState = (Boolean) bundle.get("edit");
+                  }
+
 
 
         //dog type spinner
@@ -299,9 +303,10 @@ public class DogRegistrationActivity extends AppCompatActivity {
         dogName = nameView.getText().toString();
 
         if (dogName.length() < 2) {
-            Toast.makeText(this, "Must add at least name", Toast.LENGTH_SHORT).show();
+            nameView.setError("A Dog's Name Is A must");
             return;
         }
+
 
         dogBD = BDView.getText().toString();
         dog_is_female = (gender == Gender.Female);

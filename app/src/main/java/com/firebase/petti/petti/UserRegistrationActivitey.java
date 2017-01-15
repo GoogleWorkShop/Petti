@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -69,7 +70,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     Button uploadButton;
     ImageView userImage;
     TextView addressText;
-//    final String[] city = new String[1];
+    //    final String[] city = new String[1];
     final String[] looking4 = new String[1];
     RadioButton maleButton;
     RadioButton femaleButton;
@@ -148,7 +149,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 BDView.setText(userBD);
             }
 
-
+            //address
             cityStr = currOwnerData.getCity();
             if (cityStr != null){
                 addressText.setText(cityStr);
@@ -262,6 +263,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
     public void ChooseStaticLocationMethod(View view) {
         try {
+
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                     .build();
@@ -367,6 +369,18 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         //fill fields to pass to db
         userName = nameView.getText().toString();
+        if(userName.length() < 2){
+            nameView.requestFocus();
+            nameView.setError("Your Name Is A Must");
+            return;
+        }
+        cityStr = addressText.getText().toString();
+        if(cityStr == null || cityStr.isEmpty() || cityStr.startsWith("Tap here")){
+            addressText.requestFocus();
+            addressText.setError("Must Select Your Home Address");
+            return;
+        }
+
         userBD = BDView.getText().toString();
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
 //        cityStr = city[0];

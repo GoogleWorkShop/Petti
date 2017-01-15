@@ -5,7 +5,6 @@
     android:id="@+id/activity_registration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/grass_and_sky"
     android:weightSum="1"
     android:layout_marginTop="5dp"
     android:orientation="vertical"
@@ -132,9 +131,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:weightSum="1"
-            android:onClick="ChooseStaticLocationMethod"
             android:layout_weight="1">
 
             <TextView
@@ -152,10 +149,20 @@
                 android:textSize="20sp"
                 android:layout_below="@+id/address_header"
                 android:id="@+id/address_str"
+                android:onClick="ChooseStaticLocationMethod"
+                style="@android:style/Widget.EditText"
                 android:textColor="@color/tw__composer_black"
                 android:layout_alignParentLeft="true"
                 android:text="Tap here to set address"
                 />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/address_str"
+                android:onClick="ChooseStaticLocationMethod"
+                android:layout_alignParentBottom="true"
+                android:background="@mipmap/ic_location_icon"/>
+
 
         </RelativeLayout>
 
@@ -214,9 +221,3 @@
 
 
 </LinearLayout>
-
-
-
-
-
-

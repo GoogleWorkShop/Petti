@@ -107,7 +107,8 @@ public class API {
         Owner new_user = new Owner(name, mail);
         setOwner(new_user);
         Dog default_dog = new Dog();
-        default_dog.setName("John Doggo");
+        //default_dog.setName("John Doggo");
+        default_dog.setName("");
         setDog(default_dog);
     }
 
