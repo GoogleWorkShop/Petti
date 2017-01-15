@@ -303,9 +303,10 @@ public class DogRegistrationActivity extends AppCompatActivity {
         dogName = nameView.getText().toString();
 
         if (dogName.length() < 2) {
-            Toast.makeText(this, "Must add at least name", Toast.LENGTH_SHORT).show();
+            nameView.setError("A Dog's Name Is A must");
             return;
         }
+
 
         dogBD = BDView.getText().toString();
         dog_is_female = (gender == Gender.Female);

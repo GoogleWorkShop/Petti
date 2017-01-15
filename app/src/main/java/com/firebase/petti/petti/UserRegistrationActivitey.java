@@ -149,7 +149,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 BDView.setText(userBD);
             }
 
-
+            //address
             cityStr = currOwnerData.getCity();
             if (cityStr != null){
                 addressText.setText(cityStr);
@@ -263,6 +263,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
     public void ChooseStaticLocationMethod(View view) {
         try {
+
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                     .build();
@@ -368,6 +369,18 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         //fill fields to pass to db
         userName = nameView.getText().toString();
+        if(userName.length() < 2){
+            nameView.requestFocus();
+            nameView.setError("Your Name Is A Must");
+            return;
+        }
+        cityStr = addressText.getText().toString();
+        if(cityStr == null || cityStr.isEmpty() || cityStr.startsWith("Tap here")){
+            addressText.requestFocus();
+            addressText.setError("Must Select Your Home Address");
+            return;
+        }
+
         userBD = BDView.getText().toString();
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
 //        cityStr = city[0];
