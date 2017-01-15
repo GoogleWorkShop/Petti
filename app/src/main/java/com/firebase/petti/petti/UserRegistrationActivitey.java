@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -27,6 +29,12 @@ import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User.Owner;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
@@ -47,22 +55,26 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     List<String> lookingForList = new ArrayList<String>();
     String userDescreption;
     String userNickname;
-    String userEmail;
+//    String userEmail;
+
+    Place newAddressPlace;
 
     //TODO picture....
 
 
     private static final int SELECT_PICTURE = 100;
+    private static final int SELECT_LOCATION = 200;
     private static final String TAG = "UserRegActivity";
     EditText nameView;
     TextView BDView;
     Button uploadButton;
     ImageView userImage;
-    final String[] city = new String[1];
+    TextView addressText;
+    //    final String[] city = new String[1];
     final String[] looking4 = new String[1];
     RadioButton maleButton;
     RadioButton femaleButton;
-    Button moveToMainButton;
+    ImageButton moveToMainButton;
 
     boolean isEditState;
 
@@ -91,7 +103,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     UserRegistrationActivitey.Gender gender;
     TextInputEditText userDescreptionView;
     TextInputEditText nicknameView;
-    TextView userEmailView;
+//    TextView userEmailView;
 
 
     @Override
@@ -109,20 +121,19 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         nicknameView = (TextInputEditText) findViewById(R.id.user_nickname);
         maleButton = (RadioButton) findViewById(R.id.user_gender_male_radio);
         femaleButton = (RadioButton) findViewById(R.id.user_gender_female_radio);
-        ///userEmailView = (TextView) findViewById(R.id.user_email_view);
-        moveToMainButton = (Button) findViewById(R.id.FindPartnersButton);
+
+        addressText = (TextView) findViewById(R.id.address_str);
+
+//        userEmailView = (TextView) findViewById(R.id.user_email_view);
+
+        newAddressPlace = null;
+
 
         //change button text acoording to ui flow, it its from initail registration: move to user reg,
         //if it is from editing profile, go back to main
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        if(bundle != null){
-            isEditState = (Boolean) bundle.get("edit");
-        }
 
-        if(isEditState){
-            moveToMainButton.setText("Done Editing");
-        }
 
         //fill views with data
         currOwnerData = API.getCurrOwnerData();
@@ -137,12 +148,18 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             if (userBD != null) {
                 BDView.setText(userBD);
             }
-            //email
-            userEmail = currOwnerData.getMail();
-            if (userEmail != null) {
 
-               // userEmailView.setText(userEmail);
+
+            cityStr = currOwnerData.getCity();
+            if (cityStr != null){
+                addressText.setText(cityStr);
+
             }
+//            //email
+//            userEmail = currOwnerData.getMail();
+//            if (userEmail != null) {
+//                userEmailView.setText(userEmail);
+//            }
             //gender
             user_is_female = currOwnerData.getFemale();
             if (user_is_female != null) {
@@ -168,27 +185,27 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
 
 
-        //city spinner
-        Spinner city_spinner = (Spinner) findViewById(R.id.user_city_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> cityAdapter = ArrayAdapter.createFromResource(this,
-                R.array.city_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        cityAdapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
-        // Apply the adapter to the spinner
-        city_spinner.setAdapter(cityAdapter);
-        city_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                city[0] = adapterView.getItemAtPosition(pos).toString();
-                Toast.makeText(adapterView.getContext(), "city :" + city[0], Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        //city spinner
+//        Spinner city_spinner = (Spinner) findViewById(R.id.user_city_spinner);
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<CharSequence> cityAdapter = ArrayAdapter.createFromResource(this,
+//                R.array.city_array, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        cityAdapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
+//        // Apply the adapter to the spinner
+//        city_spinner.setAdapter(cityAdapter);
+//        city_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+//                city[0] = adapterView.getItemAtPosition(pos).toString();
+////                Toast.makeText(adapterView.getContext(), "city :" + city[0], Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
 
 
@@ -217,11 +234,11 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         // set city selection
         if(currOwnerData != null) {
-            cityStr = currOwnerData.getCity();
-            if (cityStr != null) {
-                city_spinner.setSelection(cityAdapter.getPosition(cityStr));
-                city[0] = cityStr;
-            }
+//            cityStr = currOwnerData.getCity();
+//            if (cityStr != null) {
+//                city_spinner.setSelection(cityAdapter.getPosition(cityStr));
+//                city[0] = cityStr;
+//            }
 
             //set looking 4 list
             lookingForList = currOwnerData.getLookingForList();
@@ -242,6 +259,24 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    public void ChooseStaticLocationMethod(View view) {
+        try {
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                    .build();
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .setFilter(typeFilter)
+                            .build(this);
+
+            startActivityForResult(intent, SELECT_LOCATION);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -269,6 +304,23 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                             setOwnerImage();
                         }
                     });
+        }
+        else if (requestCode == SELECT_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                newAddressPlace = PlaceAutocomplete.getPlace(this, data);
+                cityStr = (String) newAddressPlace.getName();
+                addressText.setText(cityStr);
+//                Toast.makeText(this, cityStr, Toast.LENGTH_SHORT).show();
+//                API.addStaticLocation(place.getLatLng());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+                // TODO: Handle the error.
+                Log.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
         }
     }
 
@@ -318,7 +370,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         userName = nameView.getText().toString();
         userBD = BDView.getText().toString();
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
-        cityStr = city[0];
+//        cityStr = city[0];
         lookingForList.add(looking4[0]);
         userDescreption = userDescreptionView.getText().toString();
         userNickname = nicknameView.getText().toString();
@@ -330,6 +382,8 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         currOwnerData.setLookingForList(lookingForList);
         currOwnerData.setDescription(userDescreption);
         currOwnerData.setNickname(userNickname);
+
+        API.addStaticLocation(newAddressPlace);
 
         API.setOwner(currOwnerData);
 
