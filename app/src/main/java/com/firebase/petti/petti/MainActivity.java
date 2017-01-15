@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         drawerDogNameTextView = (TextView) drawerProfileHeader.findViewById(R.id.dog_name_header);
         drawerProfilePicImageView = (ImageView) drawerProfileHeader.findViewById(R.id.profile_pic);
 
-        ImageLoaderUtils.initImageLoader(this.getApplicationContext());
+        setDrawerProfileInfo();
 
         Menu menuNav = nvDrawer.getMenu();
         MenuItem defaultFragmentItem = menuNav.findItem(R.id.default_fragment);
