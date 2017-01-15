@@ -165,6 +165,7 @@ public class SplashActivity extends AppCompatActivity {
         final String display_name = user.getDisplayName();
         final String email = user.getEmail();
         API.currUserUid = user_id;
+        Log.d(TAG, user_id);
 
 //        NewMessagesHandler.initNewMessagesHandler();
 
@@ -173,6 +174,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Inside first listener");
                 editUserProfile = !dataSnapshot.exists();
                 if (editUserProfile) {
                     // 1st registration
@@ -180,13 +182,13 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 editDogProfile = !dataSnapshot.child("dog").hasChild("name")
                         || dataSnapshot.child("dog").child("name").getValue().equals("");
-                if (editDogProfile || editUserProfile){
-//                    startEditProfileActivity();
-                } else {
-                    String dogName = (String) dataSnapshot.child("dog").child("name").getValue();
-                    String dogPhoto = (String) dataSnapshot.child("dog").child("photoUrl").getValue();
-//                    setDrawerProfileInfo(dogName, dogPhoto);
-                }
+//                if (editDogProfile || editUserProfile){
+////                    startEditProfileActivity();
+//                } else {
+//                    String dogName = (String) dataSnapshot.child("dog").child("name").getValue();
+//                    String dogPhoto = (String) dataSnapshot.child("dog").child("photoUrl").getValue();
+////                    setDrawerProfileInfo(dogName, dogPhoto);
+//                }
             }
 
             @Override

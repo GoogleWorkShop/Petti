@@ -120,6 +120,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="1"
+            android:onClick="ChooseStaticLocationMethod"
             android:layout_weight="1">
             <TextView
                 android:id="@+id/address_header"
@@ -137,7 +138,7 @@
                 android:id="@+id/address_str"
                 android:textColor="@color/tw__composer_black"
                 android:layout_alignParentLeft="true"
-                android:onClick="ChooseStaticLocationMethod"
+                android:text="Tap here to set address"
                 />
 
         </RelativeLayout>
