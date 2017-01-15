@@ -7,7 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +32,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         TextView personName;
         TextView personAge;
         ImageView personPhoto;
-        public Button delete_bt;
-        public Button start_chat_bt;
+        public ImageButton delete_bt;
+        public ImageButton start_chat_bt;
 
         PersonViewHolder(View itemView) {
             super(itemView);
@@ -38,8 +41,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             personName = (TextView)itemView.findViewById(R.id.person_name);
             personAge = (TextView)itemView.findViewById(R.id.person_age);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
-            delete_bt = (Button) itemView.findViewById(R.id.delete_bt);
-            start_chat_bt = (Button) itemView.findViewById(R.id.chat_bt);
+            delete_bt = (ImageButton) itemView.findViewById(R.id.delete_bt);
+            start_chat_bt = (ImageButton) itemView.findViewById(R.id.chat_bt);
             delete_bt.setOnClickListener(this);
             start_chat_bt.setOnClickListener(this);
         }
@@ -60,6 +63,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
                 myIntent.putExtra("USER_ID", message);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(myIntent);
+                this.start_chat_bt.clearAnimation();
+                this.start_chat_bt.setImageResource(R.drawable.chat_outline);
 //                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
         }
@@ -87,10 +92,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
-        Dog currDogData = mFriends.get(i).getDog();
+        User currUser = mFriends.get(i);
+        Dog currDogData = currUser.getDog();
         personViewHolder.personName.setText(currDogData.getName());
         personViewHolder.personAge.setText(currDogData.getAge());
         ImageView petImage = personViewHolder.personPhoto;
+        if (!API.getCurrMsgTracker().get(currUser.getTempUid())){
+            personViewHolder.start_chat_bt.setImageResource(R.drawable.chat_filled);
+            Animation pulse = AnimationUtils.loadAnimation(context, R.anim.pulse);
+            personViewHolder.start_chat_bt.setAnimation(pulse);
+        }
         String dogPhotoUrl = currDogData.getPhotoUrl();
         ImageLoaderUtils.setImage(dogPhotoUrl, petImage, R.drawable.anonymous_grn);
 //        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);

@@ -41,7 +41,6 @@
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_weight="0.12"
                 android:id="@+id/user_image"
                 android:background="@drawable/dog_person_pic"
 
@@ -49,12 +48,13 @@
                 />
 
             <Button
-                android:layout_width="165dp"
+                android:layout_width="150dp"
                 android:layout_height="49dp"
+                android:drawableLeft="@drawable/upload_picture"
                 android:id="@+id/user_uploadButton"
                 android:layout_gravity="fill_vertical"
-                android:text="user_UPLOAD IMAGE"
-                android:layout_weight="0.01"
+                android:text="Upload"
+                android:layout_below="@+id/user_image"
                 android:onClick="uploadImageMethod"
                 />
 
@@ -106,14 +106,6 @@
                     android:onClick="genderSelection"
                     />
             </RadioGroup>
-            <android.support.v7.widget.AppCompatSpinner
-                android:layout_width="fill_parent"
-                android:layout_height="46dp"
-                android:id="@+id/user_city_spinner"
-                android:scrollbarStyle="outsideInset"
-                android:scrollbarSize="20dp"
-
-                />
 
             <android.support.v7.widget.AppCompatSpinner
                 android:layout_width="fill_parent"
@@ -123,8 +115,6 @@
                 android:scrollbarSize="20dp"
                 android:choiceMode="multipleChoice"
                 />
-
-
         </LinearLayout>
 
 
@@ -139,34 +129,35 @@
         android:weightSum="4"
         >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="1"
+            android:onClick="ChooseStaticLocationMethod"
             android:layout_weight="1">
-            <!--EditText
+
+            <TextView
+                android:id="@+id/address_header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="20dp"
-                android:hint="Choose on map"
-                android:layout_gravity="top"
-                android:id="@+id/user_email_view"
-                android:layout_weight="0.3"
-                /-->
-            <ImageView
-                android:layout_width="111dp"
-                android:background="@mipmap/ic_location_icon"
-                android:onClick="openAddressSelectionActivity"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:text="Address:"
+                android:layout_alignParentLeft="true"
+                android:textSize="12sp"
+
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="*Set Home Address"
-                android:layout_weight="0.6"
-                android:textSize="20dp"
+                android:textSize="20sp"
+                android:layout_below="@+id/address_header"
+                android:id="@+id/address_str"
+                android:textColor="@color/tw__composer_black"
+                android:layout_alignParentLeft="true"
+                android:text="Tap here to set address"
                 />
-        </LinearLayout>
+
+        </RelativeLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -197,24 +188,22 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:weightSum="1"
             android:orientation="horizontal">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:text="Find Partners"
-                android:textSize="20dp"
-                android:onClick="MoveToMainAndUploodUserToDB"
-                android:background="@color/colorPrimary"
-                android:id="@+id/FindPartnersButton" />
-
-            <android.support.v7.widget.AppCompatImageButton
-                android:layout_width="match_parent"
+            <ImageButton
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:background="@drawable/walking_paws_pic"/>
+                android:src="@drawable/done_edit"
+                android:id="@+id/delete_bt"
+                android:background="@color/tw__transparent"
+                android:onClick="MoveToMainAndUploodUserToDB"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_centerInParent="true"
+                />
+
 
 
 

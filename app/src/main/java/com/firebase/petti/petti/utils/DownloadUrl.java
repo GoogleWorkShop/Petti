@@ -1,4 +1,4 @@
-package com.firebase.petti.petti;
+package com.firebase.petti.petti.utils;
 
 import android.util.Log;
 
