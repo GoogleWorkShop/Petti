@@ -26,6 +26,7 @@ import java.util.List;
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User.Owner;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
@@ -79,6 +80,10 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 now.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    public void openAddressSelectionActivity(View view) {
+
+    }
+
 
     enum Gender {Male, Female}
 
@@ -104,7 +109,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         nicknameView = (TextInputEditText) findViewById(R.id.user_nickname);
         maleButton = (RadioButton) findViewById(R.id.user_gender_male_radio);
         femaleButton = (RadioButton) findViewById(R.id.user_gender_female_radio);
-        userEmailView = (TextView) findViewById(R.id.user_email_view);
+        ///userEmailView = (TextView) findViewById(R.id.user_email_view);
         moveToMainButton = (Button) findViewById(R.id.FindPartnersButton);
 
         //change button text acoording to ui flow, it its from initail registration: move to user reg,
@@ -135,7 +140,8 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             //email
             userEmail = currOwnerData.getMail();
             if (userEmail != null) {
-                userEmailView.setText(userEmail);
+
+               // userEmailView.setText(userEmail);
             }
             //gender
             user_is_female = currOwnerData.getFemale();
