@@ -92,14 +92,6 @@
                     android:onClick="genderSelection"
                     />
             </RadioGroup>
-            <android.support.v7.widget.AppCompatSpinner
-                android:layout_width="fill_parent"
-                android:layout_height="46dp"
-                android:id="@+id/user_city_spinner"
-                android:scrollbarStyle="outsideInset"
-                android:scrollbarSize="20dp"
-
-                />
 
             <android.support.v7.widget.AppCompatSpinner
                 android:layout_width="fill_parent"
@@ -108,10 +100,7 @@
                 android:scrollbarStyle="outsideInset"
                 android:scrollbarSize="20dp"
                 android:choiceMode="multipleChoice"
-
                 />
-
-
         </LinearLayout>
 
 
@@ -126,30 +115,32 @@
         android:weightSum="4"
         >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="1"
             android:layout_weight="1">
             <TextView
+                android:id="@+id/address_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Email :"
-
-                android:layout_weight="0.7"
-                android:textSize="20dp"
+                android:text="Address:"
+                android:layout_alignParentLeft="true"
+                android:textSize="12sp"
                 />
-            <EditText
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="20dp"
-                android:layout_gravity="top"
-                android:id="@+id/user_email_view"
-                android:layout_weight="0.3"
+                android:textSize="20sp"
+                android:layout_below="@+id/address_header"
+                android:id="@+id/address_str"
+                android:textColor="@color/tw__composer_black"
+                android:layout_alignParentLeft="true"
+                android:onClick="ChooseStaticLocationMethod"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

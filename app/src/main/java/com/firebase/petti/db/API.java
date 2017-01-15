@@ -10,6 +10,8 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.petti.petti.R;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,11 +36,13 @@ public class API {
     protected static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseStorage mFirebaseStorage;
     public static GeoFire geoFire;
+    public static GeoFire geoFireStatic;
 
     public static DatabaseReference mDatabaseUsersRef;
     public static StorageReference mPetPhotos;
     public static StorageReference mOwnerPhotos;
     public static DatabaseReference mDatabaseLocationsRef;
+    public static DatabaseReference mDatabaseStaticLocationsRef;
 
     private static ValueEventListener mUserEventListener;
     private static GeoQueryEventListener mLocationsListener;
@@ -64,6 +68,9 @@ public class API {
             mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
 
             mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
+            mDatabaseStaticLocationsRef = mFirebaseDatabase.getReference().child("static_locations");
+
+            geoFireStatic = new GeoFire(mDatabaseStaticLocationsRef);
             geoFire = new GeoFire(mDatabaseLocationsRef);
             geoQuery = null;
             queryReady = false;
@@ -77,6 +84,17 @@ public class API {
             currUserData = null;
         }
 
+    }
+
+    public static void addStaticLocation(Place place){
+        if (place != null) {
+            addStaticLocation(place.getLatLng());
+        }
+    }
+
+    public static void addStaticLocation(LatLng ltlng){
+        GeoLocation geoLoc = new GeoLocation(ltlng.latitude, ltlng.longitude);
+        geoFireStatic.setLocation(currUserUid, geoLoc);
     }
 
     private static void addLocation(GeoLocation geoLoc, long timestamp) {
