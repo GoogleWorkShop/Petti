@@ -11,6 +11,7 @@
     tools:context="com.firebase.petti.petti.LoginActivity">
 
     <!-- Login progress -->
+    <!--TODO Yahav - Do we need this PrograssBar?-->
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"

@@ -10,6 +10,8 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.petti.petti.R;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,14 +32,17 @@ import java.util.Map;
 public class API {
 
     private static final String tag = "***FIREBASE API***";
+
     protected static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseStorage mFirebaseStorage;
     public static GeoFire geoFire;
+    public static GeoFire geoFireStatic;
 
     public static DatabaseReference mDatabaseUsersRef;
     public static StorageReference mPetPhotos;
     public static StorageReference mOwnerPhotos;
     public static DatabaseReference mDatabaseLocationsRef;
+    public static DatabaseReference mDatabaseStaticLocationsRef;
 
     private static ValueEventListener mUserEventListener;
     private static GeoQueryEventListener mLocationsListener;
@@ -50,27 +55,46 @@ public class API {
     private static GeoQuery geoQuery;
     public static boolean queryReady;
 
+    public static final long HALF_HOUR_MILLSEC = 30*60*1000;
+
     public static void initDatabaseApi() {
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseStorage = FirebaseStorage.getInstance();
+        if (mFirebaseDatabase == null) {
+            mFirebaseDatabase = FirebaseDatabase.getInstance();
+            mFirebaseStorage = FirebaseStorage.getInstance();
 
 
-        mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
-        mPetPhotos = mFirebaseStorage.getReference().child("pet_photos");
-        mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
+            mDatabaseUsersRef = mFirebaseDatabase.getReference().child("users");
+            mPetPhotos = mFirebaseStorage.getReference().child("pet_photos");
+            mOwnerPhotos = mFirebaseStorage.getReference().child("owner_photos");
 
-        mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
-        geoFire = new GeoFire(mDatabaseLocationsRef);
-        geoQuery = null;
-        queryReady = false;
+            mDatabaseLocationsRef = mFirebaseDatabase.getReference().child("locations");
+            mDatabaseStaticLocationsRef = mFirebaseDatabase.getReference().child("static_locations");
 
-        mUserEventListener = null;
+            geoFireStatic = new GeoFire(mDatabaseStaticLocationsRef);
+            geoFire = new GeoFire(mDatabaseLocationsRef);
+            geoQuery = null;
+            queryReady = false;
 
-        ChatApi.initChatDb();
+            mUserEventListener = null;
 
-        currUserUid = null;
-        currUserData = null;
+            ChatApi.initChatDb();
+//        NewMessagesHandler.initNewMessagesHandler();
 
+            currUserUid = null;
+            currUserData = null;
+        }
+
+    }
+
+    public static void addStaticLocation(Place place){
+        if (place != null) {
+            addStaticLocation(place.getLatLng());
+        }
+    }
+
+    public static void addStaticLocation(LatLng ltlng){
+        GeoLocation geoLoc = new GeoLocation(ltlng.latitude, ltlng.longitude);
+        geoFireStatic.setLocation(currUserUid, geoLoc);
     }
 
     private static void addLocation(GeoLocation geoLoc, long timestamp) {
@@ -82,6 +106,9 @@ public class API {
 //        Owner new_user = new Owner(name, mail);
         Owner new_user = new Owner(name, mail);
         setOwner(new_user);
+        Dog default_dog = new Dog();
+        default_dog.setName("John Doggo");
+        setDog(default_dog);
     }
 
     public static void setOwner(Owner owner) {
@@ -141,11 +168,15 @@ public class API {
         return tempDog == null ? new Dog() : tempDog;
     }
 
-    public static void attachNearbyUsersListener(Location location, int radius) {
+    public static boolean attachNearbyUsersListener(Location location, int radius) {
 
         nearbyUsers = new HashMap<>();
 
         //first set the location for the user
+        if(location == null){
+            Log.d("**** PETTI API ****", "Got a null value in location parameter");
+            return false;
+        }
 
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
@@ -225,6 +256,7 @@ public class API {
             };
             geoQuery.addGeoQueryEventListener(mLocationsListener);
         }
+        return true;
     }
 
 
@@ -241,9 +273,9 @@ public class API {
     }
 
     public static boolean isMatchedWith(String uid){
-        return (currUserData.getMsgTracker() != null &&
+        return (getCurrMsgTracker() != null &&
                 uid != null &&
-                currUserData.getMsgTracker().containsKey(uid));
+                getCurrMsgTracker().containsKey(uid));
     }
 
     public static Map<String, Boolean> getCurrMsgTracker(){

@@ -224,7 +224,7 @@ public class FoodNotificationsFragment extends Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.settings_menu) {
             Fragment myPrefrences = new MyPreferencesFragment();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_container, myPrefrences)
