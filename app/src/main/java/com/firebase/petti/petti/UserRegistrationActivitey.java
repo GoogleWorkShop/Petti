@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.firebase.petti.db.API;
+import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User.Owner;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.google.android.gms.location.LocationServices;
@@ -417,7 +418,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         currOwnerData.setDescription(userDescreption);
         currOwnerData.setNickname(userNickname);
 
-        API.addStaticLocation(newAddressPlace);
+        LocationsApi.addStaticLocation(newAddressPlace);
 
         API.setOwner(currOwnerData);
 

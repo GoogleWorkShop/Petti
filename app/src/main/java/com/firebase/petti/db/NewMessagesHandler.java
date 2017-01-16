@@ -79,7 +79,7 @@ public class NewMessagesHandler {
             builder.setContentIntent(pendingIntent);
             builder.setContentTitle("You Have Unread Messages!");
             builder.setContentText("Go to \"My Friends\" or tap to view");
-            builder.setSmallIcon(R.drawable.ic_announcement_black_24dp);
+            builder.setSmallIcon(R.drawable.pet_pic_white_burned);
             builder.setVibrate(new long[] { 500, 500 });
             builder.setAutoCancel(true);
             Notification notification = builder.build();

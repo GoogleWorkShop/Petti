@@ -330,12 +330,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
             return;
         }
 
-
         dogBD = BDView.getText().toString();
         dog_is_female = (gender == Gender.Female);
         dogType = dog_type[0];
         if(dogCharacters == null){
-            dogCharacters = new ArrayList<String>();
+            dogCharacters = new ArrayList<>();
         }
         dogCharacters.add(dog_charater[0]);
         dogDescreption = petDescreptionText.getText().toString();
@@ -364,8 +363,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
 
     }
-
-
 
     public void startMainActivity(View view) {
         Intent intent = new Intent(this, MainActivity.class);

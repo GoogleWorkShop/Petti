@@ -8,6 +8,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.firebase.petti.db.API;
+import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.MatchesFragment;
 import com.firebase.petti.petti.MatchesFragment.TaskParams;
@@ -59,22 +60,27 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
                 return null;
             }
         }
-        while (timeout-- != 0 && !API.queryReady);
+        while (timeout-- != 0 && !LocationsApi.queryReady);
 
         /* ensuring we have any results before iterating over them */
-        if(API.nearbyUsers == null){
+        if(LocationsApi.nearbyUsers == null){
             return null;
         }
 
         ArrayList<User> mMatchesArray = new ArrayList<>();
-        for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
+        for (Map.Entry<String, User> item : LocationsApi.nearbyUsers.entrySet()){
             User userCandidate = item.getValue();
-            Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
             Boolean isEnabled = userCandidate.getEnabled();
-            long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
-            if (bark && (userLastWalkTimestamp == null ||
-                    userLastWalkTimestamp < minBarkTimeLimit)){
+            if (isEnabled != null && !isEnabled){
                 continue;
+            }
+            if (bark) {
+                Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
+                long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
+                if ((userLastWalkTimestamp == null ||
+                        userLastWalkTimestamp < minBarkTimeLimit)) {
+                    continue;
+                }
             }
             userCandidate.setTempUid(item.getKey());
             mMatchesArray.add(userCandidate);
