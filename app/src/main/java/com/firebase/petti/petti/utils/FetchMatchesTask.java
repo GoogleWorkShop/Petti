@@ -72,6 +72,7 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
             User userCandidate = item.getValue();
             Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
+            Boolean isEnabled = userCandidate.getEnabled();
             long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
             if (bark && (userLastWalkTimestamp == null ||
                     userLastWalkTimestamp < minBarkTimeLimit)){

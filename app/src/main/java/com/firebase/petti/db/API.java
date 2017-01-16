@@ -175,7 +175,7 @@ public class API {
 
         //first set the location for the user
         if(location == null){
-            Log.d("**** PETTI API ****", "Got a null value in location parameter");
+            Log.d(tag, "Got a null value in location parameter");
             return false;
         }
 
