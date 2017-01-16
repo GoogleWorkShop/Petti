@@ -31,7 +31,6 @@ import com.firebase.petti.db.API;
 import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User.Owner;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -196,33 +195,6 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             }
         }
 
-
-
-//        //city spinner
-//        Spinner city_spinner = (Spinner) findViewById(R.id.user_city_spinner);
-//        // Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<CharSequence> cityAdapter = ArrayAdapter.createFromResource(this,
-//                R.array.city_array, android.R.layout.simple_spinner_item);
-//        // Specify the layout to use when the list of choices appears
-//        cityAdapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
-//        // Apply the adapter to the spinner
-//        city_spinner.setAdapter(cityAdapter);
-//        city_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-//                city[0] = adapterView.getItemAtPosition(pos).toString();
-////                Toast.makeText(adapterView.getContext(), "city :" + city[0], Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-
-
-
-
         //Lokking for spinner
         Spinner looking_4_spinner = (Spinner) findViewById(R.id.user_looking4_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -247,12 +219,6 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         // set city selection
         if(currOwnerData != null) {
-//            cityStr = currOwnerData.getCity();
-//            if (cityStr != null) {
-//                city_spinner.setSelection(cityAdapter.getPosition(cityStr));
-//                city[0] = cityStr;
-//            }
-
             //set looking 4 list
             lookingForList = currOwnerData.getLookingForList();
             if(lookingForList != null && lookingForList.size() > 0){
@@ -333,11 +299,9 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 newAddressPlace = PlaceAutocomplete.getPlace(this, data);
                 cityStr = (String) newAddressPlace.getName();
                 addressText.setText(cityStr);
-//                Toast.makeText(this, cityStr, Toast.LENGTH_SHORT).show();
 //                API.addStaticLocation(place.getLatLng());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
                 // TODO: Handle the error.
                 Log.i(TAG, status.getStatusMessage());
 

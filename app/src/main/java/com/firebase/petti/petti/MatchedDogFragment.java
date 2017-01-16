@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -99,6 +98,7 @@ public class MatchedDogFragment extends Fragment {
                 ownerDetail.setVisibility(View.VISIBLE);
                 showDogBtn.setVisibility(View.VISIBLE);
                 dogDetail.setVisibility(View.GONE);
+                ImageLoaderUtils.setImage(user.getOwner().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
             }
         });
         showDogBtn.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +108,7 @@ public class MatchedDogFragment extends Fragment {
                 ownerDetail.setVisibility(View.GONE);
                 showDogBtn.setVisibility(View.GONE);
                 dogDetail.setVisibility(View.VISIBLE);
+                ImageLoaderUtils.setImage(user.getDog().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
             }
         });
         addAsFriendBtn.setOnClickListener(new View.OnClickListener() {
@@ -116,10 +117,10 @@ public class MatchedDogFragment extends Fragment {
                 Map<String, Boolean> msgsData = API.getCurrMsgTracker();
                 String friendUid = user.getTempUid();
                 if (msgsData != null && msgsData.containsKey(friendUid)){
-                    friendAlreadyAdded();
+                    friendToast(false);
                 } else {
                     API.getCurrUserRef().child("msgTracker").child(user.getTempUid()).setValue(true);
-                    friendAddedToast();
+                    friendToast(true);
                 }
             }
         });
@@ -138,14 +139,6 @@ public class MatchedDogFragment extends Fragment {
         Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
     }
 
-    private void friendAddedToast(){
-        friendToast(true);
-    }
-
-    private void friendAlreadyAdded(){
-        friendToast(false);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,41 +146,10 @@ public class MatchedDogFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    private void updateDogDate() {
-        FetchAnotherDogTask dogTask = new FetchAnotherDogTask(imageView);
-        dogTask.execute();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        updateDogDate();
-    }
-
-
-    public class FetchAnotherDogTask extends AsyncTask<String, Void, ArrayList<String>> {
-
-        private ImageView imageView;
-
-        public FetchAnotherDogTask(ImageView imageView){
-            this.imageView = imageView;
-        }
-
-        @Override
-        protected ArrayList<String> doInBackground(String... params) {
-
-            //TODO get dog data from firebase by mDogId var
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<String> result) {
-            ImageLoaderUtils.setImage(user.getDog().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
-//            Picasso.with(getActivity()).load(user.getDog().getPhotoUrl()).into(imageView);
-            // New data is back from the server.  Hooray!
-        }
-
+        ImageLoaderUtils.setImage(user.getDog().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
     }
 
 }

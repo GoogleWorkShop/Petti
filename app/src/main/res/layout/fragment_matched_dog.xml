@@ -6,22 +6,25 @@
     android:layout_height="match_parent"
     android:gravity="top"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/grass_and_sky">
 
     <ImageView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="180dp"
         android:layout_margin="5dp"
         android:id="@+id/matched_dog_image"
         android:contentDescription="dogs image"
-        android:layout_gravity="center_vertical|center_horizontal|center" />
+        android:layout_gravity="center_vertical|center_horizontal|center"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <Button
             android:text="@string/add_as_friend"
@@ -88,7 +91,9 @@
         android:layout_height="wrap_content"
         android:typeface="sans"
         android:textStyle="bold"
-        android:gravity="left"/>
+        android:gravity="left"
+        android:textSize="20sp"
+        android:paddingLeft="10dp"/>
 
     <ListView
         android:id="@+id/matched_dog_detail"
@@ -96,7 +101,8 @@
         android:layout_height="match_parent"
         android:visibility="visible"
         android:typeface="sans"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:paddingLeft="5dp"/>
 
     <ListView
         android:id="@+id/matched_dog_owner_detail"
@@ -104,5 +110,6 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:typeface="sans"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:paddingLeft="5dp"/>
 </LinearLayout>

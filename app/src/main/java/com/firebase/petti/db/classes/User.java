@@ -1,7 +1,10 @@
 package com.firebase.petti.db.classes;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -210,9 +213,16 @@ public class User implements Serializable{
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = new ArrayList<>();
             output.add("Nickname: " + nickname);
-            output.add("City: " + city);
-            output.add("Age: " + getAge());
-            output.add(getFemale()? "Female" : "Male");
+            if(getAge() != null){
+                String[] ageParams = getAge().split("/");
+                String age = getAgeFromDate(Integer.parseInt(ageParams[0]),
+                                            Integer.parseInt(ageParams[1]),
+                                            Integer.parseInt(ageParams[2]));
+                output.add("Age: " + age);
+            }
+            if (getFemale() != null) {
+                output.add(getFemale() ? "Female" : "Male");
+            }
             output.add("Description: " + getDescription());
             return output;
         }
@@ -264,8 +274,16 @@ public class User implements Serializable{
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = new ArrayList<>();
             output.add("Type: " + type);
-            output.add("Age: " + getAge());
-            output.add(getFemale()? "Female" : "Male");
+            if(getAge() != null){
+                String[] ageParams = getAge().split("/");
+                String age = getAgeFromDate(Integer.parseInt(ageParams[0]),
+                        Integer.parseInt(ageParams[1]),
+                        Integer.parseInt(ageParams[2]));
+                output.add("Age: " + age);
+            }
+            if (getFemale() != null) {
+                output.add(getFemale() ? "Female" : "Male");
+            }
             for (String trait : personalityAttributes){
                 output.add(trait);
             }
@@ -273,5 +291,31 @@ public class User implements Serializable{
             output.add(getDescription());
             return output;
         }
+    }
+
+    /**
+     * Method to extract the user's age from the entered Date of Birth.
+     *
+     * @param DoB String The user's date of birth.
+     *
+     * @return ageS String The user's age in years based on the supplied DoB.
+     */
+    private static String getAgeFromDate(int day, int month, int year){
+
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
     }
 }

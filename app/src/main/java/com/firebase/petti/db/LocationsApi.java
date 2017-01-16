@@ -1,6 +1,7 @@
 package com.firebase.petti.db;
 
 import android.location.Location;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
@@ -72,7 +73,7 @@ public class LocationsApi {
         geoFire.setLocation(API.currUserUid, geoLoc);
     }
 
-    public static boolean attachNearbyUsersListener(Location location, int radius, boolean bark) {
+    public static boolean attachNearbyUsersListener(@Nullable Location location, int radius, boolean bark) {
         if (bark) {
             return attachDynamicNearbyUsersListener(location, radius);
         } else {

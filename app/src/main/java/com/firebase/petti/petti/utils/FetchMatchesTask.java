@@ -49,8 +49,14 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         boolean bark = params[0].bark;
         Location location = params[0].location;
 
+        /* 3 seconds of placebo searching for feel good effect */
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            return null;
+        }
 
-        int timeout = 10; // five seconds of timeout until we decide there are no matches
+        int timeout = 10; // ten seconds of timeout until we decide there are no matches
         do {
             try {
                 if(isCancelled()) {
@@ -102,20 +108,6 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
 
         // sort list by distance to current user
         Collections.sort(mMatchesArray, new MatchedUserComparator());
-
-        // TODO YAHAV - can we delete this?
-//            //put friends before non-friends
-//            ArrayList<User> tmpFriendsListByLocation = new ArrayList<>();
-//            ArrayList<User> tmpNotFriendsListByLocation = new ArrayList<>();
-//            for (User user : mMatchesArray){
-//                if (API.isMatchedWith(user.getTempUid())){
-//                    tmpFriendsListByLocation.add(user);
-//                }else{
-//                    tmpNotFriendsListByLocation.add(user);
-//                }
-//            }
-//            mMatchesArray = new ArrayList<>(tmpFriendsListByLocation);
-//            mMatchesArray.addAll(tmpNotFriendsListByLocation);
         return mMatchesArray;
     }
 
@@ -142,7 +134,7 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
     }
 
     /**
-     * returning a user with
+     * returning a user nullified with
      */
     private User createFalseUser(){
         User falseUser = new User();
