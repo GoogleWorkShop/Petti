@@ -22,6 +22,7 @@ public class User implements Serializable{
     private Map<String, Boolean> msgTracker;
 
     private Long lastLocationTime;
+    private Boolean enabled;
 
     // These members are set only in the java realm. they are always null in the db
     private String tempUid;
@@ -77,6 +78,14 @@ public class User implements Serializable{
 
     public void setLastLocationTime(Long lastLocationTime) {
         this.lastLocationTime = lastLocationTime;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Dog getDog(){
