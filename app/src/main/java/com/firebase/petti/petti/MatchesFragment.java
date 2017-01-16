@@ -43,6 +43,7 @@ public class MatchesFragment extends Fragment {
     GridViewAdapter mMatchesAdapter;
     FetchMatchesTask matchesTask;
     boolean bark;
+    boolean visible;
     int mRadius;
 
     // GPSTracker class
@@ -53,6 +54,7 @@ public class MatchesFragment extends Fragment {
     GridView gridView;
     TextView notFoundView;
     TextView searchingView;
+    TextView visibleView;
 
     private boolean attachedNearbyList;
 
@@ -75,15 +77,17 @@ public class MatchesFragment extends Fragment {
             bark = false;
         }
 
-        Log.d(LOG_TAG, "****** created new matches fragment -  bark is: " + bark + " ********");
-
-        setUpLocation();
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         mRadius = Integer.parseInt(pref.getString("matchDistance", "1"));
 
-        API.attachNearbyUsersListener(location, mRadius);
+        if(checkVisible()) {
+            Log.d(LOG_TAG, "****** created new matches fragment -  bark is: " + bark + " ********");
+
+            setUpLocation();
+
+            API.attachNearbyUsersListener(location, mRadius);
+        }
     }
 
     @Override
@@ -95,10 +99,17 @@ public class MatchesFragment extends Fragment {
         gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
         notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
         searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+        visibleView = (TextView) rootView.findViewById(R.id.non_visible_state_str);
 
         gridView.setVisibility(View.GONE);
         notFoundView.setVisibility(View.GONE);
-        searchingView.setVisibility(View.VISIBLE);
+        if (checkVisible()){
+            searchingView.setVisibility(View.VISIBLE);
+            visibleView.setVisibility(View.GONE);
+        } else {
+            searchingView.setVisibility(View.GONE);
+            visibleView.setVisibility(View.VISIBLE);
+        }
 
         mMatchesAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_match);
 
@@ -126,6 +137,7 @@ public class MatchesFragment extends Fragment {
             Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " AND LOCATION = " + (location==null) + " ********");
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.GONE);
+            visibleView.setVisibility(View.GONE);
             searchingView.setVisibility(View.VISIBLE);
             TaskParams taskParams = new TaskParams(bark, location);
             matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
@@ -133,6 +145,8 @@ public class MatchesFragment extends Fragment {
         } else {
             Log.d(LOG_TAG, "****** updateMatches - bark is: " + bark + " IN HAS NNNNNNOOOOOO PERMISSION ********");
             searchingView.setVisibility(View.GONE);
+            visibleView.setVisibility(View.GONE);
+            notFoundView.setVisibility(View.VISIBLE);
         }
         // TODO deal with cancellations
         /*if (isCancelled()){
@@ -142,15 +156,26 @@ public class MatchesFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        matchesTask.cancel(true);
-        API.detachNearbyUsersListener();
+        // TODO deal with cancellations
+        if(visible) {
+            matchesTask.cancel(true);
+            API.detachNearbyUsersListener();
+        }
         super.onDestroy();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        checkAndUpdate();
+        if (checkVisible()){
+            checkAndUpdate();
+        } else {
+            gridView.setVisibility(View.GONE);
+            notFoundView.setVisibility(View.GONE);
+            searchingView.setVisibility(View.GONE);
+            visibleView.setVisibility(View.VISIBLE);
+            visible = false;
+        }
     }
 
     /**
@@ -178,6 +203,11 @@ public class MatchesFragment extends Fragment {
             API.detachNearbyUsersListener();
             attachedNearbyList = API.attachNearbyUsersListener(location, mRadius);
             needUpdate = true;
+        }
+
+        if (!visible && checkVisible()){
+            needUpdate = true;
+            visible = true;
         }
 
         /* if one of the above is true - call update function */
@@ -245,6 +275,12 @@ public class MatchesFragment extends Fragment {
             //TODO replace with location from address in this case
             location = null;
         }
+    }
+
+    private boolean checkVisible(){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        return pref.getBoolean("visible", true);
     }
 
     public static class TaskParams{
