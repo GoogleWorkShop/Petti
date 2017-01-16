@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.petti.db.API;
+import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
@@ -88,7 +89,7 @@ public class MatchesFragment extends Fragment {
 
             setUpLocation();
 
-            API.attachNearbyUsersListener(location, mRadius);
+            LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
         }
     }
 
@@ -160,13 +161,13 @@ public class MatchesFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onPause() {
         // TODO deal with cancellations
         if(visible) {
             matchesTask.cancel(true);
-            API.detachNearbyUsersListener();
+            detachLocationsListener();
         }
-        super.onDestroy();
+        super.onPause();
     }
 
     @Override
@@ -197,7 +198,7 @@ public class MatchesFragment extends Fragment {
         int radius;
         String stringRadius;
         if ((!bark || canAccessLocation()) && !attachedNearbyList) {
-            attachedNearbyList = API.attachNearbyUsersListener(location, mRadius);
+            attachedNearbyList = LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
             needUpdate = true;
         }
 
@@ -206,8 +207,8 @@ public class MatchesFragment extends Fragment {
         radius = Integer.parseInt(stringRadius);
         if (radius != mRadius) {
             mRadius = radius;
-            API.detachNearbyUsersListener();
-            attachedNearbyList = API.attachNearbyUsersListener(location, mRadius);
+            detachLocationsListener();
+            attachedNearbyList = LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
             needUpdate = true;
         }
 
@@ -299,4 +300,9 @@ public class MatchesFragment extends Fragment {
         }
     }
 
+
+    private void detachLocationsListener(){
+        LocationsApi.detachNearbyUsersListener(bark);
+        attachedNearbyList = false;
+    }
 }

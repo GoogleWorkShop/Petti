@@ -58,7 +58,7 @@ public class NotificationPublisher extends BroadcastReceiver {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle("Scheduled Notification");
         builder.setContentText(content);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.pet_pic_white_burned);
         return builder.build();
     }
 }
