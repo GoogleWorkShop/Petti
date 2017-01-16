@@ -30,6 +30,8 @@ import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
 import com.firebase.petti.petti.utils.FetchMatchesTask;
 
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +55,7 @@ public class MatchesFragment extends Fragment {
 
     GridView gridView;
     TextView notFoundView;
-    TextView searchingView;
+    PulsatorLayout searchingView;
     TextView visibleView;
 
     private boolean attachedNearbyList;
@@ -98,16 +100,19 @@ public class MatchesFragment extends Fragment {
 
         gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
         notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
-        searchingView = (TextView) rootView.findViewById(R.id.searching_matches_str);
+        searchingView = (PulsatorLayout) rootView.findViewById(R.id.searching_matches_view);
         visibleView = (TextView) rootView.findViewById(R.id.non_visible_state_str);
 
         gridView.setVisibility(View.GONE);
         notFoundView.setVisibility(View.GONE);
         if (checkVisible()){
             searchingView.setVisibility(View.VISIBLE);
+            searchingView.start();
             visibleView.setVisibility(View.GONE);
         } else {
             searchingView.setVisibility(View.GONE);
+
+            searchingView.stop();
             visibleView.setVisibility(View.VISIBLE);
         }
 
@@ -173,6 +178,7 @@ public class MatchesFragment extends Fragment {
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.GONE);
             searchingView.setVisibility(View.GONE);
+            searchingView.stop();
             visibleView.setVisibility(View.VISIBLE);
             visible = false;
         }

@@ -251,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
                     }
-                    // TODO deal with no permission
                     setTitle(mainMenuItem.getTitle());
                     mainMenuItem.setChecked(true);
                     return;
@@ -274,38 +273,35 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.closeDrawers();
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 startActivity(mapsIntent);
-                mainMenuItem = menuItem;
                 return;
             case R.id.sign_out:
                 mDrawer.closeDrawers();
                 AuthUI.getInstance().signOut(this);
                 Intent signOutIntent = new Intent(this,SplashActivity.class);
                 startActivityForResult(signOutIntent, 888);
-                mainMenuItem = menuItem;
                 return;
             case R.id.edit_user_profile:
+                mainMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
                 userIntent.putExtra("edit",true);
-                startActivity(userIntent);
-                mainMenuItem = menuItem;
+                startActivityForResult(userIntent, 0);
                 return;
             case R.id.edit_dog_profile:
+                mainMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
                 dogIntent.putExtra("edit",true);
-                startActivityForResult(dogIntent,0);
-                mainMenuItem = menuItem;
+                startActivityForResult(dogIntent, 0);
                 return;
             case R.id.friends:
                 mDrawer.closeDrawers();
                 Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
-                mainMenuItem = menuItem;
                 return;
             default:
                 fragmentClass = MainFragment.class;
-                mainMenuItem = menuItem;
+                mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
         }
 
         try {
@@ -405,10 +401,10 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
             // Highlight the selected item has been done by NavigationView
             Menu menuNav = nvDrawer.getMenu();
-            MenuItem defaultFragmentItem = menuNav.findItem(R.id.default_fragment);
-            defaultFragmentItem.setChecked(true);
+            mainMenuItem = menuNav.findItem(R.id.default_fragment);
+            mainMenuItem.setChecked(true);
             // Set action bar title
-            setTitle(defaultFragmentItem.getTitle());
+            setTitle(mainMenuItem.getTitle());
             return;
         }
         super.onBackPressed();

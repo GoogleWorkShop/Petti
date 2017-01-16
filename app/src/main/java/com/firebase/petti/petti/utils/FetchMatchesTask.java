@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+
 /**
  * Created by barjon on 09-Jan-17.
  */
@@ -30,10 +32,10 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
 
     private GridView gridView;
     private TextView notFoundView;
-    private TextView searchingView;
+    PulsatorLayout searchingView;
 
     public FetchMatchesTask(GridViewAdapter mMatchesAdapter, GridView gridView,
-                            TextView notFoundView, TextView searchingView) {
+                            TextView notFoundView, PulsatorLayout searchingView) {
         this.mMatchesAdapter = mMatchesAdapter;
         this.gridView = gridView;
         this.notFoundView = notFoundView;
@@ -120,6 +122,7 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         }
 
         searchingView.setVisibility(View.GONE);
+        searchingView.stop();
         if(mMatchesAdapter.isEmpty()){
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.VISIBLE);
