@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(chatFriendsIntent);
                 return;
             default:
-                fragmentClass = MainFragment.class;
+                fragmentClass = MatchesFragment.class;
                 mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
         }
 
@@ -416,125 +416,6 @@ public class MainActivity extends AppCompatActivity {
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
     }
-
-
-//    private void initAuthStateListener(){
-//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                if (user != null) {
-//                    // User is signed in
-////                    String username = user.getDisplayName();
-////                    if (username == null) {
-////                        username = user.getEmail();
-////                    }
-//
-//                    onSignedInInitialize(firebaseAuth.getCurrentUser());
-//
-//
-//                } else {
-//                    // User is signed out
-//                    onSignedOutCleanup();
-//                    startActivityForResult(
-//                            AuthUI.getInstance()
-//                                    .createSignInIntentBuilder()
-//                                    .setIsSmartLockEnabled(false)
-//                                    .setLogo(R.drawable.pet_pic)
-//                                    .setProviders(Arrays.asList(
-//                                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-//                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-//                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-//                                    .build(),
-//                            RC_SIGN_IN);
-//                }
-//            }
-//        };
-//    }
-//
-//    private void onSignedInInitialize(FirebaseUser user) {
-//        // clear adapters if any populated
-//        // currently none is populated
-//
-//        // creating db user
-//        final String user_id = user.getUid();
-//        final String display_name = user.getDisplayName();
-//        final String email = user.getEmail();
-//        API.currUserUid = user_id;
-//
-////        NewMessagesHandler.initNewMessagesHandler();
-//
-//        startProgressBar();
-//        ValueEventListener mNewUserListener = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                editUserProfile = !dataSnapshot.exists();
-//                if (editUserProfile) {
-//                    // 1st registration
-//                    API.createUser(display_name, email);
-//                }
-//                editDogProfile = !dataSnapshot.child("dog").hasChild("name")
-//                        || dataSnapshot.child("dog").child("name").getValue().equals("");
-//                if (editDogProfile || editUserProfile){
-//                    startEditProfileActivity();
-//                } else {
-//                    String dogName = (String) dataSnapshot.child("dog").child("name").getValue();
-//                    String dogPhoto = (String) dataSnapshot.child("dog").child("photoUrl").getValue();
-//                    setDrawerProfileInfo(dogName, dogPhoto);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        };
-//        API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
-//        API.attachCurrUserDataReadListener();
-//        NewMessagesHandler.trackNewMessages(getApplicationContext());
-//    }
-//
-//    private void onSignedOutCleanup() {
-//        // clear adapters if any populated
-//        // currently none is populated
-//        API.detachCurrUserDataReadListener();
-//        NewMessagesHandler.untrackNewMessages();
-//        API.currUserUid = null;
-//        API.currUserData = null;
-//        setDrawerProfileInfo("", "");
-//    }
-//
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (mAuthStateListener != null) {
-//            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-//        }
-//        // clear adapters if any populated
-//        // currently none is populated
-//    }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RC_SIGN_IN) {
-//            if (resultCode == RESULT_OK) {
-//                // Sign-in succeeded, set up the UI
-//
-//            } else if (resultCode == RESULT_CANCELED) {
-//                // Sign in was canceled by the user, finish the activity
-//                finish();
-//            }
-//        }
-//    }
 
     private void startEditProfileActivity() {
         Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();

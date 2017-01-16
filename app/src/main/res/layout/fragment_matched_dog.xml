@@ -85,17 +85,24 @@
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/matched_dog_name"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:typeface="sans"
+        android:textStyle="bold"
+        android:gravity="left"/>
 
     <ListView
         android:id="@+id/matched_dog_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:typeface="sans"
+        android:textStyle="bold"/>
 
     <ListView
         android:id="@+id/matched_dog_owner_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:typeface="sans"
+        android:textStyle="bold"/>
 </LinearLayout>

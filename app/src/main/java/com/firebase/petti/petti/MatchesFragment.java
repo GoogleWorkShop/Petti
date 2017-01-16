@@ -197,6 +197,7 @@ public class MatchesFragment extends Fragment {
         boolean needUpdate = false;
         int radius;
         String stringRadius;
+
         if ((!bark || canAccessLocation()) && !attachedNearbyList) {
             attachedNearbyList = LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
             needUpdate = true;
