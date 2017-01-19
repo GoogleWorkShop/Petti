@@ -87,7 +87,13 @@ public class MatchesFragment extends Fragment {
         if(checkVisible()) {
             setUpLocation();
 
-            LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
+            if(location != null) {
+                Toast.makeText(getActivity(),
+                        "All locations and no permissions makes Johnny a dull boy",
+                        Toast.LENGTH_LONG).show();
+                Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
+                LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
+            }
         }
     }
 
@@ -138,6 +144,13 @@ public class MatchesFragment extends Fragment {
     private void updateMatches() {
         if ((canAccessLocation() && bark) || !bark) {
             setUpLocation();
+            if(location == null){
+                Toast.makeText(getActivity(),
+                        "All locations and no permissions makes Johnny a dull boy",
+                        Toast.LENGTH_LONG).show();
+                Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
+                return;
+            }
             detachLocationsListener();
             attachedNearbyList = LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
             gridView.setVisibility(View.GONE);

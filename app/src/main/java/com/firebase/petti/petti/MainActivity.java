@@ -35,42 +35,37 @@ import com.firebase.ui.auth.AuthUI;
 
 import com.firebase.petti.db.API;
 
+
+/**
+ * This is the main activity where we can navigate between the main application features.
+ * The navigation is possible through the navigation drawer.
+ * The main features (bark and dog neighbours) AND the light weight features are set as fragments
+ * on top of this activity {@link MatchesFragment}.
+ * The heavy weight features as the {@link MapsActivity} map and the chat {@link MatchedFriendsActivity}
+ * Are activities in their own right.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    final Context contex = this;
-
-    private DrawerLayout mDrawer;
-
-    private Toolbar toolbar;
-    private MenuItem mainMenuItem;
+    final Context context = this;
 
     //DB
     public static UtilsDBHelper m_dbHelper;
 
-    // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
-    // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
+    private DrawerLayout mDrawer;
+
+    private Toolbar toolbar;
+    private MenuItem prevMenuItem;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView nvDrawer;
-
-    private boolean editUserProfile;
-    private boolean editDogProfile;
 
     private TextView drawerDogNameTextView;
     private ImageView drawerProfilePicImageView;
 
-//    private boolean editUserProfile;
-//    private boolean editDogProfile;
-//
-//    public static final int RC_SIGN_IN = 1;
-//    private FirebaseAuth mFirebaseAuth;
-//    private FirebaseAuth.AuthStateListener mAuthStateListener;
-//    ProgressDialog pd;
-
     /* this are for the location permission request */
+    private static final int INITIAL_REQUEST = 1337;
     private static final String[] INITIAL_PERMS={
             android.Manifest.permission.ACCESS_FINE_LOCATION
     };
-    private static final int INITIAL_REQUEST = 1337;
 
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -87,17 +82,6 @@ public class MainActivity extends AppCompatActivity {
                                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
-
-//        API.initDatabaseApi();
-//        mFirebaseAuth = FirebaseAuth.getInstance();
-//        editUserProfile = false;
-//        editDogProfile = false;
-//        ImageLoaderUtils.initImageLoader(this.getApplicationContext());
-//        initAuthStateListener();
-//
-//        pd = new ProgressDialog(this, R.style.MyTheme);
-//        pd.setCancelable(false);
-//        pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
 
         m_dbHelper =  new UtilsDBHelper(this);
 
@@ -117,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawerContent(nvDrawer);
 
-        mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
+        prevMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
 
         //get widgets from drawer( profile pic and name)
         final View drawerProfileHeader = nvDrawer.inflateHeaderView(R.layout.main_nav_header);
@@ -140,53 +124,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean canAccessLocation() {
-        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(this, perm));
-    }
-
-    // Callback with the request from calling requestPermissions
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        // Make sure it's our original GET_LOCATION request
-        if (requestCode == INITIAL_REQUEST) {
-            if (grantResults.length == 1 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                if (canAccessLocation()) {
-//                    Toast.makeText(contex, R.string.get_ready_for_a_walk,
-//                            Toast.LENGTH_SHORT).show();
-//                    MatchesFragment matchesFragment = new MatchesFragment();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putBoolean("bark", true);
-//                    matchesFragment.setArguments(bundle);
-//                    FragmentManager fragmentManager = getSupportFragmentManager();
-//                    fragmentManager.beginTransaction().replace(R.id.main_container,
-//                            matchesFragment).commit();
-//
-//                    mDrawer.closeDrawers();
-//                    setTitle("Who Want To Walk Now");
-//                }
-            } else {
-                Toast.makeText(this,
-                        "We can not play with you without your permission...",
-                        Toast.LENGTH_SHORT).show();
-            }
-            setTitle(mainMenuItem.getTitle());
-            mainMenuItem.setChecked(true);
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
+    /* Drawer handling function */
 
     private void setDrawerProfileInfo(String dogName, String dogPhotoUrl){
-//        stopProgressBar();
         if (drawerDogNameTextView != null && drawerProfilePicImageView != null) {
             String defaultDog = getString(R.string.default_dog_name);
             if (dogPhotoUrl != null && !dogPhotoUrl.isEmpty()) {
@@ -214,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
-        // and will not render the hamburger icon without it.
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
@@ -241,21 +179,21 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = MatchesFragment.class;
                 bundle = new Bundle();
                 bundle.putBoolean("bark", false);
-                mainMenuItem = menuItem;
+                prevMenuItem = menuItem;
                 break;
             case R.id.bark_fragment:
                 if (!canAccessLocation()) {
-                    Toast.makeText(contex,
+                    Toast.makeText(context,
                             "All locations and no permissions makes Johnny a dull boy",
                             Toast.LENGTH_SHORT).show();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
                     }
-                    setTitle(mainMenuItem.getTitle());
-                    mainMenuItem.setChecked(true);
+                    setTitle(prevMenuItem.getTitle());
+                    prevMenuItem.setChecked(true);
                     return;
                 }
-                Toast.makeText(contex, R.string.get_ready_for_a_walk,
+                Toast.makeText(context, R.string.get_ready_for_a_walk,
                         Toast.LENGTH_SHORT).show();
                 fragmentClass = MatchesFragment.class;
                 bundle = new Bundle();
@@ -263,13 +201,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.food_notifications:
                 fragmentClass = FoodNotificationsFragment.class;
-                mainMenuItem = menuItem;
+                prevMenuItem = menuItem;
                 break;
             case R.id.vaccinetion_card:
                 fragmentClass = VaccinationCardFragment.class;
-                mainMenuItem = menuItem;
+                prevMenuItem = menuItem;
                 break;
             case R.id.find_near_map:
+                prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 startActivity(mapsIntent);
@@ -281,27 +220,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(signOutIntent, 888);
                 return;
             case R.id.edit_user_profile:
-                mainMenuItem.setChecked(true);
+                prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
                 userIntent.putExtra("edit",true);
                 startActivityForResult(userIntent, 0);
                 return;
             case R.id.edit_dog_profile:
-                mainMenuItem.setChecked(true);
+                prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
                 dogIntent.putExtra("edit",true);
                 startActivityForResult(dogIntent, 0);
                 return;
             case R.id.friends:
+                prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
                 return;
             default:
                 fragmentClass = MatchesFragment.class;
-                mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
+                prevMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
         }
 
         try {
@@ -327,6 +267,19 @@ public class MainActivity extends AppCompatActivity {
         mDrawer.closeDrawers();
     }
 
+    // `onPostCreate` called when activity start-up is complete after `onStart()`
+    // There are 2 signatures and only `onPostCreate(Bundle state)` shows the hamburger icon.
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    /* End drawer Handling */
+
+
+    /* Option pressed function */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -360,17 +313,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // `onPostCreate` called when activity start-up is complete after `onStart()`
-    // NOTE 1: Make sure to override the method with only a single `Bundle` argument
-    // Note 2: Make sure you implement the correct `onPostCreate(Bundle savedInstanceState)` method.
-    // There are 2 signatures and only `onPostCreate(Bundle state)` shows the hamburger icon.
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState();
-    }
+    /* End option pressed Handling */
 
+    /**
+     *  Handle the logic of pressing the back button:
+     *      if in neighbour dogs or bark - exit the app
+     *      else - get back to neighbor dogs
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -401,14 +350,51 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
             // Highlight the selected item has been done by NavigationView
             Menu menuNav = nvDrawer.getMenu();
-            mainMenuItem = menuNav.findItem(R.id.default_fragment);
-            mainMenuItem.setChecked(true);
+            prevMenuItem = menuNav.findItem(R.id.default_fragment);
+            prevMenuItem.setChecked(true);
             // Set action bar title
-            setTitle(mainMenuItem.getTitle());
+            setTitle(prevMenuItem.getTitle());
             return;
         }
         super.onBackPressed();
     }
+
+    /* End back handling */
+
+    /* Location permissions Function */
+
+    private boolean canAccessLocation() {
+        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean hasPermission(String perm) {
+        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(this, perm));
+    }
+
+    // Callback with the request from calling requestPermissions
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        // Make sure it's our original GET_LOCATION request
+        if (requestCode == INITIAL_REQUEST) {
+            if (grantResults.length == 1 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // pass
+            } else {
+                Toast.makeText(this,
+                        "We can not play with you without your permission...",
+                        Toast.LENGTH_SHORT).show();
+            }
+            setTitle(prevMenuItem.getTitle());
+            prevMenuItem.setChecked(true);
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    /* End location permissions Function */
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -418,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startEditProfileActivity() {
-        Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Need to add dog information", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DogRegistrationActivity.class);
         startActivity(intent);
     }

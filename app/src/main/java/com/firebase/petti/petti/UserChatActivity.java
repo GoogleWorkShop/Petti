@@ -1,26 +1,23 @@
 package com.firebase.petti.petti;
 
-import android.app.ActionBar;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
-import com.firebase.petti.db.API;
 import com.firebase.petti.db.ChatApi;
 import com.firebase.petti.db.NewMessagesHandler;
 import com.firebase.petti.db.classes.ChatMessage;
-import com.firebase.petti.petti.R;
 import com.firebase.petti.petti.utils.chatAdapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,13 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class UserChatActivity extends AppCompatActivity {
-    private ListView mainListView ;
+    private ListView mainListView;
     private String otherUserId;
-    private ArrayAdapter<String> listAdapter ;
-
-    // YAHAV:
+    private ArrayAdapter<String> listAdapter;
 
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 256;
 
@@ -51,16 +45,21 @@ public class UserChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        setContentView(R.layout.activity_chat_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-      // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         otherUserId = getIntent().getStringExtra("USER_ID");
-        setContentView(R.layout.activity_chat_activity);
-        mainListView = (ListView) findViewById( R.id.mainListView );
+        mainListView = (ListView) findViewById(R.id.mainListView);
+
+        //TODO REPLACE WITH USER NAME
+        setTitle("THIS IS A USER NAME!");
 
         mMessageViewedTracker = NewMessagesHandler.getCurrMsgTracker().child(otherUserId);
         mMessagesDatabaseReference = ChatApi.getMsgRefById(otherUserId);
@@ -96,7 +95,6 @@ public class UserChatActivity extends AppCompatActivity {
             }
         });
         List<ChatMessage> massageList = new ArrayList<>();
-//        chatAdapter customAdapter = new chatAdapter(this, R.layout.chatrow, massageList);
         mMessageAdapter = new chatAdapter(this, R.layout.chatrow, massageList);
 
         mainListView.setAdapter(mMessageAdapter);
@@ -104,18 +102,12 @@ public class UserChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         detachDatabaseReadListener();
     }
 
-//    public int sendMassage (String imput)
-//    {
-//      return 1;
-//    };
-
-
-        private void attachDatabaseReadListener() {
+    private void attachDatabaseReadListener() {
         NewMessagesHandler.setCurrentlyChatting(otherUserId);
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
@@ -148,5 +140,20 @@ public class UserChatActivity extends AppCompatActivity {
             mChildEventListener = null;
         }
         NewMessagesHandler.unsetCurrentlyChatting();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

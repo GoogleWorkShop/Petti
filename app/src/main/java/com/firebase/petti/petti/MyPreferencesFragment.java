@@ -1,13 +1,8 @@
 package com.firebase.petti.petti;
 
-/**
- * Created by barjon on 22-Dec-16.
- */
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -96,34 +91,6 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            Fragment fragment = null;
-            Class fragmentClass;
-            int container;
-            if(getActivity().getClass() == NeighborDogsActivity.class) {
-                fragmentClass = MatchesFragment.class;
-                container = R.id.neighbor_container;
-            } else {
-                return super.onOptionsItemSelected(item);
-            }
-
-            try {
-                fragment = (Fragment) fragmentClass.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(container, fragment).commit();
-
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 }
