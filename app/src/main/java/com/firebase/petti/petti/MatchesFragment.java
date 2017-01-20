@@ -87,11 +87,11 @@ public class MatchesFragment extends Fragment {
         if(checkVisible()) {
             setUpLocation();
 
-            if(location != null) {
+            if (location == null && bark) {
                 Toast.makeText(getActivity(),
-                        "All locations and no permissions makes Johnny a dull boy",
+                        "Could not get your location. Does your GPS on?",
                         Toast.LENGTH_LONG).show();
-                Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
+            } else {
                 LocationsApi.attachNearbyUsersListener(location, mRadius, bark);
             }
         }
@@ -144,11 +144,10 @@ public class MatchesFragment extends Fragment {
     private void updateMatches() {
         if ((canAccessLocation() && bark) || !bark) {
             setUpLocation();
-            if(location == null){
+            if(location == null && bark){
                 Toast.makeText(getActivity(),
-                        "All locations and no permissions makes Johnny a dull boy",
+                        "Could not get your location. Does your GPS on or address set?",
                         Toast.LENGTH_LONG).show();
-                Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
                 return;
             }
             detachLocationsListener();
@@ -183,7 +182,6 @@ public class MatchesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (checkVisible()) {
-            Log.d(LOG_TAG, "HHHHHEEEEEERRRRRRRREEEEEEE1");
             checkAndUpdate();
         } else if (!bark){
             TaskParams taskParams = new TaskParams(bark, location);
@@ -263,14 +261,7 @@ public class MatchesFragment extends Fragment {
 
             // check if GPS enabled
             if (gps.canGetLocation()) {
-
                 location = gps.getLocation();
-                if (location == null) {
-                    Toast.makeText(getActivity(),
-                            "All locations and no permissions makes Johnny a dull boy",
-                            Toast.LENGTH_LONG).show();
-                    Log.d(LOG_TAG, "$$$$ IN setUpGPS LOCATION IS NULL $$$$");
-                }
             } else {
                 // can't get location
                 // GPS or Network is not enabled

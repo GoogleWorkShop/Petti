@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.firebase.petti.petti.utils.GetNearbyPlacesData;
@@ -42,11 +43,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     double latitude;
     double longitude;
+    private boolean neighbours;
     private int PROXIMITY_RADIUS = 10000;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+
+    LinearLayout buttons;
+
+    private final static String TAG = MapsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +76,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("onCreate","Google Play Services available.");
         }
 
+        buttons = (LinearLayout)findViewById(R.id.map_buttons);
+
+        if (savedInstanceState != null) {
+            neighbours = getIntent().getBooleanExtra("neighbours", false);
+        } else {
+            neighbours = false;
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        if(neighbours){
+            buttons.setVisibility(View.VISIBLE);
+            setUpMap();
+        } else {
+            buttons.setVisibility(View.GONE);
+        }
+    }
+
+    private void setUpMap() {
+        Log.d(TAG, "Setting up neighbour map");
+//        mMap.clear();
+//        String url = getUrl(latitude, longitude, park_string);
+//        Object[] DataTransfer = new Object[2];
+//        DataTransfer[0] = mMap;
+//        DataTransfer[1] = url;
+//        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+//        getNearbyPlacesData.execute(DataTransfer);
+        Toast.makeText(this, "This Are Your neighbours", Toast.LENGTH_LONG).show();
     }
 
     private boolean CheckGooglePlayServices() {

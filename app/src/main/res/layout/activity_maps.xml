@@ -18,7 +18,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="left"
-        android:layout_gravity="left">
+        android:layout_gravity="left"
+        android:visibility="visible"
+        android:id="@+id/map_buttons">
 
         <Button
             android:id="@+id/btnVets"

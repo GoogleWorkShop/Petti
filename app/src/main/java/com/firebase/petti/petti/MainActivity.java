@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
+                mapsIntent.putExtra("neighbours", false);
                 startActivity(mapsIntent);
                 return;
             case R.id.sign_out:
