@@ -59,8 +59,7 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-        splashHeader = (ImageView) findViewById(R.id.splash_header);
-        splashImage = (ImageView) findViewById(R.id.splash_pic);
+
         splashText = (TextView) findViewById(R.id.splash_text);
 
         /* initiate the sign in/up process */
@@ -107,8 +106,6 @@ public class SplashActivity extends AppCompatActivity {
                     textAnim.addAnimation(fadeInImage);
                     textAnim.addAnimation(fadeOut);
 
-                    splashHeader.setAnimation(imageAnim);
-                    splashImage.setAnimation(imageAnim);
                     splashText.startAnimation(textAnim);
 
                     // Start timer and launch main activity
