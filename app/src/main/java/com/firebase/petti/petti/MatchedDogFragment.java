@@ -59,9 +59,10 @@ public class MatchedDogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(getActivity(), UserChatActivity.class);
-                user.getTempUid();
                 String message =    user.getTempUid();
+                String name = user.getOwner().getName();
                 myIntent.putExtra("USER_ID", message);
+                myIntent.putExtra("USER_NAME", message);
                 getActivity().startActivity(myIntent);
             }
         });

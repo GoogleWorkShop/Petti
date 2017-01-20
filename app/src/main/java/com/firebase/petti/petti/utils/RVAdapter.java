@@ -58,8 +58,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
                 notifyItemRangeChanged(position, mFriends.size());
 //                Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(position), Toast.LENGTH_SHORT).show();
             } else {
+                String currUser = mFriends.get(position).getOwner().getName();
                 Intent myIntent = new Intent(context, UserChatActivity.class);
 //                String message = RVAdapter.this.mFriends.get(getAdapterPosition()).getTempUid();
+                myIntent.putExtra("USER_NAME", currUser);
                 myIntent.putExtra("USER_ID", message);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(myIntent);
@@ -94,6 +96,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
         User currUser = mFriends.get(i);
         Dog currDogData = currUser.getDog();
+        String name =currUser.getOwner().getName();
         personViewHolder.personName.setText(currDogData.getName());
         personViewHolder.personAge.setText(currDogData.getAge());
         ImageView petImage = personViewHolder.personPhoto;

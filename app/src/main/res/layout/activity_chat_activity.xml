@@ -19,23 +19,24 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ListView
         android:id="@+id/mainListView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/listFooter"
         android:layout_alignParentTop="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
         android:transcriptMode="alwaysScroll" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/listFooter"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 

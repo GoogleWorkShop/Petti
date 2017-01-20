@@ -59,7 +59,7 @@ public class UserChatActivity extends AppCompatActivity {
         mainListView = (ListView) findViewById(R.id.mainListView);
 
         //TODO REPLACE WITH USER NAME
-        setTitle("THIS IS A USER NAME!");
+        setTitle(getIntent().getStringExtra("USER_NAME"));
 
         mMessageViewedTracker = NewMessagesHandler.getCurrMsgTracker().child(otherUserId);
         mMessagesDatabaseReference = ChatApi.getMsgRefById(otherUserId);
