@@ -58,7 +58,6 @@ public class UserChatActivity extends AppCompatActivity {
         otherUserId = getIntent().getStringExtra("USER_ID");
         mainListView = (ListView) findViewById(R.id.mainListView);
 
-        //TODO REPLACE WITH USER NAME
         setTitle(getIntent().getStringExtra("USER_NAME"));
 
         mMessageViewedTracker = NewMessagesHandler.getCurrMsgTracker().child(otherUserId);
@@ -95,10 +94,11 @@ public class UserChatActivity extends AppCompatActivity {
             }
         });
         List<ChatMessage> massageList = new ArrayList<>();
-        mMessageAdapter = new chatAdapter(this, R.layout.chatrow, massageList);
-
+        mMessageAdapter = new chatAdapter(this, massageList);
         mainListView.setAdapter(mMessageAdapter);
+        mMessageAdapter.notifyDataSetChanged();
         attachDatabaseReadListener();
+
     }
 
     @Override
@@ -116,6 +116,7 @@ public class UserChatActivity extends AppCompatActivity {
                     ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
                     mMessageViewedTracker.setValue(true);
                     mMessageAdapter.add(chatMessage);
+                    mMessageAdapter.notifyDataSetChanged();
                 }
 
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
