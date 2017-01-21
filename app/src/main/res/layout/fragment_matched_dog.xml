@@ -86,15 +86,6 @@
 
     </RelativeLayout>
 
-    <TextView android:layout_width="wrap_content"
-        android:id="@+id/matched_dog_name"
-        android:layout_height="wrap_content"
-        android:typeface="sans"
-        android:textStyle="bold"
-        android:gravity="left"
-        android:textSize="20sp"
-        android:paddingLeft="10dp"/>
-
     <ListView
         android:id="@+id/matched_dog_detail"
         android:layout_width="match_parent"

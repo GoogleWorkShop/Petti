@@ -48,9 +48,6 @@ public class MatchedDogFragment extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragment_matched_dog, container, false);
 
-        TextView titleTextView = (TextView) rootView.findViewById(R.id.matched_dog_name);
-        titleTextView.setText(user.getDog().getName());
-
         imageView = (ImageView) rootView.findViewById(R.id.matched_dog_image);
 
         // Get a reference to the bark button and attach a listener.

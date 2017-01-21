@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -78,12 +79,14 @@ public class DogRegistrationActivity extends AppCompatActivity {
     ;
     Gender gender;
     final String[] dog_type = new String[1];
-    final String[] dog_charater = new String[1];
+    final String[] dog_character = new String[1];
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_registration);
 
@@ -152,7 +155,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         dog_character_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                dog_charater[0] = adapterView.getItemAtPosition(pos).toString();
+                dog_character[0] = adapterView.getItemAtPosition(pos).toString();
             }
 
             @Override
@@ -213,7 +216,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
             dogCharacters = currDogData.getPersonalityAttributes();
             if (dogCharacters != null && dogCharacters.size() > 0) {
                 dog_character_spinner.setSelection(characterAdapter.getPosition(dogCharacters.get(0)));
-                dog_charater[0] = dogCharacters.get(0);
+                dog_character[0] = dogCharacters.get(0);
             }
 
             //if in that poinnt the dog have a name that means the user is allready sign in
@@ -343,7 +346,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
             dogCharacters = new ArrayList<>();
         }
         dogCharacters.clear();
-        dogCharacters.add(dog_charater[0]);
+        dogCharacters.add(dog_character[0]);
         dogDescreption = petDescreptionText.getText().toString();
 //        preferedPartners = preferdPartnersText.getText().toString();
 //        commonWalkPlaces = commonWalkPlacesText.getText().toString();

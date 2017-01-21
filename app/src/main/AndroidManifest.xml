@@ -33,21 +33,14 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".DogRegistrationActivity"
-            android:label="Dog Details"/>
-        <activity
-            android:name=".NeighborDogsActivity"
-            android:label="@string/title_activity_neighbor_dogs"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.firebase.petti.petti.MainActivity" />
-        </activity>
+            android:label="Dog Details"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UserRegistrationActivitey"
             android:screenOrientation="portrait"
             android:label="User Details"
+            android:noHistory="true"
             android:theme="@style/AppTheme" />
 
         <meta-data
