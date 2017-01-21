@@ -8,18 +8,17 @@
     tools:context="com.firebase.petti.petti.SplashActivity">
 
 
-
-
-
     <TextView
         android:visibility="invisible"
         android:id="@+id/splash_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:text="@string/slogen"
         android:textSize="30sp"
         android:typeface="sans"
-        android:textColor="@color/tw__light_gray"/>
+        android:textColor="@color/tw__light_gray"
+        android:layout_marginBottom="238dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

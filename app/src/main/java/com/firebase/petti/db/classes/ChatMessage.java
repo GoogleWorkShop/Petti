@@ -11,7 +11,7 @@ import java.util.Date;
 public class ChatMessage {
 
     private String fromUid;
-//    private String toUid;
+    private String toUid;
     private String text;
     private Long timestamp;
 
@@ -38,13 +38,13 @@ public class ChatMessage {
         this.fromUid = fromUid;
     }
 
-//    public String getToUid() {
-//        return toUid;
-//    }
-//
-//    public void setToUid(String toUid) {
-//        this.toUid = toUid;
-//    }
+    public String getToUid() {
+        return toUid;
+    }
+
+    public void setToUid(String toUid) {
+        this.toUid = toUid;
+    }
 
     public String getText() {
         return text;

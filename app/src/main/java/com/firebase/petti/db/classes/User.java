@@ -241,7 +241,8 @@ public class User implements Serializable{
 
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = super.retrieveDetailList();
-            output.add("Description: " + getDescription());
+            // TODO: Uncomment when fixed
+//            output.add("Description:\n" + getDescription());
             return output;
         }
     }
@@ -292,11 +293,9 @@ public class User implements Serializable{
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = super.retrieveDetailList();
             output.add("Type: " + type);
-            for (String trait : personalityAttributes){
-                output.add(trait);
-            }
-            output.add(walkWith);
-            output.add(getDescription());
+            if (!personalityAttributes.isEmpty())
+            output.add("Character: " + personalityAttributes.get(personalityAttributes.size() - 1));
+            output.add("Description:\n" + getDescription());
             return output;
         }
     }
