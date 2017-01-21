@@ -49,7 +49,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
 
     Owner currOwnerData = new Owner();
-
+    boolean finishedSignUp = false;
     String userName;
     String userBD;
     Boolean user_is_female;
@@ -211,8 +211,12 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             } else {
                 lookingForList = new ArrayList<>();
             }
+            // there is a city and a name, therefore the user is allready signed in
+            finishedSignUp = (!(cityStr == null || cityStr.isEmpty() || cityStr.startsWith("Tap here")) && (userName.length() < 2));
 
             setOwnerImage();
+
+
         }
 
     }
@@ -335,6 +339,19 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 //        return res;
 //    }
 
+
+    @Override
+    public void onBackPressed() {
+
+        if(!finishedSignUp) {
+            Toast.makeText(this, "Please Finish Your Registration", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
     public void MoveToMainAndUploodUserToDB(View view) {
 
         //fill fields to pass to db
@@ -370,6 +387,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         LocationsApi.addStaticLocation(newAddressPlace);
 
         API.setOwner(currOwnerData);
+
 
         //move to Main activitey
         startMainActivity(view);

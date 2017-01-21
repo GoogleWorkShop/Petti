@@ -51,6 +51,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
     String dogType;
     List<String> dogCharacters;
 
+    boolean finishedSignUp = false;
+
     String dogDescreption;
     String preferedPartners;
     String commonWalkPlaces;
@@ -214,6 +216,9 @@ public class DogRegistrationActivity extends AppCompatActivity {
                 dog_charater[0] = dogCharacters.get(0);
             }
 
+            //if in that poinnt the dog have a name that means the user is allready sign in
+            finishedSignUp = dogName.length() > 2;
+
             setDogImage();
 
         }
@@ -307,6 +312,18 @@ public class DogRegistrationActivity extends AppCompatActivity {
         }
         cursor.close();
         return res;
+    }
+
+    @Override
+    public void onBackPressed() {
+            if(!finishedSignUp) {
+                Toast.makeText(this, "Please Finish Your Registration", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        else {
+                super.onBackPressed();
+            }
+
     }
 
     //TODO YAHAV : this is the button listener that will move the user to edit his profile, now here you can upload all the pet details the you have as fields under tha comment "Fields to upload"
