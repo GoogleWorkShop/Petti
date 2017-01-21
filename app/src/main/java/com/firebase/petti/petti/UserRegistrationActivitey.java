@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,7 +47,6 @@ import com.google.firebase.storage.UploadTask;
 public class UserRegistrationActivitey extends AppCompatActivity {
 
 
-    //TODO YAHAV: Fields to upload
 
     Owner currOwnerData = new Owner();
 
@@ -57,28 +57,20 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     List<String> lookingForList = new ArrayList<String>();
     String userDescreption;
     String userNickname;
-//    String userEmail;
 
     Place newAddressPlace;
 
-    //TODO picture....
-
-
     private static final int SELECT_PICTURE = 100;
     private static final int SELECT_LOCATION = 200;
-    private static final String TAG = "UserRegActivity";
+    private static final String TAG = UserRegistrationActivitey.class.getSimpleName();
     EditText nameView;
     TextView BDView;
     Button uploadButton;
     ImageView userImage;
     TextView addressText;
-    //    final String[] city = new String[1];
     final String[] looking4 = new String[1];
     RadioButton maleButton;
     RadioButton femaleButton;
-    ImageButton moveToMainButton;
-
-    boolean isEditState;
 
     public void ShowDatePicker(View view) {
         DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
@@ -94,22 +86,15 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 now.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    public void openAddressSelectionActivity(View view) {
-
-    }
-
-
     enum Gender {Male, Female}
 
-    ;
     UserRegistrationActivitey.Gender gender;
     TextInputEditText userDescreptionView;
     TextInputEditText nicknameView;
-//    TextView userEmailView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_registration);
 
@@ -122,7 +107,6 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
 
         //init views
         nameView = (EditText) findViewById(R.id.user_name);

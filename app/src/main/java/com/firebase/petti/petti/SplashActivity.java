@@ -28,6 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
+/**
+ * This class is the activity for the splash screen
+ * The splash screen is need to let the fire base action to get resolved before jumping into action.
+ */
 public class SplashActivity extends AppCompatActivity {
 
     private int SLEEP_TIME = 4;
@@ -50,14 +54,15 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);    // Removes title bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,     WindowManager.LayoutParams.FLAG_FULLSCREEN);    // Removes notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);    // Removes notification bar
 
         setContentView(R.layout.activity_splash);
 
-        splashHeader = (ImageView) findViewById(R.id.splash_header);
-        splashImage = (ImageView) findViewById(R.id.splash_pic);
+
         splashText = (TextView) findViewById(R.id.splash_text);
 
+        /* initiate the sign in/up process */
         API.initDatabaseApi();
         mFirebaseAuth = FirebaseAuth.getInstance();
         editUserProfile = false;
@@ -67,41 +72,14 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private class IntentLauncher extends Thread {
-        @Override
-        /**
-         * Sleep for some time and than start new activity.
-         */
-        public void run() {
-            try {
-                // Sleeping
-                Thread.sleep(SLEEP_TIME*1000);
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-
-            if (editDogProfile || editUserProfile){
-                nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
-            } else {
-                // Start main activity
-                nextActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
-            }
-            SplashActivity.this.startActivity(nextActivityIntent);
-            SplashActivity.this.finish();
-        }
-    }
-
     private void initAuthStateListener(){
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                /* User is signed in */
                 if (user != null) {
-                    // User is signed in
-//                    String username = user.getDisplayName();
-//                    if (username == null) {
-//                        username = user.getEmail();
-//                    }
 
                     onSignedInInitialize(firebaseAuth.getCurrentUser());
 
@@ -128,8 +106,6 @@ public class SplashActivity extends AppCompatActivity {
                     textAnim.addAnimation(fadeInImage);
                     textAnim.addAnimation(fadeOut);
 
-                    splashHeader.setAnimation(imageAnim);
-                    splashImage.setAnimation(imageAnim);
                     splashText.startAnimation(textAnim);
 
                     // Start timer and launch main activity
@@ -239,7 +215,6 @@ public class SplashActivity extends AppCompatActivity {
 
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-//                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -249,5 +224,29 @@ public class SplashActivity extends AppCompatActivity {
         Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DogRegistrationActivity.class);
         SplashActivity.this.startActivity(intent);
+    }
+
+    private class IntentLauncher extends Thread {
+        @Override
+        /**
+         * Sleep for some time and than start new activity.
+         */
+        public void run() {
+            try {
+                // Sleeping
+                Thread.sleep(SLEEP_TIME*1000);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+            if (editDogProfile || editUserProfile){
+                nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
+            } else {
+                // Start main activity
+                nextActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
+            }
+            SplashActivity.this.startActivity(nextActivityIntent);
+            SplashActivity.this.finish();
+        }
     }
 }
