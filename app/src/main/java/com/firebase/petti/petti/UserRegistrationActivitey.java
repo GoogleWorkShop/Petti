@@ -54,9 +54,9 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     String userBD;
     Boolean user_is_female;
     String cityStr;
-    List<String> lookingForList = new ArrayList<String>();
+    //List<String> lookingForList = new ArrayList<String>();
     String userDescreption;
-    String userNickname;
+    //String userNickname;
 
     Place newAddressPlace;
 
@@ -114,7 +114,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         uploadButton = (Button) findViewById(R.id.user_uploadButton);
         userImage = (ImageView) findViewById(R.id.user_image);
         userDescreptionView = (TextInputEditText) findViewById(R.id.user_descreption);
-        nicknameView = (TextInputEditText) findViewById(R.id.user_nickname);
+       // nicknameView = (TextInputEditText) findViewById(R.id.user_nickname);
         maleButton = (RadioButton) findViewById(R.id.user_gender_male_radio);
         femaleButton = (RadioButton) findViewById(R.id.user_gender_female_radio);
 
@@ -172,45 +172,46 @@ public class UserRegistrationActivitey extends AppCompatActivity {
             if (userDescreption != null) {
                 userDescreptionView.setText(userDescreption);
             }
-            //nickname
-            userNickname = currOwnerData.getNickname();
-            if (userNickname != null) {
-                nicknameView.setText(userNickname);
-            }
+//            //nickname
+//            userNickname = currOwnerData.getNickname();
+//            if (userNickname != null) {
+//                nicknameView.setText(userNickname);
+//            }
         }
 
-        //Lokking for spinner
-        Spinner looking_4_spinner = (Spinner) findViewById(R.id.user_looking4_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> looking4Adapter = ArrayAdapter.createFromResource(this,
-                R.array.looking4_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        looking4Adapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
-        // Apply the adapter to the spinner
-        looking_4_spinner.setAdapter(looking4Adapter);
-        looking_4_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                looking4[0] = adapterView.getItemAtPosition(pos).toString();
-                Toast.makeText(adapterView.getContext(), "looking 4 :" + looking4[0], Toast.LENGTH_SHORT).show();
-            }
+//        //Lokking for spinner
+//        Spinner looking_4_spinner = (Spinner) findViewById(R.id.user_looking4_spinner);
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<CharSequence> looking4Adapter = ArrayAdapter.createFromResource(this,
+//                R.array.looking4_array, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        looking4Adapter.setDropDownViewResource(R.layout.dog_ype_spinner_item);
+//        // Apply the adapter to the spinner
+//        looking_4_spinner.setAdapter(looking4Adapter);
+//        looking_4_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+//                looking4[0] = adapterView.getItemAtPosition(pos).toString();
+//                Toast.makeText(adapterView.getContext(), "looking 4 :" + looking4[0], Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
+//
+//        // set looking 4
+//        if(currOwnerData != null) {
+//            //set looking 4 list
+//            lookingForList = currOwnerData.getLookingForList();
+//            if(lookingForList != null && lookingForList.size() > 0){
+//                looking_4_spinner.setSelection(looking4Adapter.getPosition(lookingForList.get(0)));
+//                looking4[0] = lookingForList.get(0);
+//            } else {
+//                lookingForList = new ArrayList<>();
+//            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        // set city selection
-        if(currOwnerData != null) {
-            //set looking 4 list
-            lookingForList = currOwnerData.getLookingForList();
-            if(lookingForList != null && lookingForList.size() > 0){
-                looking_4_spinner.setSelection(looking4Adapter.getPosition(lookingForList.get(0)));
-                looking4[0] = lookingForList.get(0);
-            } else {
-                lookingForList = new ArrayList<>();
-            }
             // there is a city and a name, therefore the user is allready signed in
             finishedSignUp = (!(cityStr == null || cityStr.isEmpty() || cityStr.startsWith("Tap here")) && (userName.length() < 2));
 
@@ -219,7 +220,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         }
 
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -371,18 +372,18 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         userBD = BDView.getText().toString();
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
 //        cityStr = city[0];
-        lookingForList.clear();
-        lookingForList.add(looking4[0]);
+      //  lookingForList.clear();
+       // lookingForList.add(looking4[0]);
         userDescreption = userDescreptionView.getText().toString();
-        userNickname = nicknameView.getText().toString();
+       // userNickname = nicknameView.getText().toString();
 
         currOwnerData.setName(userName);
         currOwnerData.setAge(userBD);
         currOwnerData.setFemale(user_is_female);
         currOwnerData.setCity(cityStr);
-        currOwnerData.setLookingForList(lookingForList);
+    //    currOwnerData.setLookingForList(lookingForList);
         currOwnerData.setDescription(userDescreption);
-        currOwnerData.setNickname(userNickname);
+     //   currOwnerData.setNickname(userNickname);
 
         LocationsApi.addStaticLocation(newAddressPlace);
 
