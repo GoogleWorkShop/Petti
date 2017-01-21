@@ -1,5 +1,9 @@
 package com.firebase.petti.db.classes;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by yahav on 12/30/2016.
  */
@@ -7,14 +11,19 @@ package com.firebase.petti.db.classes;
 public class ChatMessage {
 
     private String fromUid;
-//    private String fromName;
-    private String toUid;
+//    private String toUid;
     private String text;
-//    private boolean viewed;
+    private Long timestamp;
 
-    public ChatMessage(String fromUid, String toUid, String text){
+//    public ChatMessage(String fromUid, String toUid, String text){
+//        this.fromUid = fromUid;
+////        this.toUid = toUid;
+//        this.text = text;
+//    }
+
+    public ChatMessage(String fromUid, Long timestamp, String text){
         this.fromUid = fromUid;
-        this.toUid = toUid;
+        this.timestamp = timestamp;
         this.text = text;
     }
 
@@ -29,13 +38,13 @@ public class ChatMessage {
         this.fromUid = fromUid;
     }
 
-    public String getToUid() {
-        return toUid;
-    }
-
-    public void setToUid(String toUid) {
-        this.toUid = toUid;
-    }
+//    public String getToUid() {
+//        return toUid;
+//    }
+//
+//    public void setToUid(String toUid) {
+//        this.toUid = toUid;
+//    }
 
     public String getText() {
         return text;
@@ -43,6 +52,24 @@ public class ChatMessage {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String formatTimestamp(){
+        try {
+        Date d = new Date(timestamp);
+        DateFormat dateFormat = new SimpleDateFormat("dd MMM HH:mm:ss");
+            return dateFormat.format(d);
+        } catch (Exception ex){
+            return "";
+        }
     }
 
 //    public boolean isViewed() {

@@ -6,6 +6,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +31,8 @@ public class ChatApi {
     }
 
     public static void sendChatMessage(String toUid, String text){
-        ChatMessage msg = new ChatMessage(API.currUserUid, toUid, text);
+        long timestamp = System.currentTimeMillis();
+        ChatMessage msg = new ChatMessage(API.currUserUid, timestamp, text);
         getMsgRefById(toUid).push().setValue(msg);
         API.getUserRef(toUid).child("msgTracker").child(API.currUserUid).setValue(false);
 //        mCurrUserMessagesDatabaseReference.child(toUid).push().setValue(msg);
