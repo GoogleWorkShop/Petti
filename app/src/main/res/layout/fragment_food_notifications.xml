@@ -78,10 +78,9 @@
 
             <TextView
                 android:id="@+id/purchase_date"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 android:inputType="date"
                 android:text="@string/purchase_date"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
                 android:textStyle="bold"
@@ -89,10 +88,8 @@
 
             <TextView
                 android:id="@+id/food_name"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:gravity="center"
                 android:text="@string/food_name"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
                 android:textStyle="bold"
@@ -100,9 +97,8 @@
 
             <TextView
                 android:id="@+id/amount"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 android:text="@string/amount"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
                 android:textStyle="bold"

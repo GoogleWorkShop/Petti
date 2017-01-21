@@ -2,6 +2,8 @@ package com.firebase.petti.db.classes;
 
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,13 +61,17 @@ public class User implements Serializable{
         this.tempUid = tempUid;
     }
 
-//    public Double getTempLatitude() { return tempLatitude; }
-//
-//    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
-//
-//    public Double getTempLongtitude() { return tempLongtitude; }
-//
-//    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
+    public LatLng retLatLng(){
+        return new LatLng(tempLatitude, tempLongtitude);
+    }
+
+    public Double getTempLatitude() { return tempLatitude; }
+
+    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
+
+    public Double getTempLongtitude() { return tempLongtitude; }
+
+    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
 
     public Map<String, Boolean> getMsgTracker() {
         return msgTracker;
@@ -295,8 +301,6 @@ public class User implements Serializable{
 
     /**
      * Method to extract the user's age from the entered Date of Birth.
-     *
-     * @param DoB String The user's date of birth.
      *
      * @return ageS String The user's age in years based on the supplied DoB.
      */

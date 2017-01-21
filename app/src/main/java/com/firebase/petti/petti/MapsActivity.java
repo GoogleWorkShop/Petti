@@ -56,7 +56,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
 
     private boolean neighbours;
-    private ArrayList<User> otherUsers;
 
     private boolean parksPressed = false;
     private boolean veterinaryPressed = false;
@@ -96,7 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (neighbours){
             findViewById(R.id.map_buttons).setVisibility(View.GONE);
             findViewById(R.id.btn_back_to_bark).setVisibility(View.VISIBLE);
-            otherUsers = (ArrayList<User>) getIntent().getSerializableExtra("other_dogs");
         } else {
             findViewById(R.id.map_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.btn_back_to_bark).setVisibility(View.GONE);
@@ -230,13 +228,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         /* if this is neighbour dogs map we want to upload them straight up */
         if(neighbours){
-            if(otherUsers == null){
+
+            if(LocationsApi.nearbyUsers == null){
                 Toast.makeText(this, "No one around", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            for (User otherUser : otherUsers){
-                
+            for (User otherUser : LocationsApi.nearbyUsers.values()){
+                LatLng latLng= otherUser.retLatLng();
+                mMap.addMarker(new MarkerOptions().position(latLng).title("A Dog!"));
             }
         }
     }

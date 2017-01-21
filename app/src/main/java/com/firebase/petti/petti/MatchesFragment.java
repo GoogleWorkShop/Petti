@@ -58,6 +58,7 @@ public class MatchesFragment extends Fragment {
     TextView notFoundView;
     PulsatorLayout searchingView;
     TextView visibleView;
+    Button goToMapBtn;
 
     private boolean attachedNearbyList;
 
@@ -107,7 +108,7 @@ public class MatchesFragment extends Fragment {
         notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
         searchingView = (PulsatorLayout) rootView.findViewById(R.id.searching_matches_view);
         visibleView = (TextView) rootView.findViewById(R.id.non_visible_state_str);
-        Button goToMapBtn = (Button)rootView.findViewById(R.id.go_to_map_btn);
+        goToMapBtn = (Button)rootView.findViewById(R.id.go_to_map_btn);
 
         if(bark){
             goToMapBtn.setVisibility(View.VISIBLE);
@@ -190,6 +191,7 @@ public class MatchesFragment extends Fragment {
             matchesTask.cancel(true);
             detachLocationsListener();
         }
+        goToMapBtn.setEnabled(false);
         super.onPause();
     }
 
