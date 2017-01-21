@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.firebase.petti.db.API.HALF_HOUR_MILLSEC;
 import static com.firebase.petti.db.API.mFirebaseDatabase;
 
 /**
@@ -74,6 +75,7 @@ public class LocationsApi {
     }
 
     public static boolean attachNearbyUsersListener(@Nullable Location location, int radius, boolean bark) {
+        nearbyUsers.clear();
         if (bark) {
             return attachDynamicNearbyUsersListener(location, radius);
         } else {
@@ -82,9 +84,6 @@ public class LocationsApi {
     }
 
     private static boolean attachDynamicNearbyUsersListener(Location location, int radius) {
-
-        nearbyUsers.clear();
-
         //first set the location for the user
         if (location == null) {
             Log.d(tag, "Got a null value in location parameter");
@@ -115,12 +114,29 @@ public class LocationsApi {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 // Get Post object and use the values to update the UI
-//                                Dog dog = dataSnapshot.getValue(Dog.class);
                                 User user = dataSnapshot.getValue(User.class);
+                                Boolean isEnabled = user.getEnabled();
+                                if (isEnabled != null && !isEnabled){
+                                    if (nearbyUsers.containsKey(userId)){
+                                        nearbyUsers.remove(userId);
+                                    }
+                                    return;
+                                }
+
+                                Long userLastWalkTimestamp = user.getLastLocationTime();
+                                long minBarkTimeLimit = (myLocation.getTime() - HALF_HOUR_MILLSEC);
+                                if ((userLastWalkTimestamp == null ||
+                                        userLastWalkTimestamp < minBarkTimeLimit)) {
+                                    if (nearbyUsers.containsKey(userId)){
+                                        nearbyUsers.remove(userId);
+                                    }
+                                    return;
+                                }
+
                                 Float distanceFromMe = calcDistanceTo(myLocation, userLatitude, userLongtitude);
                                 user.setTempDistanceFromMe(distanceFromMe);
-//                                user.setTempLatitude(userLatitude);
-//                                user.setTempLongtitude(userLongtitude);
+                                user.setTempLatitude(userLatitude);
+                                user.setTempLongtitude(userLongtitude);
 //                                String[] ownerDetails = new String[]{userId, dog.getName(), dog.getPhotoUrl()};
                                 try {
                                     nearbyUsers.put(userId, user);
@@ -173,9 +189,6 @@ public class LocationsApi {
 
 
     private static boolean attachStaticNearbyUsersListener(final int radius) {
-
-        nearbyUsers.clear();
-
         if (API.currUserData.getOwner().getCity() == null || API.currUserData.getOwner().getCity().isEmpty()){
             return false;
         }
@@ -267,7 +280,6 @@ public class LocationsApi {
         if (geoQuery != null) {
             geoQuery.removeGeoQueryEventListener(mLocationsListener);
             geoQuery = null;
-            nearbyUsers.clear();
         }
     }
 
@@ -275,7 +287,6 @@ public class LocationsApi {
         if (geoStaticQuery != null) {
             geoStaticQuery.removeGeoQueryEventListener(mStaticLocationsListener);
             geoStaticQuery = null;
-            nearbyUsers.clear();
         }
     }
 

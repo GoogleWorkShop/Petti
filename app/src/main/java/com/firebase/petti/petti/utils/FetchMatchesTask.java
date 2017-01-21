@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.MatchesFragment;
 import com.firebase.petti.petti.MatchesFragment.TaskParams;
+import com.firebase.petti.petti.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +26,7 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
  * Created by barjon on 09-Jan-17.
  */
 
-public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void, ArrayList<User>> {
+public class FetchMatchesTask extends AsyncTask<Location, Void, ArrayList<User>> {
 
     private static final String tag = "FETCH-MATCHES-TASK";
     private static final long HALF_HOUR_MILLSEC = 30*60*1000;
@@ -33,21 +35,26 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
 
     private GridView gridView;
     private TextView notFoundView;
-    PulsatorLayout searchingView;
+    private PulsatorLayout searchingView;
+    private Button mapBtn;
 
-    public FetchMatchesTask(GridViewAdapter mMatchesAdapter, GridView gridView,
-                            TextView notFoundView, PulsatorLayout searchingView) {
+    private boolean bark;
+
+    public FetchMatchesTask(boolean bark, View rootView, GridViewAdapter mMatchesAdapter) {
         this.mMatchesAdapter = mMatchesAdapter;
-        this.gridView = gridView;
-        this.notFoundView = notFoundView;
-        this.searchingView = searchingView;
+
+        gridView = (GridView) rootView.findViewById(R.id.gridview_matches);
+        notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
+        searchingView = (PulsatorLayout) rootView.findViewById(R.id.searching_matches_view);
+        mapBtn = (Button)rootView.findViewById(R.id.go_to_map_btn);
+
+        this.bark = bark;
     }
 
     @Override
-    protected ArrayList<User> doInBackground(TaskParams... params) {
+    protected ArrayList<User> doInBackground(Location... params) {
 
-        boolean bark = params[0].bark;
-        Location location = params[0].location;
+        Location location = params[0];
 
         /* 3 seconds of placebo searching for feel good effect */
         try {
@@ -78,18 +85,6 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         ArrayList<User> mMatchesArray = new ArrayList<>();
         for (Map.Entry<String, User> item : LocationsApi.nearbyUsers.entrySet()){
             User userCandidate = item.getValue();
-            Boolean isEnabled = userCandidate.getEnabled();
-            if (isEnabled != null && !isEnabled){
-                continue;
-            }
-            if (bark) {
-                Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
-                long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
-                if ((userLastWalkTimestamp == null ||
-                        userLastWalkTimestamp < minBarkTimeLimit)) {
-                    continue;
-                }
-            }
             userCandidate.setTempUid(item.getKey());
             mMatchesArray.add(userCandidate);
             if(isCancelled()){
@@ -129,6 +124,9 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         } else {
             gridView.setVisibility(View.VISIBLE);
             notFoundView.setVisibility(View.GONE);
+        }
+        if (bark){
+            mapBtn.setEnabled(true);
         }
         super.onPostExecute(users);
     }

@@ -69,7 +69,6 @@ public class SplashActivity extends AppCompatActivity {
         editDogProfile = false;
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
-
     }
 
     private void initAuthStateListener(){
@@ -151,13 +150,18 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Inside first listener");
-                editUserProfile = !dataSnapshot.exists();
-                if (editUserProfile) {
+                if (!dataSnapshot.exists()) {
                     // 1st registration
+                    editDogProfile = true;
                     API.createUser(display_name, email);
+                } else {
+                    editDogProfile = !dataSnapshot.child("dog").hasChild("name")
+                            || dataSnapshot.child("dog").child("name").getValue().equals("");
+                    editUserProfile = !dataSnapshot.child("owner").hasChild("name")
+                            || dataSnapshot.child("owner").child("name").getValue().equals("")
+                            || !dataSnapshot.child("owner").hasChild("city")
+                            || dataSnapshot.child("owner").child("city").getValue().equals("");
                 }
-                editDogProfile = !dataSnapshot.child("dog").hasChild("name")
-                        || dataSnapshot.child("dog").child("name").getValue().equals("");
             }
 
             @Override
@@ -239,8 +243,10 @@ public class SplashActivity extends AppCompatActivity {
                 Log.e(TAG, e.getMessage());
             }
 
-            if (editDogProfile || editUserProfile){
+            if (editDogProfile){
                 nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
+            } else if(editUserProfile) {
+                nextActivityIntent = new Intent(SplashActivity.this, UserRegistrationActivitey.class);
             } else {
                 // Start main activity
                 nextActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
