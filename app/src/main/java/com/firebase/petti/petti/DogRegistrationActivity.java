@@ -54,8 +54,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
     boolean finishedSignUp = false;
 
     String dogDescreption;
-    String preferedPartners;
-    String commonWalkPlaces;
+    //String preferedPartners;
+   //String commonWalkPlaces;
     //TODO picture....
 
     boolean isEditState;
@@ -103,8 +103,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
         uploadButton = (Button) findViewById(R.id.uploadButton);
         petImage = (ImageView) findViewById(R.id.pet_image);
         petDescreptionText = (TextInputEditText) findViewById(R.id.pet_descreption_text);
-        preferdPartnersText = (TextInputEditText) findViewById(R.id.preferd_walk_partners_text);
-        commonWalkPlacesText = (TextInputEditText) findViewById(R.id.common_walk_places_text);
+        //preferdPartnersText = (TextInputEditText) findViewById(R.id.preferd_walk_partners_text);
+       // commonWalkPlacesText = (TextInputEditText) findViewById(R.id.common_walk_places_text);
         dogMaleButton = (RadioButton) findViewById(R.id.pet_gender_male_radio);
         dogFemaleButton = (RadioButton) findViewById(R.id.pet_gender_female_radio);
 
@@ -176,11 +176,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
             if (dogBD != null) {
                 BDView.setText(dogBD);
             }
-            //walk places
-            commonWalkPlaces = currDogData.getWalkWhere();
-            if (commonWalkPlaces != null) {
-                commonWalkPlacesText.setText(commonWalkPlaces);
-            }
+//            //walk places
+//            commonWalkPlaces = currDogData.getWalkWhere();
+//            if (commonWalkPlaces != null) {
+//                commonWalkPlacesText.setText(commonWalkPlaces);
+//            }
             //gender
             dog_is_female = currDogData.getFemale();
             if (dog_is_female != null) {
@@ -197,11 +197,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
             if (dogDescreption != null) {
                 petDescreptionText.setText(dogDescreption);
             }
-            //partners
-            preferedPartners = currDogData.getWalkWith();
-            if (preferedPartners != null) {
-                preferdPartnersText.setText(preferedPartners);
-            }
+//            //partners
+//            preferedPartners = currDogData.getWalkWith();
+//            if (preferedPartners != null) {
+//                preferdPartnersText.setText(preferedPartners);
+//            }
 
             dogType = currDogData.getType();
             if (dogType != null) {
@@ -345,8 +345,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
         dogCharacters.clear();
         dogCharacters.add(dog_charater[0]);
         dogDescreption = petDescreptionText.getText().toString();
-        preferedPartners = preferdPartnersText.getText().toString();
-        commonWalkPlaces = commonWalkPlacesText.getText().toString();
+//        preferedPartners = preferdPartnersText.getText().toString();
+//        commonWalkPlaces = commonWalkPlacesText.getText().toString();
 
         currDogData.setName(dogName);
         currDogData.setAge(dogBD);
@@ -354,8 +354,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
         currDogData.setType(dogType);
         currDogData.setPersonalityAttributes(dogCharacters);
         currDogData.setDescription(dogDescreption);
-        currDogData.setWalkWith(preferedPartners);
-        currDogData.setWalkWhere(commonWalkPlaces);
+//        currDogData.setWalkWith(preferedPartners);
+//        currDogData.setWalkWhere(commonWalkPlaces);
 
         API.setDog(currDogData);
 

@@ -144,7 +144,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="0.5"
             android:orientation="vertical"
-            android:weightSum="4">
+            android:weightSum="3">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -156,11 +156,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top"
+                    android:inputType="textMultiLine"
                     android:hint="describe your dog in a few words"
                     android:textSize="20dp" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <!--android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -172,9 +173,9 @@
                     android:gravity="top"
                     android:hint="who would you like to walk with"
                     android:textSize="20dp" />
-            </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout-->
 
-            <android.support.design.widget.TextInputLayout
+            <!--android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -186,24 +187,22 @@
                     android:gravity="top"
                     android:hint="where do you usualy go for a walk"
                     android:textSize="20dp" />
-            </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_gravity="center"
-                android:weightSum="1"
                 android:orientation="horizontal">
 
 
                 <ImageButton
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/done_edit"
                     android:background="@color/tw__transparent"
                     android:onClick="MoveToEditProfileAndUploadPet"
-                    android:layout_weight="1"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
                     android:layout_centerInParent="true"
