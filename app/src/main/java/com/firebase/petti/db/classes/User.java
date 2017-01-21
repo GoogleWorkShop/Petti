@@ -2,6 +2,8 @@ package com.firebase.petti.db.classes;
 
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +60,12 @@ public class User implements Serializable{
     public void setTempUid(String tempUid) {
         this.tempUid = tempUid;
     }
+
+
+    public LatLng retLatLng(){
+        return new LatLng(tempLatitude, tempLongtitude);
+    }
+
 
     public Double getTempLatitude() { return tempLatitude; }
 
@@ -292,6 +300,7 @@ public class User implements Serializable{
             return output;
         }
     }
+
 
     private static String retrieveAgeFromDate(int day, int month, int year){
 

@@ -1,60 +1,88 @@
-<FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-    <fragment android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.firebase.petti.petti.MapsActivity"/>
+        tools:context="com.firebase.petti.petti.MapsActivity" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_gravity="left"
         android:gravity="left"
-        android:layout_gravity="left">
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <Button
-            android:id="@+id/btnVets"
+        <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5sp"
-            android:layout_marginLeft="5sp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:background="@drawable/our_button"
-            android:textColor="@color/tw__light_gray"
-            android:text="@string/find_vets" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnParks"
+            <Button
+                android:id="@+id/btn_vets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_marginTop="5sp"
+                android:background="@drawable/our_button"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/find_vets"
+                android:textColor="@color/tw__light_gray" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5sp"
-            android:layout_marginLeft="5sp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:background="@drawable/our_button"
-            android:textColor="@color/tw__light_gray"
-            android:text="@string/find_parks" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnPetStore"
+            <Button
+                android:id="@+id/btn_parks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_marginTop="5sp"
+                android:background="@drawable/our_button"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/find_parks"
+                android:textColor="@color/tw__light_gray" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5sp"
-            android:layout_marginLeft="5sp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:background="@drawable/our_button"
-            android:textColor="@color/tw__light_gray"
-            android:text="@string/find_pet_stores" />
+            android:layout_height="wrap_content">
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_pet_store"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_marginTop="5sp"
+                android:background="@drawable/our_button"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/find_pet_stores"
+                android:textColor="@color/tw__light_gray" />
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/btn_back_to_bark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="5sp"
+        android:background="@drawable/our_button"
+        android:text="@string/back"
+        android:textColor="@color/tw__light_gray"
+        android:visibility="gone"/>
+
+
 </FrameLayout>
