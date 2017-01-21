@@ -78,18 +78,6 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         ArrayList<User> mMatchesArray = new ArrayList<>();
         for (Map.Entry<String, User> item : LocationsApi.nearbyUsers.entrySet()){
             User userCandidate = item.getValue();
-            Boolean isEnabled = userCandidate.getEnabled();
-            if (isEnabled != null && !isEnabled){
-                continue;
-            }
-            if (bark) {
-                Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
-                long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
-                if ((userLastWalkTimestamp == null ||
-                        userLastWalkTimestamp < minBarkTimeLimit)) {
-                    continue;
-                }
-            }
             userCandidate.setTempUid(item.getKey());
             mMatchesArray.add(userCandidate);
             if(isCancelled()){
