@@ -187,4 +187,16 @@
 
     <string name="slogen">You\'ll Never Walk Alone</string>
     <string name="non_visible_string_str">HEY!!!\nIF VISIBILITY IS DISABLED\nYOU WON\'T SEE OTHER PEOPLE TOO!</string>
+    <string name="neighbour_dogs">Neighbour Dogs</string>
+    <string name="who_want_to_walk_now">Who Want To Walk Now</string>
+    <string name="my_friends">My Friends</string>
+    <string name="food_notifications">Food Notifications</string>
+    <string name="vaccination_card">Vaccination Card</string>
+    <string name="friends_parks_vets_and_shops_map">Friends, Parks, Vets, and Shops map</string>
+    <string name="edit_your_profile">Edit Your Profile</string>
+    <string name="edit_dog_profile">Edit Dog Profile</string>
+    <string name="sign_out_str">Sign Out</string>
+    <string name="find_neighbours">find_neighbours</string>
+    <string name="back">Back</string>
+    <string name="view_matches_on_map">View Matches On Map</string>
 </resources>

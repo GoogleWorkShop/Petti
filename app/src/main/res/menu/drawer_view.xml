@@ -4,40 +4,40 @@
         <item
             android:id="@+id/default_fragment"
             android:icon="@drawable/ic_action_walking_together"
-            android:title="Neighbour Dogs"
+            android:title="@string/neighbour_dogs"
             android:checked="true"/>
         <item
             android:id="@+id/bark_fragment"
             android:icon="@drawable/ic_action_walk"
-            android:title="Who Want To Walk Now"/>
+            android:title="@string/who_want_to_walk_now"/>
         <item
             android:id="@+id/friends"
             android:icon="@drawable/ic_action_friends"
-            android:title="My Friends" />
+            android:title="@string/my_friends" />
         <item
             android:id="@+id/food_notifications"
             android:icon="@drawable/ic_action_food"
-            android:title="Food Notifications" />
+            android:title="@string/food_notifications" />
         <item
-            android:id="@+id/vaccinetion_card"
+            android:id="@+id/vaccination_card"
             android:icon="@drawable/ic_action_vaccinetion"
-            android:title="Vaccinetion Card" />
+            android:title="@string/vaccination_card" />
         <item
             android:id="@+id/find_near_map"
             android:icon="@drawable/ic_map_btn"
-            android:title="Find Parks, Vets, Shops map" />
+            android:title="@string/friends_parks_vets_and_shops_map" />
         <item
             android:id="@+id/edit_user_profile"
             android:icon="@drawable/ic_action_edit_profile"
-            android:title="Edit Your Profile" />
+            android:title="@string/edit_your_profile" />
         <item
             android:id="@+id/edit_dog_profile"
             android:icon="@drawable/ic_action_edit_dog_profile"
-            android:title="Edit Dog Profile" />
+            android:title="@string/edit_dog_profile" />
         <item
             android:id="@+id/sign_out"
             android:icon="@drawable/sign_out_btn"
-            android:title="Sign Out" />
+            android:title="@string/sign_out_str" />
 
     </group>
 </menu>

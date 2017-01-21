@@ -8,11 +8,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,16 +20,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.petti.db.API;
 import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User;
+import com.firebase.petti.petti.utils.FetchMatchesTask;
 import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
-import com.firebase.petti.petti.utils.FetchMatchesTask;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
@@ -107,6 +107,13 @@ public class MatchesFragment extends Fragment {
         notFoundView = (TextView) rootView.findViewById(R.id.no_matches_str);
         searchingView = (PulsatorLayout) rootView.findViewById(R.id.searching_matches_view);
         visibleView = (TextView) rootView.findViewById(R.id.non_visible_state_str);
+        Button goToMapBtn = (Button)rootView.findViewById(R.id.go_to_map_btn);
+
+        if(bark){
+            goToMapBtn.setVisibility(View.VISIBLE);
+        } else {
+            goToMapBtn.setVisibility(View.GONE);
+        }
 
         gridView.setVisibility(View.GONE);
         notFoundView.setVisibility(View.GONE);
@@ -116,7 +123,6 @@ public class MatchesFragment extends Fragment {
             visibleView.setVisibility(View.GONE);
         } else {
             searchingView.setVisibility(View.GONE);
-
             searchingView.stop();
             visibleView.setVisibility(View.VISIBLE);
         }
@@ -137,6 +143,16 @@ public class MatchesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        goToMapBtn.setEnabled(false);
+        goToMapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapsIntent = new Intent(getActivity(), MapsActivity.class);
+                mapsIntent.putExtra("neighbours", true);
+                startActivity(mapsIntent);
+            }
+        });
+
 
         return rootView;
     }
@@ -157,9 +173,8 @@ public class MatchesFragment extends Fragment {
             visibleView.setVisibility(View.GONE);
             searchingView.setVisibility(View.VISIBLE);
             searchingView.start();
-            TaskParams taskParams = new TaskParams(bark, location);
-            matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
-            matchesTask.execute(taskParams);
+            matchesTask = new FetchMatchesTask(bark, rootView, mMatchesAdapter);
+            matchesTask.execute(location);
         } else {
             searchingView.setVisibility(View.GONE);
             searchingView.stop();
@@ -170,8 +185,8 @@ public class MatchesFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // TODO deal with cancellations
         if(visible) {
+            // cancel the async
             matchesTask.cancel(true);
             detachLocationsListener();
         }
@@ -183,10 +198,6 @@ public class MatchesFragment extends Fragment {
         super.onResume();
         if (checkVisible()) {
             checkAndUpdate();
-        } else if (!bark){
-            TaskParams taskParams = new TaskParams(bark, location);
-            matchesTask = new FetchMatchesTask(mMatchesAdapter, gridView, notFoundView, searchingView);
-            matchesTask.execute(taskParams);
         } else {
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.GONE);
@@ -287,7 +298,7 @@ public class MatchesFragment extends Fragment {
         public boolean bark;
         public Location location;
 
-        TaskParams(boolean bark, Location location) {
+        TaskParams(boolean bark, @Nullable Location location) {
             this.bark = bark;
             this.location = location;
         }

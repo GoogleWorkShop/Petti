@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = FoodNotificationsFragment.class;
                 prevMenuItem = menuItem;
                 break;
-            case R.id.vaccinetion_card:
+            case R.id.vaccination_card:
                 fragmentClass = VaccinationCardFragment.class;
                 prevMenuItem = menuItem;
                 break;

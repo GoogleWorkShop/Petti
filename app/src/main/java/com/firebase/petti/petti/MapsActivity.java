@@ -1,8 +1,11 @@
 package com.firebase.petti.petti;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +19,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.firebase.petti.db.LocationsApi;
+import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.GetNearbyPlacesData;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,6 +37,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -43,14 +51,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     double latitude;
     double longitude;
-    private boolean neighbours;
     private int PROXIMITY_RADIUS = 10000;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-    LinearLayout buttons;
+    private boolean neighbours;
+    private ArrayList<User> otherUsers;
+
+    private boolean parksPressed = false;
+    private boolean veterinaryPressed = false;
+    private boolean petStoresPressed = false;
+
+    private Button parksBtn;
+    private Button veterinaryBtn;
+    private Button petStoresBtn;
 
     private final static String TAG = MapsActivity.class.getSimpleName();
 
@@ -59,7 +73,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);    // Removes title bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,     WindowManager.LayoutParams.FLAG_FULLSCREEN);    // Removes notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);    // Removes notification bar
 
         setContentView(R.layout.activity_maps);
 
@@ -69,44 +84,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Check if Google Play Services Available or not
         if (!CheckGooglePlayServices()) {
-            Log.d("onCreate", "Finishing test case since Google Play Services are not available");
+            Log.d(TAG, "Finishing test case since Google Play Services are not available");
             finish();
         }
         else {
-            Log.d("onCreate","Google Play Services available.");
+            Log.d(TAG,"Google Play Services available.");
         }
 
-        buttons = (LinearLayout)findViewById(R.id.map_buttons);
+        neighbours = getIntent().getBooleanExtra("neighbours", false);
 
-        if (savedInstanceState != null) {
-            neighbours = getIntent().getBooleanExtra("neighbours", false);
+        if (neighbours){
+            findViewById(R.id.map_buttons).setVisibility(View.GONE);
+            findViewById(R.id.btn_back_to_bark).setVisibility(View.VISIBLE);
+            otherUsers = (ArrayList<User>) getIntent().getSerializableExtra("other_dogs");
         } else {
-            neighbours = false;
+            findViewById(R.id.map_buttons).setVisibility(View.VISIBLE);
+            findViewById(R.id.btn_back_to_bark).setVisibility(View.GONE);
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        if(neighbours){
-            buttons.setVisibility(View.VISIBLE);
-            setUpMap();
-        } else {
-            buttons.setVisibility(View.GONE);
-        }
     }
 
-    private void setUpMap() {
-        Log.d(TAG, "Setting up neighbour map");
-//        mMap.clear();
-//        String url = getUrl(latitude, longitude, park_string);
-//        Object[] DataTransfer = new Object[2];
-//        DataTransfer[0] = mMap;
-//        DataTransfer[1] = url;
-//        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-//        getNearbyPlacesData.execute(DataTransfer);
-        Toast.makeText(this, "This Are Your neighbours", Toast.LENGTH_LONG).show();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // we want to "un press" all the buttons and clear the map
+        switchBtns(99);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // we want to "un press" all the buttons and clear the map
+        switchBtns(99);
     }
 
     private boolean CheckGooglePlayServices() {
@@ -151,62 +164,81 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
-        Button btnRestaurant = (Button) findViewById(R.id.btnParks);
-        btnRestaurant.setOnClickListener(new View.OnClickListener() {
-            String park_string = "park";
+        parksBtn = (Button) findViewById(R.id.btn_parks);
+        parksBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("onClick", "Button is Clicked");
-                mMap.clear();
-                String url = getUrl(latitude, longitude, park_string);
-                Object[] DataTransfer = new Object[2];
-                DataTransfer[0] = mMap;
-                DataTransfer[1] = url;
-                Log.d("onClick", url);
-                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-                getNearbyPlacesData.execute(DataTransfer);
-                Toast.makeText(MapsActivity.this,"Nearby Parks", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        Button btnHospital = (Button) findViewById(R.id.btnVets);
-        btnHospital.setOnClickListener(new View.OnClickListener() {
-            String vet_string = "veterinary_care";
-            @Override
-            public void onClick(View v) {
-                Log.d("onClick", "Button is Clicked");
-                mMap.clear();
-                String url = getUrl(latitude, longitude, vet_string);
-                Object[] DataTransfer = new Object[2];
-                DataTransfer[0] = mMap;
-                DataTransfer[1] = url;
-                Log.d("onClick", url);
-                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-                getNearbyPlacesData.execute(DataTransfer);
-                Toast.makeText(MapsActivity.this,"Nearby Veterinary Cares", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        Button btnSchool = (Button) findViewById(R.id.btnPetStore);
-        btnSchool.setOnClickListener(new View.OnClickListener() {
-            String store_string = "pet_store";
-            @Override
-            public void onClick(View v) {
-                Log.d("onClick", "Button is Clicked");
-                mMap.clear();
-                if (mCurrLocationMarker != null) {
-                    mCurrLocationMarker.remove();
+                switchBtns(0);
+                // CAREFUL - we just switched the value of the boolean so it's a bit confusing
+                if (!parksPressed){
+                    return;
                 }
-                String url = getUrl(latitude, longitude, store_string);
+                String url = getUrl(latitude, longitude, "park");
                 Object[] DataTransfer = new Object[2];
                 DataTransfer[0] = mMap;
                 DataTransfer[1] = url;
-                Log.d("onClick", url);
+                Log.d(TAG, "Clicked parks - url: " + url);
                 GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
                 getNearbyPlacesData.execute(DataTransfer);
-                Toast.makeText(MapsActivity.this,"Nearby Pet Stores", Toast.LENGTH_LONG).show();
             }
         });
+
+        veterinaryBtn = (Button) findViewById(R.id.btn_vets);
+        veterinaryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchBtns(1);
+                // CAREFUL - we just switched the value of the boolean so it's a bit confusing
+                if (!veterinaryPressed){
+                    return;
+                }
+                String url = getUrl(latitude, longitude, "veterinary_care");
+                Object[] DataTransfer = new Object[2];
+                DataTransfer[0] = mMap;
+                DataTransfer[1] = url;
+                Log.d(TAG, "Clicked veterinary - url: " + url);
+                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+                getNearbyPlacesData.execute(DataTransfer);
+            }
+        });
+
+        petStoresBtn = (Button) findViewById(R.id.btn_pet_store);
+        petStoresBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchBtns(2);
+                // CAREFUL - we just switched the value of the boolean so it's a bit confusing
+                if (!petStoresPressed){
+                    return;
+                }
+                String url = getUrl(latitude, longitude, "pet_store");
+                Object[] DataTransfer = new Object[2];
+                DataTransfer[0] = mMap;
+                DataTransfer[1] = url;
+                Log.d(TAG, "Clicked pet stores - url: " + url);
+                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+                getNearbyPlacesData.execute(DataTransfer);
+            }
+        });
+        Button backBtn = (Button) findViewById(R.id.btn_back_to_bark);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        /* if this is neighbour dogs map we want to upload them straight up */
+        if(neighbours){
+            if(otherUsers == null){
+                Toast.makeText(this, "No one around", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            for (User otherUser : otherUsers){
+                
+            }
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -252,11 +284,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         Log.d("onLocationChanged", "entered");
 
-        mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-
         //Place current location marker
         latitude = location.getLatitude();
         longitude = location.getLongitude();
@@ -265,12 +292,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-        Toast.makeText(MapsActivity.this,"Your Current Location", Toast.LENGTH_LONG).show();
 
         Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f",latitude,longitude));
 
@@ -353,4 +378,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // You can add here other case statements according to your requirement.
         }
     }
+
+    public void switchBtns(int idx){
+        mMap.clear();
+        if (idx == 0) {
+            if(parksPressed){
+                parksBtn.setBackgroundColor(Color.parseColor("#512DA8"));
+            } else {
+                parksBtn.setBackgroundColor(Color.parseColor("#8B73A8"));
+            }
+            parksPressed = !parksPressed;
+        } else {
+            parksPressed = false;
+            parksBtn.setBackgroundColor(Color.parseColor("#512DA8"));
+        }
+        if (idx == 1) {
+            if(veterinaryPressed){
+                veterinaryBtn.setBackgroundColor(Color.parseColor("#512DA8"));
+            } else {
+                veterinaryBtn.setBackgroundColor(Color.parseColor("#8B73A8"));
+            }
+            veterinaryPressed = !veterinaryPressed;
+        } else {
+            veterinaryPressed = false;
+            veterinaryBtn.setBackgroundColor(Color.parseColor("#512DA8"));
+        }
+        if (idx == 2) {
+            if(petStoresPressed){
+                petStoresBtn.setBackgroundColor(Color.parseColor("#512DA8"));
+            } else {
+                petStoresBtn.setBackgroundColor(Color.parseColor("#8B73A8"));
+            }
+            petStoresPressed = !petStoresPressed;
+        } else {
+            petStoresPressed = false;
+            petStoresBtn.setBackgroundColor(Color.parseColor("#512DA8"));
+        }
+    }
+
 }

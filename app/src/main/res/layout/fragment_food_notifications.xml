@@ -74,38 +74,39 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="fill_horizontal"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/purchase_date"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
+                android:layout_width="wrap_content"
                 android:inputType="date"
-                android:paddingRight="30dp"
                 android:text="@string/purchase_date"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white"/>
 
             <TextView
                 android:id="@+id/food_name"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:gravity="center"
-                android:paddingRight="30dp"
                 android:text="@string/food_name"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
 
             <TextView
                 android:id="@+id/amount"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:text="@string/amount"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white"/>
         </TableRow>
 
         <TableRow
@@ -117,21 +118,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
 
             <TextView
                 android:id="@+id/first_row_food_name"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
 
             <TextView
                 android:id="@+id/first_row_amount"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
         </TableRow>
 
         <TableRow
@@ -143,21 +147,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
 
             <TextView
                 android:id="@+id/second_row_food_name"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
 
             <TextView
                 android:id="@+id/second_row_amount"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white"/>
         </TableRow>
 
         <TableRow
@@ -169,21 +176,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white"/>
 
             <TextView
                 android:id="@+id/third_row_food_name"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white"/>
 
             <TextView
                 android:id="@+id/third_row_amount"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:typeface="sans"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/tw__solid_white" />
         </TableRow>
     </TableLayout>
 </FrameLayout>
