@@ -1,6 +1,6 @@
 package com.firebase.petti.db.classes;
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ public class User implements Serializable{
     private String tempUid;
     private Float tempDistanceFromMe;
 
-//    private Double tempLongtitude;
-//    private Double tempLatitude;
+    private Double tempLongtitude;
+    private Double tempLatitude;
 
     public User(){
     }
@@ -59,13 +59,13 @@ public class User implements Serializable{
         this.tempUid = tempUid;
     }
 
-//    public Double getTempLatitude() { return tempLatitude; }
-//
-//    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
-//
-//    public Double getTempLongtitude() { return tempLongtitude; }
-//
-//    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
+    public Double getTempLatitude() { return tempLatitude; }
+
+    public void setTempLatitude(Double tempLatitude) { this.tempLatitude = tempLatitude; }
+
+    public Double getTempLongtitude() { return tempLongtitude; }
+
+    public void setTempLongtitude(Double tempLongtitude) { this.tempLongtitude = tempLongtitude; }
 
     public Map<String, Boolean> getMsgTracker() {
         return msgTracker;
@@ -161,6 +161,27 @@ public class User implements Serializable{
         public Boolean getFemale(){
             return this.female;
         }
+
+        public ArrayList<String> retrieveDetailList () {
+            ArrayList<String> output = new ArrayList<>();
+            if (getName() != null && !getName().isEmpty()){
+                output.add("Name: " + getName());
+            }
+            String myAge = getAge();
+            if (myAge != null && !myAge.isEmpty()) {
+                if (!TextUtils.isDigitsOnly(myAge)) {
+                    String[] ageParams = getAge().split("/");
+                    myAge = retrieveAgeFromDate(Integer.parseInt(ageParams[0]),
+                            Integer.parseInt(ageParams[1]),
+                            Integer.parseInt(ageParams[2]));
+                }
+                output.add("Age: " + myAge);
+            }
+            if (getFemale() != null) {
+                output.add("Gender: " + (getFemale() ? "Female" : "Male"));
+            }
+            return output;
+        }
     }
 
     public static class Owner extends ABCNamedEntity {
@@ -211,18 +232,7 @@ public class User implements Serializable{
         }
 
         public ArrayList<String> retrieveDetailList (){
-            ArrayList<String> output = new ArrayList<>();
-            output.add("Nickname: " + nickname);
-            if(getAge() != null){
-                String[] ageParams = getAge().split("/");
-                String age = getAgeFromDate(Integer.parseInt(ageParams[0]),
-                                            Integer.parseInt(ageParams[1]),
-                                            Integer.parseInt(ageParams[2]));
-                output.add("Age: " + age);
-            }
-            if (getFemale() != null) {
-                output.add(getFemale() ? "Female" : "Male");
-            }
+            ArrayList<String> output = super.retrieveDetailList();
             output.add("Description: " + getDescription());
             return output;
         }
@@ -272,18 +282,8 @@ public class User implements Serializable{
         }
 
         public ArrayList<String> retrieveDetailList (){
-            ArrayList<String> output = new ArrayList<>();
+            ArrayList<String> output = super.retrieveDetailList();
             output.add("Type: " + type);
-            if(getAge() != null){
-                String[] ageParams = getAge().split("/");
-                String age = getAgeFromDate(Integer.parseInt(ageParams[0]),
-                        Integer.parseInt(ageParams[1]),
-                        Integer.parseInt(ageParams[2]));
-                output.add("Age: " + age);
-            }
-            if (getFemale() != null) {
-                output.add(getFemale() ? "Female" : "Male");
-            }
             for (String trait : personalityAttributes){
                 output.add(trait);
             }
@@ -293,28 +293,26 @@ public class User implements Serializable{
         }
     }
 
-    /**
-     * Method to extract the user's age from the entered Date of Birth.
-     *
-     * @param DoB String The user's date of birth.
-     *
-     * @return ageS String The user's age in years based on the supplied DoB.
-     */
-    private static String getAgeFromDate(int day, int month, int year){
+    private static String retrieveAgeFromDate(int day, int month, int year){
 
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
 
         dob.set(year, month, day);
 
+        boolean inMonths = false;
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+        if (age == 0){
+            age = today.get(Calendar.MONTH) - dob.get(Calendar.MONTH);
+            inMonths = true;
+        }
 
         if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
             age--;
         }
 
         Integer ageInt = new Integer(age);
-        String ageS = ageInt.toString();
+        String ageS = String.format("%d %s old", ageInt, inMonths ? "Months": "Years");
 
         return ageS;
     }

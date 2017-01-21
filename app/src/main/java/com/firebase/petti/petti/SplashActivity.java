@@ -69,7 +69,6 @@ public class SplashActivity extends AppCompatActivity {
         editDogProfile = false;
         ImageLoaderUtils.initImageLoader(this.getApplicationContext());
         initAuthStateListener();
-
     }
 
     private void initAuthStateListener(){

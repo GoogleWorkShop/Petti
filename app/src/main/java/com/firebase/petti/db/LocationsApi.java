@@ -119,8 +119,8 @@ public class LocationsApi {
                                 User user = dataSnapshot.getValue(User.class);
                                 Float distanceFromMe = calcDistanceTo(myLocation, userLatitude, userLongtitude);
                                 user.setTempDistanceFromMe(distanceFromMe);
-//                                user.setTempLatitude(userLatitude);
-//                                user.setTempLongtitude(userLongtitude);
+                                user.setTempLatitude(userLatitude);
+                                user.setTempLongtitude(userLongtitude);
 //                                String[] ownerDetails = new String[]{userId, dog.getName(), dog.getPhotoUrl()};
                                 try {
                                     nearbyUsers.put(userId, user);

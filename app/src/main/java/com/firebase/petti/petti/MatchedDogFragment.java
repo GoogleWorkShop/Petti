@@ -98,7 +98,7 @@ public class MatchedDogFragment extends Fragment {
                 ownerDetail.setVisibility(View.VISIBLE);
                 showDogBtn.setVisibility(View.VISIBLE);
                 dogDetail.setVisibility(View.GONE);
-                ImageLoaderUtils.setImage(user.getOwner().getPhotoUrl(), imageView, R.drawable.anonymous_prpl);
+                ImageLoaderUtils.setImage(user.getOwner().getPhotoUrl(), imageView, R.drawable.dog_person_burned);
             }
         });
         showDogBtn.setOnClickListener(new View.OnClickListener() {
