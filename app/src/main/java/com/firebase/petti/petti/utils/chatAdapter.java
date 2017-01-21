@@ -72,11 +72,10 @@ public class chatAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        ;//Just a dummy check
-        //to simulate whether it me or other sender
+
         setAlignment(holder, API.isMyUid(chatMessage.getFromUid()));
         holder.txtMessage.setText(chatMessage.getText());
-        holder.txtInfo.setText(DateFormat.getDateTimeInstance().format(new Date()));
+        holder.txtInfo.setText((chatMessage.formatTimestamp()));
 
         return convertView;
     }
