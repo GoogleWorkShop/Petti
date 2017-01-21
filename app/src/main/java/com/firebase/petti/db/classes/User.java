@@ -61,9 +61,11 @@ public class User implements Serializable{
         this.tempUid = tempUid;
     }
 
+
     public LatLng retLatLng(){
         return new LatLng(tempLatitude, tempLongtitude);
     }
+
 
     public Double getTempLatitude() { return tempLatitude; }
 
@@ -299,11 +301,7 @@ public class User implements Serializable{
         }
     }
 
-    /**
-     * Method to extract the user's age from the entered Date of Birth.
-     *
-     * @return ageS String The user's age in years based on the supplied DoB.
-     */
+
     private static String retrieveAgeFromDate(int day, int month, int year){
 
         Calendar dob = Calendar.getInstance();
