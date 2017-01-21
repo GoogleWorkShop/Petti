@@ -354,6 +354,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         userBD = BDView.getText().toString();
         user_is_female = (gender == UserRegistrationActivitey.Gender.Female);
 //        cityStr = city[0];
+        lookingForList.clear();
         lookingForList.add(looking4[0]);
         userDescreption = userDescreptionView.getText().toString();
         userNickname = nicknameView.getText().toString();

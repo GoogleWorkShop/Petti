@@ -221,6 +221,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -324,6 +325,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         if(dogCharacters == null){
             dogCharacters = new ArrayList<>();
         }
+        dogCharacters.clear();
         dogCharacters.add(dog_charater[0]);
         dogDescreption = petDescreptionText.getText().toString();
         preferedPartners = preferdPartnersText.getText().toString();
