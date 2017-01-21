@@ -49,7 +49,8 @@ public class VaccinationCardFragment extends Fragment {
     private static final long HOURS_IN_DAY = 24;
     private static final long DAYS_IN_MONTH = 30;
     private static final long DAY_IN_MILLIES = MILLIES_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY;
-    private static final String[] VACCINETIONS = {"Rabies", "Distemper", "Spirocerca Lupi", "Deworming"};
+    private static final String[] VACCINETIONS = {"Rabies Vaccination", "Distemper Vaccination",
+                                                    "Spirocerca Lupi Vaccination", "Deworming Treatment"};
 
     private static final Map<String, Integer> myMap;
     public static final String[] EVENT_PROJECTION = new String[]{
