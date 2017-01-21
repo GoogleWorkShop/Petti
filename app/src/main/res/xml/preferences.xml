@@ -16,7 +16,7 @@
             android:numeric="integer"
             android:maxLength="2"
             android:defaultValue="3"
-            android:title="Matching Distance"
+            android:title="Matching Distance (Km)"
             android:key="matchDistance" />
 
     </PreferenceCategory>

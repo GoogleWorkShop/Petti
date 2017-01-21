@@ -30,7 +30,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     protected String doInBackground(Object... params) {
         try {
             String url;
-            Log.d("GetNearbyPlacesData", "doInBackground entered");
             mMap = (GoogleMap) params[0];
             url = (String) params[1];
 
@@ -38,7 +37,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             DownloadUrl downloadUrl = new DownloadUrl();
             googlePlacesData = downloadUrl.readUrl(url);
-            Log.d("GooglePlacesReadTask", "doInBackground Exit");
+            Log.d("!@#$%", googlePlacesData);
         } catch (Exception e) {
             Log.d("GooglePlacesReadTask", e.toString());
         }
@@ -47,21 +46,22 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        Log.d("GooglePlacesReadTask", "onPostExecute Entered");
         List<HashMap<String, String>> nearbyPlacesList;
         DataParser dataParser = new DataParser();
         nearbyPlacesList =  dataParser.parse(result);
+        Log.d("!@#$%", nearbyPlacesList.toString());
         ShowNearbyPlaces(nearbyPlacesList);
-        Log.d("GooglePlacesReadTask", "onPostExecute Exit");
     }
 
     private void ShowNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
-        Log.d("onPostExecute",String.format("********* type = %s", this.placeType));
+        Log.d("onPostExecute",String.format("********* type = %s size: %d", this.placeType, nearbyPlacesList.size()));
         for (int i = 0; i < nearbyPlacesList.size(); i++) {
+            Log.d("!@#$%", "i: " + i);
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlacesList.get(i);
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
+            Log.d("!@#$%", "lat: " + lat + "lng: " + lng);
             String placeName = googlePlace.get("place_name");
             String vicinity = googlePlace.get("vicinity");
             LatLng latLng = new LatLng(lat, lng);

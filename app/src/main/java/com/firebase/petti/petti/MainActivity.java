@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     setTitle(prevMenuItem.getTitle());
                     prevMenuItem.setChecked(true);
+                    prevMenuItem = menuItem;
                     return;
                 }
                 Toast.makeText(context, R.string.get_ready_for_a_walk,
@@ -198,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = MatchesFragment.class;
                 bundle = new Bundle();
                 bundle.putBoolean("bark", true);
+                prevMenuItem = menuItem;
                 break;
             case R.id.food_notifications:
                 fragmentClass = FoodNotificationsFragment.class;

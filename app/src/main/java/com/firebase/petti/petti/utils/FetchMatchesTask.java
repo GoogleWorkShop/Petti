@@ -126,7 +126,11 @@ public class FetchMatchesTask extends AsyncTask<Location, Void, ArrayList<User>>
             notFoundView.setVisibility(View.GONE);
         }
         if (bark){
-            mapBtn.setEnabled(true);
+            if(users.isEmpty()) {
+                mapBtn.setEnabled(false);
+            } else {
+                mapBtn.setEnabled(true);
+            }
         }
         super.onPostExecute(users);
     }

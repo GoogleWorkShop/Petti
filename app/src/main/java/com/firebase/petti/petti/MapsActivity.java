@@ -107,17 +107,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // we want to "un press" all the buttons and clear the map
-        switchBtns(99);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        // we want to "un press" all the buttons and clear the map
-        switchBtns(99);
+        if (!neighbours){
+            // we want to "un press" all the buttons and clear the map
+            switchBtns(99);
+        }
     }
 
     private boolean CheckGooglePlayServices() {
@@ -229,7 +224,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         /* if this is neighbour dogs map we want to upload them straight up */
         if(neighbours){
 
-            if(LocationsApi.nearbyUsers == null){
+            if(LocationsApi.nearbyUsers.isEmpty()){
                 Toast.makeText(this, "No one around", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -302,9 +297,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            Log.d("onLocationChanged", "Removing Location Updates");
         }
-        Log.d("onLocationChanged", "Exit");
+
+        if(neighbours) {
+            String url = getUrl(latitude, longitude, "park");
+            Object[] DataTransfer = new Object[2];
+            DataTransfer[0] = mMap;
+            DataTransfer[1] = url;
+            Log.d(TAG, "Clicked parks - url: " + url);
+            GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+            getNearbyPlacesData.execute(DataTransfer);
+
+            if (LocationsApi.nearbyUsers == null) {
+                Toast.makeText(this, "No one around", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
 
     }
 
