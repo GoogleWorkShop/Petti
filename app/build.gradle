@@ -48,6 +48,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.firebaseui:firebase-ui-auth:1.0.1'
     compile 'com.firebase:geofire-android:2.1.1'
+    compile 'pl.bclogic:pulsator4droid:1.0.3'
     testCompile 'junit:junit:4.12'
 }
 

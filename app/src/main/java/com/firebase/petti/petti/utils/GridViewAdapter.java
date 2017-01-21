@@ -45,8 +45,9 @@ public class GridViewAdapter extends ArrayAdapter {
     }
 
     public String getDistanceTo(int position){
-        float toKM = mMatchesArray.get(position).getTempDistanceFromMe() / 1000;
-        return String.format("%.1f km", toKM);
+        /* meters / 500m/minute */
+        int toM = Math.round(mMatchesArray.get(position).getTempDistanceFromMe() / 83);
+        return toM + " Minutes";
     }
 
     public String getImage(int position){

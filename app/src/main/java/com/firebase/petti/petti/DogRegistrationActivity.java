@@ -1,7 +1,6 @@
 package com.firebase.petti.petti;
 
 import android.app.DatePickerDialog;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +30,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -130,7 +127,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 dog_type[0] = adapterView.getItemAtPosition(pos).toString();
-//                Toast.makeText(adapterView.getContext(), "type :" + dog_type[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -153,7 +149,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 dog_charater[0] = adapterView.getItemAtPosition(pos).toString();
-//                Toast.makeText(adapterView.getContext(), "character :" + dog_charater[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -245,15 +240,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
-            // Get the url from data
-//            Uri selectedImageUri = data.getData();
-//            if (null != selectedImageUri) {
-//                // Get the path from the Uri
-//                String path = getPathFromURI(selectedImageUri);
-//                Log.i(TAG, "Image Path : " + path);
-//                // Set the image in ImageView
-//                petImage.setImageURI(selectedImageUri);
-//            }
             final Uri selectedImageUri = data.getData();
             petImage.setImageURI(selectedImageUri);
             StorageReference photoRef = API.mPetPhotos
@@ -330,12 +316,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
             return;
         }
 
-
         dogBD = BDView.getText().toString();
         dog_is_female = (gender == Gender.Female);
         dogType = dog_type[0];
         if(dogCharacters == null){
-            dogCharacters = new ArrayList<String>();
+            dogCharacters = new ArrayList<>();
         }
         dogCharacters.add(dog_charater[0]);
         dogDescreption = petDescreptionText.getText().toString();
@@ -361,11 +346,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         else{
             startUserRegistrationActivity(view);
         }
-
-
     }
-
-
 
     public void startMainActivity(View view) {
         Intent intent = new Intent(this, MainActivity.class);

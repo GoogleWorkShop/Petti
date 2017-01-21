@@ -166,6 +166,7 @@
     <string name="bark_on">true</string>
     <string name="bark_off">false</string>
     <string name="no_matches_found">Sorry mate/mam…\nNo matches found...\nWhy not walking a bit further?...</string>
+    <string name="visible_pref_sum">When non visible - Other people won\'t see you and you won\'t see them\n</string>
     <string name="purchase_date">Purchase Date</string>
     <string name="food_name">Food Name</string>
     <string name="amount">Amount (In KGs)</string>
@@ -185,4 +186,5 @@
     <string name="title_activity_maps2">Map</string>
 
     <string name="slogen">You\'ll Never Walk Alone</string>
+    <string name="non_visible_string_str">HEY!!!\nIF VISIBILITY IS DISABLED\nYOU WON\'T SEE OTHER PEOPLE TOO!</string>
 </resources>

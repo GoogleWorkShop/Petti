@@ -13,6 +13,8 @@ import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.firebase.petti.db.API;
+
 
 public class MyPreferencesFragment extends PreferenceFragmentCompat
         implements OnSharedPreferenceChangeListener {
@@ -23,7 +25,7 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
     public static final int DEFAULT_DISTANCE_INT = 3;
     public static int last_distance_int = DEFAULT_DISTANCE_INT;
 
-    public static String getNotifications;
+    public static String visible;
     public static String matchDistance;
 
     private android.support.v7.preference.CheckBoxPreference mGetNotifications;
@@ -36,10 +38,10 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        getNotifications = "getNotifications";
+        visible = "visible";
         matchDistance = "matchDistance";
 
-        mGetNotifications = (android.support.v7.preference.CheckBoxPreference) findPreference(getNotifications);
+        mGetNotifications = (android.support.v7.preference.CheckBoxPreference) findPreference(visible);
         mMatchDistance = (android.support.v7.preference.EditTextPreference) findPreference(matchDistance);
 
     }
@@ -50,7 +52,7 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
 
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
         // set the summaries from saved values
-        onSharedPreferenceChanged(prefs, getNotifications);
+        onSharedPreferenceChanged(prefs, visible);
         onSharedPreferenceChanged(prefs, matchDistance);
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
@@ -65,9 +67,11 @@ public class MyPreferencesFragment extends PreferenceFragmentCompat
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
-        if (getNotifications.equals(key)) {
+        if (visible.equals(key)) {
             boolean b = prefs.getBoolean(key, false);
-            mGetNotifications.setSummary(b ? "Enabled" : "Disabled");
+            String summary = getString(R.string.visible_pref_sum) + (b ? "Enabled" : "Disabled");
+            mGetNotifications.setSummary(summary);
+            API.getCurrUserRef().child("enabled").setValue(b);
         } else if (matchDistance.equals(key)) {
             String i = prefs.getString(key, DEFAULT_DISTANCE_S);
             try {

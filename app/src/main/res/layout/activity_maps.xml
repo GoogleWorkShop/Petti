@@ -16,24 +16,44 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="left"
+        android:layout_gravity="left">
 
         <Button
             android:id="@+id/btnVets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="5sp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/our_button"
+            android:textColor="@color/tw__light_gray"
             android:text="@string/find_vets" />
 
         <Button
             android:id="@+id/btnParks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="5sp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/our_button"
+            android:textColor="@color/tw__light_gray"
             android:text="@string/find_parks" />
 
         <Button
             android:id="@+id/btnPetStore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="5sp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/our_button"
+            android:textColor="@color/tw__light_gray"
             android:text="@string/find_pet_stores" />
 
     </LinearLayout>

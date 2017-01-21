@@ -84,7 +84,9 @@
                 android:inputType="date"
                 android:paddingRight="30dp"
                 android:text="@string/purchase_date"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/food_name"
@@ -93,13 +95,17 @@
                 android:gravity="center"
                 android:paddingRight="30dp"
                 android:text="@string/food_name"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/amount"
                 android:layout_height="wrap_content"
                 android:text="@string/amount"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold"/>
         </TableRow>
 
         <TableRow
@@ -109,17 +115,23 @@
             <TextView
                 android:id="@+id/first_row_purchase_date"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/first_row_food_name"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/first_row_amount"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -129,17 +141,23 @@
             <TextView
                 android:id="@+id/second_row_purchase_date"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/second_row_food_name"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/second_row_amount"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -149,17 +167,23 @@
             <TextView
                 android:id="@+id/third_row_purchase_date"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/third_row_food_name"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/third_row_amount"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:typeface="sans"
+                android:textStyle="bold" />
         </TableRow>
     </TableLayout>
 </FrameLayout>

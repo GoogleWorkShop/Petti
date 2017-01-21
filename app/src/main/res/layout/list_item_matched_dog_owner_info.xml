@@ -3,4 +3,7 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="start|center_vertical"
-    android:id="@+id/list_item_matched_dog_owner_textview" />
+    android:id="@+id/list_item_matched_dog_owner_textview"
+    android:typeface="sans"
+    android:textSize="20sp"
+    android:paddingLeft="5dp"/>

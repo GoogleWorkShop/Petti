@@ -8,6 +8,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.firebase.petti.db.API;
+import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.MatchesFragment;
 import com.firebase.petti.petti.MatchesFragment.TaskParams;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
+
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
 /**
  * Created by barjon on 09-Jan-17.
@@ -30,10 +33,10 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
 
     private GridView gridView;
     private TextView notFoundView;
-    private TextView searchingView;
+    PulsatorLayout searchingView;
 
     public FetchMatchesTask(GridViewAdapter mMatchesAdapter, GridView gridView,
-                            TextView notFoundView, TextView searchingView) {
+                            TextView notFoundView, PulsatorLayout searchingView) {
         this.mMatchesAdapter = mMatchesAdapter;
         this.gridView = gridView;
         this.notFoundView = notFoundView;
@@ -46,8 +49,14 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         boolean bark = params[0].bark;
         Location location = params[0].location;
 
+        /* 3 seconds of placebo searching for feel good effect */
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            return null;
+        }
 
-        int timeout = 10; // five seconds of timeout until we decide there are no matches
+        int timeout = 10; // ten seconds of timeout until we decide there are no matches
         do {
             try {
                 if(isCancelled()) {
@@ -59,21 +68,27 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
                 return null;
             }
         }
-        while (timeout-- != 0 && !API.queryReady);
+        while (timeout-- != 0 && !LocationsApi.queryReady);
 
         /* ensuring we have any results before iterating over them */
-        if(API.nearbyUsers == null){
+        if(LocationsApi.nearbyUsers == null){
             return null;
         }
 
         ArrayList<User> mMatchesArray = new ArrayList<>();
-        for (Map.Entry<String, User> item : API.nearbyUsers.entrySet()){
+        for (Map.Entry<String, User> item : LocationsApi.nearbyUsers.entrySet()){
             User userCandidate = item.getValue();
-            Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
-            long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
-            if (bark && (userLastWalkTimestamp == null ||
-                    userLastWalkTimestamp < minBarkTimeLimit)){
+            Boolean isEnabled = userCandidate.getEnabled();
+            if (isEnabled != null && !isEnabled){
                 continue;
+            }
+            if (bark) {
+                Long userLastWalkTimestamp = userCandidate.getLastLocationTime();
+                long minBarkTimeLimit = (location.getTime() - HALF_HOUR_MILLSEC);
+                if ((userLastWalkTimestamp == null ||
+                        userLastWalkTimestamp < minBarkTimeLimit)) {
+                    continue;
+                }
             }
             userCandidate.setTempUid(item.getKey());
             mMatchesArray.add(userCandidate);
@@ -93,20 +108,6 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
 
         // sort list by distance to current user
         Collections.sort(mMatchesArray, new MatchedUserComparator());
-
-        // TODO YAHAV - can we delete this?
-//            //put friends before non-friends
-//            ArrayList<User> tmpFriendsListByLocation = new ArrayList<>();
-//            ArrayList<User> tmpNotFriendsListByLocation = new ArrayList<>();
-//            for (User user : mMatchesArray){
-//                if (API.isMatchedWith(user.getTempUid())){
-//                    tmpFriendsListByLocation.add(user);
-//                }else{
-//                    tmpNotFriendsListByLocation.add(user);
-//                }
-//            }
-//            mMatchesArray = new ArrayList<>(tmpFriendsListByLocation);
-//            mMatchesArray.addAll(tmpNotFriendsListByLocation);
         return mMatchesArray;
     }
 
@@ -120,6 +121,7 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
         }
 
         searchingView.setVisibility(View.GONE);
+        searchingView.stop();
         if(mMatchesAdapter.isEmpty()){
             gridView.setVisibility(View.GONE);
             notFoundView.setVisibility(View.VISIBLE);
@@ -132,7 +134,7 @@ public class FetchMatchesTask extends AsyncTask<MatchesFragment.TaskParams, Void
     }
 
     /**
-     * returning a user with
+     * returning a user nullified with
      */
     private User createFalseUser(){
         User falseUser = new User();

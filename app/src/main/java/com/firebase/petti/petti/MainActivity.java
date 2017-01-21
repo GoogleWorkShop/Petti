@@ -251,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
                     }
-                    // TODO deal with no permission
                     setTitle(mainMenuItem.getTitle());
                     mainMenuItem.setChecked(true);
                     return;
@@ -274,38 +273,35 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.closeDrawers();
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 startActivity(mapsIntent);
-                mainMenuItem = menuItem;
                 return;
             case R.id.sign_out:
                 mDrawer.closeDrawers();
                 AuthUI.getInstance().signOut(this);
                 Intent signOutIntent = new Intent(this,SplashActivity.class);
                 startActivityForResult(signOutIntent, 888);
-                mainMenuItem = menuItem;
                 return;
             case R.id.edit_user_profile:
+                mainMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
                 userIntent.putExtra("edit",true);
-                startActivity(userIntent);
-                mainMenuItem = menuItem;
+                startActivityForResult(userIntent, 0);
                 return;
             case R.id.edit_dog_profile:
+                mainMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
                 dogIntent.putExtra("edit",true);
-                startActivityForResult(dogIntent,0);
-                mainMenuItem = menuItem;
+                startActivityForResult(dogIntent, 0);
                 return;
             case R.id.friends:
                 mDrawer.closeDrawers();
                 Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
-                mainMenuItem = menuItem;
                 return;
             default:
-                fragmentClass = MainFragment.class;
-                mainMenuItem = menuItem;
+                fragmentClass = MatchesFragment.class;
+                mainMenuItem = nvDrawer.getMenu().findItem(R.id.default_fragment);
         }
 
         try {
@@ -405,10 +401,10 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
             // Highlight the selected item has been done by NavigationView
             Menu menuNav = nvDrawer.getMenu();
-            MenuItem defaultFragmentItem = menuNav.findItem(R.id.default_fragment);
-            defaultFragmentItem.setChecked(true);
+            mainMenuItem = menuNav.findItem(R.id.default_fragment);
+            mainMenuItem.setChecked(true);
             // Set action bar title
-            setTitle(defaultFragmentItem.getTitle());
+            setTitle(mainMenuItem.getTitle());
             return;
         }
         super.onBackPressed();
@@ -420,125 +416,6 @@ public class MainActivity extends AppCompatActivity {
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
     }
-
-
-//    private void initAuthStateListener(){
-//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                if (user != null) {
-//                    // User is signed in
-////                    String username = user.getDisplayName();
-////                    if (username == null) {
-////                        username = user.getEmail();
-////                    }
-//
-//                    onSignedInInitialize(firebaseAuth.getCurrentUser());
-//
-//
-//                } else {
-//                    // User is signed out
-//                    onSignedOutCleanup();
-//                    startActivityForResult(
-//                            AuthUI.getInstance()
-//                                    .createSignInIntentBuilder()
-//                                    .setIsSmartLockEnabled(false)
-//                                    .setLogo(R.drawable.pet_pic)
-//                                    .setProviders(Arrays.asList(
-//                                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-//                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-//                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-//                                    .build(),
-//                            RC_SIGN_IN);
-//                }
-//            }
-//        };
-//    }
-//
-//    private void onSignedInInitialize(FirebaseUser user) {
-//        // clear adapters if any populated
-//        // currently none is populated
-//
-//        // creating db user
-//        final String user_id = user.getUid();
-//        final String display_name = user.getDisplayName();
-//        final String email = user.getEmail();
-//        API.currUserUid = user_id;
-//
-////        NewMessagesHandler.initNewMessagesHandler();
-//
-//        startProgressBar();
-//        ValueEventListener mNewUserListener = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                editUserProfile = !dataSnapshot.exists();
-//                if (editUserProfile) {
-//                    // 1st registration
-//                    API.createUser(display_name, email);
-//                }
-//                editDogProfile = !dataSnapshot.child("dog").hasChild("name")
-//                        || dataSnapshot.child("dog").child("name").getValue().equals("");
-//                if (editDogProfile || editUserProfile){
-//                    startEditProfileActivity();
-//                } else {
-//                    String dogName = (String) dataSnapshot.child("dog").child("name").getValue();
-//                    String dogPhoto = (String) dataSnapshot.child("dog").child("photoUrl").getValue();
-//                    setDrawerProfileInfo(dogName, dogPhoto);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        };
-//        API.mDatabaseUsersRef.child(user_id).addListenerForSingleValueEvent(mNewUserListener);
-//        API.attachCurrUserDataReadListener();
-//        NewMessagesHandler.trackNewMessages(getApplicationContext());
-//    }
-//
-//    private void onSignedOutCleanup() {
-//        // clear adapters if any populated
-//        // currently none is populated
-//        API.detachCurrUserDataReadListener();
-//        NewMessagesHandler.untrackNewMessages();
-//        API.currUserUid = null;
-//        API.currUserData = null;
-//        setDrawerProfileInfo("", "");
-//    }
-//
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (mAuthStateListener != null) {
-//            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-//        }
-//        // clear adapters if any populated
-//        // currently none is populated
-//    }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RC_SIGN_IN) {
-//            if (resultCode == RESULT_OK) {
-//                // Sign-in succeeded, set up the UI
-//
-//            } else if (resultCode == RESULT_CANCELED) {
-//                // Sign in was canceled by the user, finish the activity
-//                finish();
-//            }
-//        }
-//    }
 
     private void startEditProfileActivity() {
         Toast.makeText(this, "Need to add dog data", Toast.LENGTH_SHORT).show();

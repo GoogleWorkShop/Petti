@@ -7,8 +7,9 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="getNotifications"
-            android:title="Get Notifications" />
+            android:key="visible"
+            android:title="Be Visible To Other People"
+            android:summary="@string/visible_pref_sum"/>
 
         <EditTextPreference
             android:inputType="numberDecimal"

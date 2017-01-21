@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,16 +11,34 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:typeface="sans"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
+    <pl.bclogic.pulsator4droid.library.PulsatorLayout
+        android:id="@+id/searching_matches_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:pulse_count="4"
+        app:pulse_duration="7000"
+        app:pulse_repeat="0"
+        app:pulse_color="#512DA8"
+        app:pulse_startFromScratch="true"
+        app:pulse_interpolator="AccelerateDecelerate">
+    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
 
     <TextView
-        android:id="@+id/searching_matches_str"
-        android:text="@string/searching_matches"
+        android:id="@+id/non_visible_state_str"
+        android:text="@string/non_visible_string_str"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:visibility="gone"
+        android:typeface="sans"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
 
     <GridView
         android:id="@+id/gridview_matches"

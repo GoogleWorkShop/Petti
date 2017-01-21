@@ -182,13 +182,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 editDogProfile = !dataSnapshot.child("dog").hasChild("name")
                         || dataSnapshot.child("dog").child("name").getValue().equals("");
-//                if (editDogProfile || editUserProfile){
-////                    startEditProfileActivity();
-//                } else {
-//                    String dogName = (String) dataSnapshot.child("dog").child("name").getValue();
-//                    String dogPhoto = (String) dataSnapshot.child("dog").child("photoUrl").getValue();
-////                    setDrawerProfileInfo(dogName, dogPhoto);
-//                }
             }
 
             @Override
