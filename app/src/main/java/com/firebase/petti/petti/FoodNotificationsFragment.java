@@ -90,17 +90,19 @@ public class FoodNotificationsFragment extends Fragment {
                     return;
                 }
 
-
-                int amount_int = Integer.parseInt(amount_str);
+                /* amount_bought (in grams) - amount_per_day (in grams) * days = amount_bought * 20/100 */
+                /* days * amount_per_day = amount_per_day * 80/100 */
+                /* days = (amount_bought * 8/10) / amount_per_day */
+                int amount_int = Integer.parseInt(amount_str) * 1000;
                 int per_day_int = Integer.parseInt(per_meal_str);
-                long daysUntilNotif = Math.round(( amount_int - ((amount_int*20)/100) ) / per_day_int);
+                long daysUntilNotif = Math.round((amount_int * 0.8) / per_day_int);
 
                 NotificationPublisher.scheduleNotification("Buy FOOOOOOOOOD",
                                                             DAY_IN_MILLIES * daysUntilNotif,
                                                             getActivity());
 
                 Toast.makeText(getActivity(),
-                        "A notification has been set to when food is at 30% captain!",
+                        "A notification has been set to when food is at 20% captain!",
                         Toast.LENGTH_LONG).show();
 
                 //save to DB
@@ -115,8 +117,9 @@ public class FoodNotificationsFragment extends Fragment {
 
 
                 // Insert the new row, returning the primary key value of the new row
-                //TODO Raz - do we need this veriable?
-                long newRowId = db.insert(UtilsContract.FoodEntry.TABLE_NAME, null, values);
+                if (db.insert(UtilsContract.FoodEntry.TABLE_NAME, null, values) == -1) {
+                    //TODO handle error
+                }
                 Cursor cursor = db.query(UtilsContract.FoodEntry.TABLE_NAME, null, null, null, null, null, null);
                 if(cursor.getCount() >= 4) {
                     //delete the first row, bc valuses are readed backwards so now the first row is outdated bc we only save 3 last entrys

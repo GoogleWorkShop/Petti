@@ -156,7 +156,7 @@
             android:layout_centerInParent="true"
             android:adjustViewBounds="true"
             android:background="@drawable/done_edit"
-            android:onClick="MoveToMainAndUploodUserToDB"
+            android:onClick="MoveToMainAndUploadUserToDB"
             android:scaleType="fitXY"
             android:src="@drawable/done_edit" />
     </RelativeLayout>

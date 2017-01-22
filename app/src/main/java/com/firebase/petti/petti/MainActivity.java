@@ -216,12 +216,6 @@ public class MainActivity extends AppCompatActivity {
                 mapsIntent.putExtra("neighbours", false);
                 startActivity(mapsIntent);
                 return;
-            case R.id.sign_out:
-                mDrawer.closeDrawers();
-                AuthUI.getInstance().signOut(this);
-                Intent signOutIntent = new Intent(this,SplashActivity.class);
-                startActivityForResult(signOutIntent, 888);
-                return;
             case R.id.edit_user_profile:
                 prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
@@ -243,6 +237,12 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.closeDrawers();
                 Intent chatFriendsIntent = new Intent(this, MatchedFriendsActivity.class);
                 startActivity(chatFriendsIntent);
+                return;
+            case R.id.sign_out:
+                mDrawer.closeDrawers();
+                AuthUI.getInstance().signOut(this);
+                Intent signOutIntent = new Intent(this,SplashActivity.class);
+                startActivityForResult(signOutIntent, 888);
                 return;
             default:
                 fragmentClass = MatchesFragment.class;

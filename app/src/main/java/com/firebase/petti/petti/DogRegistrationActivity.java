@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -51,19 +52,19 @@ public class DogRegistrationActivity extends AppCompatActivity {
 
     boolean finishedSignUp = false;
 
-    String dogDescreption;
+    String dogDescription;
 
     boolean isEditState;
 
     EditText nameView;
     TextView BDView;
-    TextInputEditText petDescreptionText;
+    TextInputEditText petDescriptionText;
     Button uploadButton;
     ImageView petImage;
     RadioButton dogMaleButton;
     RadioButton dogFemaleButton;
 
-    enum Gender {Male, Female};
+    enum Gender {Male, Female}
     Gender gender;
     final String[] dog_type = new String[1];
     final String[] dog_character = new String[1];
@@ -90,7 +91,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         BDView = (TextView) findViewById(R.id.pet_BD);
         uploadButton = (Button) findViewById(R.id.uploadButton);
         petImage = (ImageView) findViewById(R.id.pet_image);
-        petDescreptionText = (TextInputEditText) findViewById(R.id.pet_description_text);
+        petDescriptionText = (TextInputEditText) findViewById(R.id.pet_description_text);
         dogMaleButton = (RadioButton) findViewById(R.id.pet_gender_male_radio);
         dogFemaleButton = (RadioButton) findViewById(R.id.pet_gender_female_radio);
 
@@ -100,7 +101,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            isEditState = (Boolean) bundle.get("edit");
+            try {
+                isEditState = (Boolean) bundle.get("edit");
+            } catch (NullPointerException e){
+                isEditState = false;
+            }
         }
 
         //fill dog data if exists from DB
@@ -129,13 +134,13 @@ public class DogRegistrationActivity extends AppCompatActivity {
                 }
             }
 
-            //descreption
-            dogDescreption = currDogData.getDescription();
-            if (dogDescreption != null) {
-                petDescreptionText.setText(dogDescreption);
+            //description
+            dogDescription = currDogData.getDescription();
+            if (dogDescription != null) {
+                petDescriptionText.setText(dogDescription);
             }
 
-            //if in that poinnt the dog have a name that means the user is allready sign in
+            //if in that point the dog have a name that means the user is allready sign in
             finishedSignUp = dogName.length() > 2;
 
             setDogImage();
@@ -157,13 +162,14 @@ public class DogRegistrationActivity extends AppCompatActivity {
     public void uploadImageMethod(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
-            final Uri selectedImageUri = data.getData();
+            // Get the url from data
+            Uri selectedImageUri = data.getData();
             petImage.setImageURI(selectedImageUri);
             StorageReference photoRef = API.mPetPhotos
                     .child(API.currUserUid)
@@ -215,18 +221,6 @@ public class DogRegistrationActivity extends AppCompatActivity {
         }
     }
 
-    public String getPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
-    }
-
     @Override
     public void onBackPressed() {
         if (!finishedSignUp) {
@@ -267,14 +261,14 @@ public class DogRegistrationActivity extends AppCompatActivity {
         }
         dogCharacters.clear();
         dogCharacters.add(dog_character[0]);
-        dogDescreption = petDescreptionText.getText().toString();
+        dogDescription = petDescriptionText.getText().toString();
 
         currDogData.setName(dogName);
         currDogData.setAge(dogBD);
         currDogData.setFemale(dog_is_female);
         currDogData.setType(dogType);
         currDogData.setPersonalityAttributes(dogCharacters);
-        currDogData.setDescription(dogDescreption);
+        currDogData.setDescription(dogDescription);
 
         API.setDog(currDogData);
         return true;

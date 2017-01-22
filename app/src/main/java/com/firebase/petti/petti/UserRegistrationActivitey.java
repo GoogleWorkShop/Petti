@@ -21,8 +21,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User.Owner;
@@ -38,6 +36,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Calendar;
+
 
 public class UserRegistrationActivitey extends AppCompatActivity {
 
@@ -51,6 +51,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     String userDescreption;
 
     Place newAddressPlace;
+    boolean isEditState;
 
     private static final int SELECT_PICTURE = 100;
     private static final int SELECT_LOCATION = 200;
@@ -67,12 +68,12 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                userBD = Integer.toString(dayOfMonth)+"/" + Integer.toString(month+1) + "/" + Integer.toString(year);
+                userBD = Integer.toString(dayOfMonth) + "/" + Integer.toString(month + 1) + "/" + Integer.toString(year);
                 BDView.setText(userBD);
             }
         };
         Calendar now = Calendar.getInstance();
-        new DatePickerDialog(UserRegistrationActivitey.this,dateListener, now
+        new DatePickerDialog(UserRegistrationActivitey.this, dateListener, now
                 .get(Calendar.YEAR), now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -113,14 +114,23 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         newAddressPlace = null;
 
-        //change button text acoording to ui flow, it its from initail registration: move to user reg,
-        //if it is from editing profile, go back to main
+        //change button text according to ui flow, it its from initial
+        //registration: move to user reg, if it is from editing profile,
+        //go back to main
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
+        if (bundle != null) {
+            try {
+                isEditState = (Boolean) bundle.get("edit");
+            } catch (NullPointerException e){
+                isEditState = false;
+            }
+        }
+
         //fill views with data
         currOwnerData = API.getCurrOwnerData();
-        if(currOwnerData != null) {
+        if (currOwnerData != null) {
             //name
             userName = currOwnerData.getName();
             if (userName != null) {
@@ -134,7 +144,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
             //address
             cityStr = currOwnerData.getCity();
-            if (cityStr != null){
+            if (cityStr != null) {
                 addressText.setText(cityStr);
 
             }
@@ -150,20 +160,20 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                 }
             }
 
-            //descreption
+            //description
             userDescreption = currOwnerData.getDescription();
             if (userDescreption != null) {
                 userDescreptionView.setText(userDescreption);
             }
         }
 
-            // there is a city and a name, therefore the user is allready signed in
-            finishedSignUp = (!(cityStr == null || cityStr.isEmpty() || cityStr.startsWith("Tap here")) && (userName.length() < 2));
+        // there is a city and a name, therefore the user is allready signed in
+        finishedSignUp = (!(cityStr == null || cityStr.isEmpty() || cityStr.startsWith("Tap here")) && (userName.length() < 2));
 
-            setOwnerImage();
+        setOwnerImage();
 
 
-        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,8 +184,9 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     public void uploadImageMethod(View view) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
@@ -220,12 +231,12 @@ public class UserRegistrationActivitey extends AppCompatActivity {
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
                             uploadImageFailedToast();
                             setOwnerImage();
                         }
                     });
-        }
-        else if (requestCode == SELECT_LOCATION) {
+        } else if (requestCode == SELECT_LOCATION) {
             if (resultCode == RESULT_OK) {
                 newAddressPlace = PlaceAutocomplete.getPlace(this, data);
                 cityStr = (String) newAddressPlace.getName();
@@ -241,7 +252,7 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         }
     }
 
-    private void uploadImageFailedToast(){
+    private void uploadImageFailedToast() {
         Toast.makeText(this, "Failed to upload image..", Toast.LENGTH_SHORT).show();
     }
 
@@ -270,18 +281,16 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        if(!finishedSignUp) {
+        if (!finishedSignUp) {
             Toast.makeText(this, "Please Finish Your Registration", Toast.LENGTH_SHORT).show();
             return;
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
 
-    public void MoveToMainAndUploodUserToDB(View view) {
-        if (!updateFields(true)){
+    public void MoveToMainAndUploadUserToDB(View view) {
+        if (!updateFields(true)) {
             return;
         }
 
@@ -293,16 +302,16 @@ public class UserRegistrationActivitey extends AppCompatActivity {
     private boolean updateFields(boolean stubborn) {
         //fill fields to pass to db
         userName = nameView.getText().toString();
-        if(userName.length() < 2 && stubborn){
+        if (userName.length() < 2 && stubborn) {
             nameView.requestFocus();
             nameView.setError("Your Name Is A Must");
             return false;
         }
         cityStr = addressText.getText().toString();
-        if((cityStr == null ||
+        if ((cityStr == null ||
                 cityStr.isEmpty() ||
                 cityStr.startsWith("Tap here"))
-                && stubborn){
+                && stubborn) {
             addressText.requestFocus();
             addressText.setError("Must Select Your Home Address");
             return false;
