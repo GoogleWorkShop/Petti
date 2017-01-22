@@ -59,7 +59,7 @@ public class MatchedDogFragment extends Fragment {
                 String message =    user.getTempUid();
                 String name = user.getOwner().getName();
                 myIntent.putExtra("USER_ID", message);
-                myIntent.putExtra("USER_NAME", message);
+                myIntent.putExtra("USER_NAME", name);
                 getActivity().startActivity(myIntent);
             }
         });

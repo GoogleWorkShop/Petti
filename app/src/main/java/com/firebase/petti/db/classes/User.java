@@ -293,8 +293,6 @@ public class User implements Serializable{
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = super.retrieveDetailList();
             output.add("Type: " + type);
-            if (!personalityAttributes.isEmpty())
-            output.add("Character: " + personalityAttributes.get(personalityAttributes.size() - 1));
             output.add("Description:\n" + getDescription());
             return output;
         }

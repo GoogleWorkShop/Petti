@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.closeDrawers();
                 Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
                 userIntent.putExtra("edit",true);
+                userIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(userIntent, 0);
                 return;
             case R.id.edit_dog_profile:
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.closeDrawers();
                 Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
                 dogIntent.putExtra("edit",true);
+                dogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(dogIntent, 0);
                 return;
             case R.id.friends:

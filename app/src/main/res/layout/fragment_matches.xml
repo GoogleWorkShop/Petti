@@ -14,8 +14,8 @@
         android:background="@drawable/our_button"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text="@string/view_matches_on_map"
-        android:textColor="@color/tw__light_gray" />
+        android:textColor="@color/tw__light_gray"
+        android:text="@string/view_matches_on_map"/>
 
     <TextView
         android:id="@+id/no_matches_str"

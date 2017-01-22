@@ -43,13 +43,13 @@ import static android.Manifest.permission.WRITE_CALENDAR;
  */
 public class VaccinationCardFragment extends Fragment {
 
-    private static final long MILLIES_IN_SECOND = 1000;
+    private static final long MILLIE_IN_SECOND = 1000;
     private static final long SECONDS_IN_MINUTE = 60;
     private static final long MINUTES_IN_HOUR = 60;
     private static final long HOURS_IN_DAY = 24;
     private static final long DAYS_IN_MONTH = 30;
-    private static final long DAY_IN_MILLIES = MILLIES_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY;
-    private static final String[] VACCINETIONS = {"Rabies Vaccination", "Distemper Vaccination",
+    private static final long DAY_IN_MILLIE = MILLIE_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY;
+    private static final String[] VACCINATIONS = {"Rabies Vaccination", "Distemper Vaccination",
                                                     "Spirocerca Lupi Vaccination", "Deworming Treatment"};
 
     private static final Map<String, Integer> myMap;
@@ -66,10 +66,10 @@ public class VaccinationCardFragment extends Fragment {
     /* A map that matches between the treatment and the interval in months */
     static {
         myMap = new HashMap<>();
-        myMap.put(VACCINETIONS[0], 12);
-        myMap.put(VACCINETIONS[1], 12);
-        myMap.put(VACCINETIONS[2], 2);
-        myMap.put(VACCINETIONS[3], 6);
+        myMap.put(VACCINATIONS[0], 12);
+        myMap.put(VACCINATIONS[1], 12);
+        myMap.put(VACCINATIONS[2], 2);
+        myMap.put(VACCINATIONS[3], 6);
     }
 
     /* this are for the calendar permission request */
@@ -92,7 +92,7 @@ public class VaccinationCardFragment extends Fragment {
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_vaccinetion_textview, // The name of the layout ID.
                         R.id.list_item_vaccinetion_textview, // The ID of the textview to populate.
-                        new ArrayList<>(Arrays.asList(VACCINETIONS)));
+                        new ArrayList<>(Arrays.asList(VACCINATIONS)));
 
         View rootView = inflater.inflate(R.layout.fragment_vaccinetion_card, container, false);
 
@@ -119,7 +119,7 @@ public class VaccinationCardFragment extends Fragment {
                         Uri calendars = Uri.parse(("content://com.android.calendar/calendars"));
                         Cursor managedCursor = getContext().getContentResolver().query(calendars, EVENT_PROJECTION, null, null, null);
                         if (managedCursor.getCount() > 0) {
-                            setCalendarEvent(managedCursor, VACCINETIONS[POSITION]);
+                            setCalendarEvent(managedCursor, VACCINATIONS[POSITION]);
                         } else {
                             createVacNotif(POSITION, VAC);
                         }
@@ -188,7 +188,7 @@ public class VaccinationCardFragment extends Fragment {
     }
 
     private void createVacNotif(int POSITION, String VAC) {
-        long daysUntilNotif = myMap.get(VACCINETIONS[POSITION]) * DAY_IN_MILLIES * DAYS_IN_MONTH - DAY_IN_MILLIES * 7;
+        long daysUntilNotif = myMap.get(VACCINATIONS[POSITION]) * DAY_IN_MILLIE * DAYS_IN_MONTH - DAY_IN_MILLIE * 7;
         if (VAC.equals("Check")) {
             daysUntilNotif = 5000;
         }

@@ -47,6 +47,12 @@ public class GridViewAdapter extends ArrayAdapter {
     public String getDistanceTo(int position){
         /* meters / 500m/minute */
         int toM = Math.round(mMatchesArray.get(position).getTempDistanceFromMe() / 83);
+        //check if more minutes then an hour - change to hour string
+        if(toM >= 60){
+            int minutes = toM % 60;
+            toM /= 60;
+            return toM + " Hours and " + minutes + " minutes";
+        }
         return toM + " Minutes";
     }
 

@@ -199,4 +199,19 @@
     <string name="find_neighbours">find_neighbours</string>
     <string name="back">Back</string>
     <string name="view_matches_on_map">View Matches On Map</string>
+    <string name="name_input">Name:</string>
+    <string name="birth_date_input">Birth Date</string>
+    <string name="gender_input_male">Male</string>
+    <string name="gender_input_female">Female</string>
+    <string name="address_input">Tap here to set address</string>
+    <string name="upload_owner_photo_tn">Upload</string>
+    <string name="owner_description_input">describe your self in a few words</string>
+    <string name="describe_yourself_shortly_below">Describe Yourself Shortly Below</string>
+    <string name="describe_yourself_shortly_here">Describe Yourself Shortly Here</string>
+    <string name="describe_your_dog_shortly_below">Describe Your Dog Shortly Below</string>
+    <string name="describe_your_dog_shortly_here">Describe Your Dog Shortly Here</string>
+    <string name="name_dog_input">Name:</string>
+    <string name="birth_date_dog_input">Birth Date:</string>
+    <string name="dog_gender_male">Male</string>
+    <string name="dog_gender_female">Female</string>
 </resources>
