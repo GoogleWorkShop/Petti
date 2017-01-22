@@ -9,73 +9,81 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User;
 import com.firebase.petti.db.classes.User.Dog;
+import com.firebase.petti.petti.MatchedDogActivity;
 import com.firebase.petti.petti.R;
 import com.firebase.petti.petti.UserChatActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
+
     Context context;
-    public  class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public List<User> mFriends;
+
+    public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CardView cv;
         TextView personName;
-        TextView personAge;
         ImageView personPhoto;
         public ImageButton delete_bt;
         public ImageButton start_chat_bt;
 
         PersonViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
-            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            cv = (CardView) itemView.findViewById(R.id.cv);
+            personName = (TextView) itemView.findViewById(R.id.matched_user_dogs_name);
+            personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
             delete_bt = (ImageButton) itemView.findViewById(R.id.delete_bt);
             start_chat_bt = (ImageButton) itemView.findViewById(R.id.chat_bt);
-            delete_bt.setOnClickListener(this);
+            cv.setOnClickListener(this);
             start_chat_bt.setOnClickListener(this);
+            personPhoto.setOnClickListener(this);
+            delete_bt.setOnClickListener(this);
         }
+
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
             String message = RVAdapter.this.mFriends.get(position).getTempUid();
 
-            if (v.getId() == delete_bt.getId()){
+            int viewId = v.getId();
+
+            if (viewId == delete_bt.getId()) {
+                // delete the user from the friends list
                 API.getCurrUserRef().child("msgTracker").child(message).removeValue();
                 mFriends.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mFriends.size());
-//                Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(position), Toast.LENGTH_SHORT).show();
-            } else {
-                String currUser = mFriends.get(position).getOwner().getName();
+            } else if(viewId == personPhoto.getId()){
+                // enter the user card
+                User otherUser =  mFriends.get(position);
+                Intent intent = new Intent(context, MatchedDogActivity.class);
+                intent.putExtra("user", otherUser);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }  else if (viewId == start_chat_bt.getId() || viewId == cv.getId()) {
+                // go into chat activity with this user
+                String currUser = mFriends.get(position).getDog().getName();
                 Intent myIntent = new Intent(context, UserChatActivity.class);
-//                String message = RVAdapter.this.mFriends.get(getAdapterPosition()).getTempUid();
                 myIntent.putExtra("USER_NAME", currUser);
                 myIntent.putExtra("USER_ID", message);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(myIntent);
                 this.start_chat_bt.clearAnimation();
                 this.start_chat_bt.setImageResource(R.drawable.chat_outline);
-//                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
         }
 
     }
 
-    public List<User> mFriends;
-
-    public RVAdapter(List<User> mFriends, Context con){
+    public RVAdapter(List<User> mFriends, Context con) {
         context = con;
         this.mFriends = mFriends;
     }
@@ -96,19 +104,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
         User currUser = mFriends.get(i);
         Dog currDogData = currUser.getDog();
-        String name =currUser.getOwner().getName();
         personViewHolder.personName.setText(currDogData.getName());
-        personViewHolder.personAge.setText(currDogData.getAge());
         ImageView petImage = personViewHolder.personPhoto;
-        if (!API.getCurrMsgTracker().get(currUser.getTempUid())){
+        if (!API.getCurrMsgTracker().get(currUser.getTempUid())) {
             personViewHolder.start_chat_bt.setImageResource(R.drawable.chat_filled);
             Animation pulse = AnimationUtils.loadAnimation(context, R.anim.pulse);
             personViewHolder.start_chat_bt.setAnimation(pulse);
         }
         String dogPhotoUrl = currDogData.getPhotoUrl();
         ImageLoaderUtils.setImage(dogPhotoUrl, petImage, R.drawable.anonymous_grn);
-//        Picasso.with(petImage.getContext()).load(currDogData.getPhotoUrl()).into(petImage);
-
     }
 
     @Override

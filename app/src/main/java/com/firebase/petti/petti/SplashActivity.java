@@ -1,9 +1,9 @@
 package com.firebase.petti.petti;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,8 +43,6 @@ public class SplashActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-    ImageView splashHeader;
-    ImageView splashImage;
     TextView splashText;
 
     Intent nextActivityIntent;
@@ -71,7 +69,7 @@ public class SplashActivity extends AppCompatActivity {
         initAuthStateListener();
     }
 
-    private void initAuthStateListener(){
+    private void initAuthStateListener() {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -238,14 +236,14 @@ public class SplashActivity extends AppCompatActivity {
         public void run() {
             try {
                 // Sleeping
-                Thread.sleep(SLEEP_TIME*1000);
+                Thread.sleep(SLEEP_TIME * 1000);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
 
-            if (editDogProfile){
+            if (editDogProfile) {
                 nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
-            } else if(editUserProfile) {
+            } else if (editUserProfile) {
                 nextActivityIntent = new Intent(SplashActivity.this, UserRegistrationActivitey.class);
             } else {
                 // Start main activity

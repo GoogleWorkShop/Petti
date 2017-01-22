@@ -82,11 +82,6 @@ public class MatchedFriendsActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
-//        initializeData();
-//        initializeAdapter();
     }
 
     @Override

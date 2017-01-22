@@ -57,7 +57,7 @@ public class MatchedDogFragment extends Fragment {
             public void onClick(View v) {
                 Intent myIntent = new Intent(getActivity(), UserChatActivity.class);
                 String message =    user.getTempUid();
-                String name = user.getOwner().getName();
+                String name = user.getDog().getName();
                 myIntent.putExtra("USER_ID", message);
                 myIntent.putExtra("USER_NAME", name);
                 getActivity().startActivity(myIntent);
