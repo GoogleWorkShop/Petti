@@ -94,7 +94,4 @@ public class MatchedFriendsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//        adapter.persons.add(new Friend("yahav", "25 years old", R.drawable.lavery));
-//        adapter.notifyItemInserted(persons.size() - 1);
-
 }
