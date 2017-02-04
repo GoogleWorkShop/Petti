@@ -248,7 +248,6 @@ public class User implements Serializable{
 
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = super.retrieveDetailList();
-            // TODO: Uncomment when fixed
             output.add("Description:\n" + getDescription());
             return output;
         }
