@@ -1,11 +1,15 @@
 package com.firebase.petti.petti;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -14,10 +18,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.petti.db.ChatApi;
 import com.firebase.petti.db.NewMessagesHandler;
 import com.firebase.petti.db.classes.ChatMessage;
+import com.firebase.petti.petti.utils.SendMailTask;
 import com.firebase.petti.petti.utils.chatAdapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +40,7 @@ public class UserChatActivity extends AppCompatActivity {
     private ArrayAdapter<String> listAdapter;
 
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 256;
+    private static final String PETTI_COMPLAINTS_MAIL = "petticomplaints@gmail.com";
 
     private chatAdapter mMessageAdapter;
     private ChildEventListener mChildEventListener;
@@ -144,6 +151,13 @@ public class UserChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Handle action bar item clicks here. The action bar will
@@ -153,8 +167,43 @@ public class UserChatActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.report_user:
+                getReportAndSend();
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getReportAndSend() {
+        /* First get the report */
+        // Add text to dialog
+        final EditText text = new EditText(this);
+        final Context context = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setView(text);
+        builder.setMessage("Enter Report Reason");
+        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String enteredReport = text.getText().toString();
+                Toast.makeText(context,
+                        "You sent this: " + enteredReport,
+                        Toast.LENGTH_SHORT).show();
+                SendMailTask sendMailTask = new SendMailTask(PETTI_COMPLAINTS_MAIL,
+                        "Complaint On: " + otherUserId,
+                        enteredReport);
+                /* Now send it by mail to company mail */
+                sendMailTask.execute();
+                return;
+            }
+        });
+        builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

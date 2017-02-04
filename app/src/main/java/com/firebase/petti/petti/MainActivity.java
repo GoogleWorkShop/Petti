@@ -3,6 +3,7 @@ package com.firebase.petti.petti;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -24,16 +26,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.db.API;
+import com.firebase.petti.db.LocationsApi;
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.firebase.petti.petti.utils.SendMailTask;
 import com.firebase.petti.petti.utils.UtilsDBHelper;
 import com.firebase.ui.auth.AuthUI;
-
-import com.firebase.petti.db.API;
+import com.google.firebase.auth.FirebaseUser;
 
 
 /**
@@ -46,6 +51,7 @@ import com.firebase.petti.db.API;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final String PETTI_REVIEW_MAIL = "pettireview@gmail.com";
     final Context context = this;
 
     //DB
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     /* this are for the location permission request */
     private static final int INITIAL_REQUEST = 1337;
-    private static final String[] INITIAL_PERMS={
+    private static final String[] INITIAL_PERMS = {
             android.Manifest.permission.ACCESS_FINE_LOCATION
     };
 
@@ -79,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
 
-        m_dbHelper =  new UtilsDBHelper(this);
+        m_dbHelper = new UtilsDBHelper(this);
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -126,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     /* Drawer handling function */
 
-    private void setDrawerProfileInfo(String dogName, String dogPhotoUrl){
+    private void setDrawerProfileInfo(String dogName, String dogPhotoUrl) {
         if (drawerDogNameTextView != null && drawerProfilePicImageView != null) {
             String defaultDog = getString(R.string.default_dog_name);
             if (dogPhotoUrl != null && !dogPhotoUrl.isEmpty()) {
@@ -142,9 +148,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setDrawerProfileInfo(){
+    public void setDrawerProfileInfo() {
         Dog myDog = API.getCurrDogData();
-        if (myDog != null){
+        if (myDog != null) {
             String dogName = myDog.getName();
             String dogPhoto = myDog.getPhotoUrl();
             setDrawerProfileInfo(dogName, dogPhoto);
@@ -219,16 +225,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.edit_user_profile:
                 prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
-                Intent userIntent = new Intent(this,UserRegistrationActivitey.class);
-                userIntent.putExtra("edit",true);
+                Intent userIntent = new Intent(this, UserRegistrationActivitey.class);
+                userIntent.putExtra("edit", true);
                 userIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(userIntent, 0);
                 return;
             case R.id.edit_dog_profile:
                 prevMenuItem.setChecked(true);
                 mDrawer.closeDrawers();
-                Intent dogIntent = new Intent(this,DogRegistrationActivity.class);
-                dogIntent.putExtra("edit",true);
+                Intent dogIntent = new Intent(this, DogRegistrationActivity.class);
+                dogIntent.putExtra("edit", true);
                 dogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(dogIntent, 0);
                 return;
@@ -241,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.sign_out:
                 mDrawer.closeDrawers();
                 AuthUI.getInstance().signOut(this);
-                Intent signOutIntent = new Intent(this,SplashActivity.class);
+                Intent signOutIntent = new Intent(this, SplashActivity.class);
                 startActivityForResult(signOutIntent, 888);
                 return;
             default:
@@ -257,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
         /* if this is a matches fragment we need to pass the bark variable */
         if (menuItem.getItemId() == R.id.default_fragment ||
-                menuItem.getItemId() == R.id.bark_fragment){
+                menuItem.getItemId() == R.id.bark_fragment) {
             fragment.setArguments(bundle);
         }
         // Insert the fragment by replacing any existing fragment
@@ -313,6 +319,36 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.review:
+                /* First get the review */
+                final EditText text = new EditText(this);
+                final Context context = this;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setView(text);
+                builder.setMessage("Tell us what you think on the app\nOr any problem occurred");
+                builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String enteredReport = text.getText().toString();
+                        Toast.makeText(context,
+                                "You sent this: " + enteredReport,
+                                Toast.LENGTH_SHORT).show();
+
+                        SendMailTask sendMailTask = new SendMailTask(PETTI_REVIEW_MAIL,
+                                "Review From: " + API.currUserUid,
+                                enteredReport);
+                        /* Now send it by mail to company mail */
+                        sendMailTask.execute();
+                        return;
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -321,15 +357,15 @@ public class MainActivity extends AppCompatActivity {
     /* End option pressed Handling */
 
     /**
-     *  Handle the logic of pressing the back button:
-     *      if in neighbour dogs or bark - exit the app
-     *      else - get back to neighbor dogs
+     * Handle the logic of pressing the back button:
+     * if in neighbour dogs or bark - exit the app
+     * else - get back to neighbor dogs
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
-        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             // Close the navigation drawer
             mDrawer.closeDrawers();
             return true;
@@ -347,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
-        if(fragment.getClass() != MatchesFragment.class) {
+        if (fragment.getClass() != MatchesFragment.class) {
             fragment = new MatchesFragment();
             Bundle bundle = new Bundle();
             bundle.putBoolean("bark", false);
@@ -369,12 +405,12 @@ public class MainActivity extends AppCompatActivity {
     /* Location permissions Function */
 
     private boolean canAccessLocation() {
-        return(hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
+        return (hasPermission(android.Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED== ContextCompat.checkSelfPermission(this, perm));
+        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perm));
     }
 
     // Callback with the request from calling requestPermissions
@@ -415,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // used in main_nav_header as on click
-    public void EditDogProfile(View view){
+    public void EditDogProfile(View view) {
         Intent intent = new Intent(this, DogRegistrationActivity.class);
         intent.putExtra("edit", true);
         startActivity(intent);
