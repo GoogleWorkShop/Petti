@@ -148,4 +148,22 @@ public class API {
     public static boolean verifyMandatoryData(){
         return currUserUid != null && currUserData != null;
     }
+
+    public static void blockUser(String uid){
+        getCurrUserRef().child("blockedUsers").child(uid).setValue(true);
+    }
+
+    public static void unBlockUser(String uid){
+        getCurrUserRef().child("blockedUsers").child(uid).setValue(null);
+    }
+
+    public static boolean isBlockedByMe(String uid){
+        return currUserData != null && currUserData.getBlockedUsers() != null
+                && currUserData.getBlockedUsers().containsKey(uid);
+    }
+
+    public static boolean isUserBlockingMe(User user){
+        return currUserUid != null && user.getBlockedUsers() != null
+                && user.getBlockedUsers().containsKey(currUserUid);
+    }
 }

@@ -61,7 +61,7 @@ public class NewMessagesHandler {
     private static void notifyNewMessage(final Context appContext, @NonNull String fromUid){
         long now = System.currentTimeMillis();
         long minLimit = now - API.HALF_HOUR_MILLSEC;
-        if (!fromUid.equals(currentlyChatting)) {
+        if (!fromUid.equals(currentlyChatting) && !API.isBlockedByMe(fromUid)) {
 //            NotificationPublisher.scheduleNotification("You have unread messages!", 0, appContext);
             lastNotificationTime = now;
 

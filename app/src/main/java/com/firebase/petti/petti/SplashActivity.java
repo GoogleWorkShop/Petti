@@ -251,7 +251,7 @@ public class SplashActivity extends AppCompatActivity {
             int i = 0;
             int timeout = 10;
 
-//            while (!API.verifyMandatoryData() && i < timeout){
+            while (!API.verifyMandatoryData() && i < timeout){
 //                if (!pd.isShowing()){
 //                    Handler h = new Handler(Looper.getMainLooper());
 //                    h.post(new Runnable() {
@@ -259,21 +259,21 @@ public class SplashActivity extends AppCompatActivity {
 //                            pd.show();
 //                        }
 //                    });
-////                    pd.show();
+//                    pd.show();
 //                }
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (Exception e) {
-//                    Log.e(TAG, e.getMessage());
-//                }
-//                i++;
-//            }
-//            pd.dismiss();
-//            if (i == timeout){
-//                // TODO: DECIDE WHAT TO DO ON TIMEOUT
-//                Log.d(TAG, "Timed out waiting for data from server");
-//                SplashActivity.this.finish();
-//            } else {
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+                i++;
+            }
+            pd.dismiss();
+            if (i == timeout){
+                // TODO: DECIDE WHAT TO DO ON TIMEOUT
+                Log.d(TAG, "Timed out waiting for data from server");
+                SplashActivity.this.finish();
+            } else {
 
                 if (editDogProfile) {
                     nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
@@ -285,7 +285,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 SplashActivity.this.startActivity(nextActivityIntent);
                 SplashActivity.this.finish();
-//            }
+            }
         }
     }
 }
