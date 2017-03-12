@@ -62,7 +62,8 @@ public class MatchedFriendsActivity extends AppCompatActivity {
                     for (Map.Entry<String, Boolean> entry: API.currUserData.getMsgTracker().entrySet()){
                         String friendUid = entry.getKey();
                         DataSnapshot currFriend = dataSnapshot.child(friendUid);
-                        if (currFriend.exists() && currFriend.hasChild("dog")){
+                        if (currFriend.exists() && currFriend.hasChild("dog") &&
+                                !API.isBlockedByMe(friendUid)){
                             User currUser = currFriend.getValue(User.class);
                             currUser.setTempUid(friendUid);
                             if (entry.getValue()) {
@@ -93,8 +94,5 @@ public class MatchedFriendsActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-//        adapter.persons.add(new Friend("yahav", "25 years old", R.drawable.lavery));
-//        adapter.notifyItemInserted(persons.size() - 1);
 
 }

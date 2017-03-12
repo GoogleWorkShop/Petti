@@ -1,7 +1,10 @@
 package com.firebase.petti.petti;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +46,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    ProgressDialog pd;
 
     TextView splashText;
 
@@ -56,6 +61,8 @@ public class SplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);    // Removes notification bar
 
         setContentView(R.layout.activity_splash);
+
+        pd = new ProgressDialog(this, R.style.MyTheme);
 
 
         splashText = (TextView) findViewById(R.id.splash_text);
@@ -241,16 +248,44 @@ public class SplashActivity extends AppCompatActivity {
                 Log.e(TAG, e.getMessage());
             }
 
-            if (editDogProfile) {
-                nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
-            } else if (editUserProfile) {
-                nextActivityIntent = new Intent(SplashActivity.this, UserRegistrationActivitey.class);
-            } else {
-                // Start main activity
-                nextActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
+            int i = 0;
+            int timeout = 10;
+
+            while (!API.verifyMandatoryData() && i < timeout){
+//                if (!pd.isShowing()){
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable() {
+//                        public void run() {
+//                            pd.show();
+//                        }
+//                    });
+//                    pd.show();
+//                }
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+                i++;
             }
-            SplashActivity.this.startActivity(nextActivityIntent);
-            SplashActivity.this.finish();
+            pd.dismiss();
+            if (i == timeout){
+                // TODO: DECIDE WHAT TO DO ON TIMEOUT
+                Log.d(TAG, "Timed out waiting for data from server");
+                SplashActivity.this.finish();
+            } else {
+
+                if (editDogProfile) {
+                    nextActivityIntent = new Intent(SplashActivity.this, DogRegistrationActivity.class);
+                } else if (editUserProfile) {
+                    nextActivityIntent = new Intent(SplashActivity.this, UserRegistrationActivitey.class);
+                } else {
+                    // Start main activity
+                    nextActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
+                }
+                SplashActivity.this.startActivity(nextActivityIntent);
+                SplashActivity.this.finish();
+            }
         }
     }
 }

@@ -121,19 +121,13 @@ public class API {
     }
 
     public static Owner getCurrOwnerData() {
-        if (currUserData == null) {
-            return null;
-        }
-        Owner tempOwner = currUserData.getOwner();
-        return tempOwner == null ? new Owner() : tempOwner;
+        return currUserData == null || currUserData.getOwner() == null ?
+                new Owner() : currUserData.getOwner();
     }
 
     public static Dog getCurrDogData() {
-        if (currUserData == null) {
-            return null;
-        }
-        Dog tempDog = currUserData.getDog();
-        return tempDog == null ? new Dog() : tempDog;
+        return currUserData == null || currUserData.getDog() == null ?
+                new Dog() : currUserData.getDog();
     }
 
     public static boolean isMyUid(String uid){
@@ -147,7 +141,29 @@ public class API {
     }
 
     public static Map<String, Boolean> getCurrMsgTracker(){
-        return currUserData.getMsgTracker();
+        return currUserData != null && currUserData.getMsgTracker() != null ?
+                currUserData.getMsgTracker() : new HashMap<String, Boolean>();
     }
 
+    public static boolean verifyMandatoryData(){
+        return currUserUid != null && currUserData != null;
+    }
+
+    public static void blockUser(String uid){
+        getCurrUserRef().child("blockedUsers").child(uid).setValue(true);
+    }
+
+    public static void unBlockUser(String uid){
+        getCurrUserRef().child("blockedUsers").child(uid).setValue(null);
+    }
+
+    public static boolean isBlockedByMe(String uid){
+        return currUserData != null && currUserData.getBlockedUsers() != null
+                && currUserData.getBlockedUsers().containsKey(uid);
+    }
+
+    public static boolean isUserBlockingMe(User user){
+        return currUserUid != null && user.getBlockedUsers() != null
+                && user.getBlockedUsers().containsKey(currUserUid);
+    }
 }

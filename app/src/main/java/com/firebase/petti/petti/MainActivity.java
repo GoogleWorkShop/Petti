@@ -84,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
         /* ---REST OF CREATION CODE BELLOW--- */
         super.onCreate(savedInstanceState);
 
+//        if (!API.verifyMandatoryData()){
+//            Intent splashIntent = new Intent(this, SplashActivity.class);
+//            this.startActivity(splashIntent);
+//            finish();
+//        }
+
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

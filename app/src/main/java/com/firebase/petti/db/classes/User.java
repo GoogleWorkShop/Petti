@@ -12,9 +12,6 @@ import java.util.Map;
 
 /**
  * Created by yahav on 12/26/2016.
- *
- * Because the {@link com.firebase.petti.petti.utils.FetchMatchesTask} always returns A user with nullified fields
- * will indicate for us a problam in
  */
 
 public class User implements Serializable{
@@ -25,6 +22,8 @@ public class User implements Serializable{
     // map of format: <FriendUid, isViewed>
     // isViewed: This will be true if we have seen all messages from that friend
     private Map<String, Boolean> msgTracker;
+
+    private Map<String, Boolean> blockedUsers;
 
     private Long lastLocationTime;
     private Boolean enabled;
@@ -81,6 +80,14 @@ public class User implements Serializable{
 
     public void setMsgTracker(Map<String, Boolean> msgTracker) {
         this.msgTracker = msgTracker;
+    }
+
+    public Map<String, Boolean> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(Map<String, Boolean> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     public Long getLastLocationTime() {
@@ -241,7 +248,6 @@ public class User implements Serializable{
 
         public ArrayList<String> retrieveDetailList (){
             ArrayList<String> output = super.retrieveDetailList();
-            // TODO: Uncomment when fixed
             output.add("Description:\n" + getDescription());
             return output;
         }
