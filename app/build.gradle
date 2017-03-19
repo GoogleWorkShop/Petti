@@ -55,9 +55,9 @@ dependencies {
     compile 'pl.bclogic:pulsator4droid:1.0.3'
     compile 'me.spark:submitbutton:1.0.1'
     testCompile 'junit:junit:4.12'
-    compile files('C:/Apps/petti/Petti/libs/activation.jar')
-    compile files('C:/Apps/petti/Petti/libs/additionnal.jar')
-    compile files('C:/Apps/petti/Petti/libs/mail.jar')
+    compile 'javax.mail:mail:1.4.7'
+    compile group: 'javax.activation', name: 'activation', version: '1.1'
+
 }
 
 
