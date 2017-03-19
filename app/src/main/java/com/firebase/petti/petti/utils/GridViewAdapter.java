@@ -17,7 +17,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
- * Created by barjon on 18-Dec-16.
+ * The adapter for the matches Fragment screen. Fits the data from the matches task to the
+ * corresponding view and additionally sets details (image, name, distance to) to every item in it.
  */
 
 public class GridViewAdapter extends ArrayAdapter {

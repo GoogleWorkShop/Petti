@@ -35,6 +35,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * this activity handles the registration and the details of the dog itself - its name, age, image,
+ * gender and characteristics. These details can be modified later on via the "Edit Dof Profile'
+ * menu button.
+ */
 public class DogRegistrationActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 100;
@@ -166,6 +171,8 @@ public class DogRegistrationActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
+
+    // Handles upload image for the dog
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
             // Get the url from data
@@ -244,6 +251,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         }
     }
 
+    // Insert the dog data to the firebase DB
     private boolean updateFields(boolean stubborn) {
         //fill fields to pass to db
         dogName = nameView.getText().toString();

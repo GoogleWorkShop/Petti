@@ -10,7 +10,9 @@ import android.widget.Toast;
 
 import com.firebase.petti.db.API;
 
-
+/**
+ *
+ */
 public class MyPreferencesFragment extends PreferenceFragmentCompat
         implements OnSharedPreferenceChangeListener {
 

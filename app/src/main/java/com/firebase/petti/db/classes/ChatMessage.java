@@ -5,7 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by yahav on 12/30/2016.
+ * This class represents a single chat message. it provides getters and setters for the text in
+ * the message, for details of both participants and of the the time it was sent.
  */
 
 public class ChatMessage {

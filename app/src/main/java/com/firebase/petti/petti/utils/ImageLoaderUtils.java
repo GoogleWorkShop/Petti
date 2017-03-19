@@ -9,7 +9,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
- * Created by yahav on 1/6/2017.
+ * Utility to load and select image from the storage section of the database (photoUrl)
+ * to a specific imageView placeholder.
  */
 
 public class ImageLoaderUtils {

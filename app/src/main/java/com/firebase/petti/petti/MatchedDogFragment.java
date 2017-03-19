@@ -24,7 +24,9 @@ import java.util.Map;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * This fragment is responsible for displaying data about specified user (owner+dog) which was
+ * selected in the matchedFragment. In this screen, the user can observe data about the owner,
+ * about the dog; add the user as a friend; and send him a message via the chat
  */
 public class MatchedDogFragment extends Fragment {
 

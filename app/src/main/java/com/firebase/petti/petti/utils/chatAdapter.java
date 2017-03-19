@@ -25,7 +25,8 @@ import java.util.List;
 import static android.R.id.message;
 
 /**
- * Created by USER on 31/12/2016.
+ * This is the adapter for the chats. It is responsible for populating the chat view, in which -
+ * among others - will set different alignments and colors to both chat participants.
  */
 
 public class chatAdapter extends BaseAdapter {

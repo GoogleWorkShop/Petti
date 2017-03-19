@@ -9,6 +9,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Helper class for getting the place information (as a string)
+ * from a specific google places api url.
+ */
 public class DownloadUrl {
 
     public String readUrl(String strUrl) throws IOException {

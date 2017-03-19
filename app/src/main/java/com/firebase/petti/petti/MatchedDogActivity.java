@@ -9,6 +9,9 @@ import android.view.WindowManager;
 
 import com.firebase.petti.db.classes.User;
 
+/**
+ * place holder for MatchedDogFragment
+ */
 public class MatchedDogActivity extends AppCompatActivity {
 
     private User user;
