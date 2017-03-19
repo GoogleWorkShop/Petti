@@ -23,7 +23,10 @@ import java.util.Map;
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
 /**
- * Created by barjon on 09-Jan-17.
+ * This class represents an asynchronous task which responsible for getting a sorted set of the
+ * current matches for the user. This is done by accessing the LocationApi nearByUsers attribute
+ * which suppose to be updated in real-time, and retrieving its content.
+ * It does all that in asynchronous manner - without blocking main thread.
  */
 
 public class FetchMatchesTask extends AsyncTask<Location, Void, ArrayList<User>> {
@@ -143,6 +146,9 @@ public class FetchMatchesTask extends AsyncTask<Location, Void, ArrayList<User>>
         return falseUser;
     }
 
+    /**comparator for sorting the matches response. The first criteria is friends or not and the
+     * and the second criteria is by distance.
+     */
     private static class MatchedUserComparator implements Comparator<User> {
         @Override
         public int compare(User a, User b) {

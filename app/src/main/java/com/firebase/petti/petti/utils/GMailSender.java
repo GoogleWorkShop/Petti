@@ -15,6 +15,9 @@ import java.io.OutputStream;
 import java.security.Security;
 import java.util.Properties;
 
+/**
+ * Gmail account access object from which messages will be sent. Used in the "SendMailTask" utility.
+ */
 public class GMailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
     private String user;

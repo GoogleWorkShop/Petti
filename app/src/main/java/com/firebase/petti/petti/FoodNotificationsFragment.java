@@ -40,9 +40,13 @@ import static android.support.customtabs.CustomTabsIntent.KEY_ID;
 
 
 /**
+
  * A simple {@link Fragment} subclass.
- * this fragment allows the user to enter enter some data when he buys food for his dog,
- * and get notification when he is about to run out of dog food
+
+ * This class handles the food notifications for the user. The user puts input about his dog's food
+ * (type, amount bought and meal size) and this feature will create notifications for when your food
+ * will be about to finish and you should buy another one. this activity will also maintain food
+ * purchases history (implemented in in-device storage rather than the main DB).
  */
 public class FoodNotificationsFragment extends Fragment {
 

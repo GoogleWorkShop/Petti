@@ -40,6 +40,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * This activity is responsible for the "parks, vets and shops map" side-bar menu. It displays a map
+ * and locations layer in which the user can select what type of nearby locations he is interested in -
+ * Vets / pet stores / parks, and corresponding pins will show up on top of the map near the user
+ * location (which will be displayed as well).
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,

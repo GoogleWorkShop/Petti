@@ -41,7 +41,14 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 
-
+/**
+ * This activity is responsible for registering the a new user - getting and populating
+ * his details. These details are assigned to the "Owner" object in the database, as well as to
+ * the storage section of the database in which the uploaded image will be stored. Additionally,
+ * the static location of the user will also be stored in the location section of the database. t
+ * This static location will then be used for the "neighbouring dogs" feature which list users with
+ * static locations near you.
+ */
 public class UserRegistrationActivitey extends AppCompatActivity {
 
 

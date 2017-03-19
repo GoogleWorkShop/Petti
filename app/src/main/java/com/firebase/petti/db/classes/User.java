@@ -11,7 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by yahav on 12/26/2016.
+ * This class represents the generic User object. User is in fact a combination of two other inner
+ * class - the owner and the dog. These two inner classes also appear below. The user class itself
+ * handles characteristics which aren't specified to wether owner nor a dog - such as location
+ * handling and handling methods related to other users (such as distance to me and examine friends).
+ * The owner and dog classes both extend another inner class named "ABCNameEntity"
+ * which has name, age and description. each child class (owner/dog) has more specific details
+ * (i.e owner has email and city; dog has type and personalityAttributes).
  */
 
 public class User implements Serializable{

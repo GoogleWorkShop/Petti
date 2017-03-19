@@ -17,7 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 /**
- * Created by yahav on 1/13/2017.
+ * this class creates and sends notifications to current user's device, in case of new messages
+ * sent to him while he's not currently in the app.
  */
 
 public class NewMessagesHandler {

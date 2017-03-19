@@ -16,7 +16,10 @@ import java.util.List;
 import static android.R.attr.type;
 
 /**
- * Created by roy on 07/01/2017.
+ * This class represents an asynchronous task which responsible for getting a specific type of
+ * places, get their information by the downloadURL utility, parsing the response and finally
+ * creating the corresponding markers on top of the underlying map. It does all that in asynchronous
+ * manner - without blocking main thread.
  */
 
 public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {

@@ -28,6 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This activity represents the screen which is led to by the "My friends" button in the sidebar
+ * menu. On this screen the user can examine his friend list of the app - the ones that he marked
+ * as friends earlier.
+ */
 public class MatchedFriendsActivity extends AppCompatActivity {
 
     private List<User> mFriends;

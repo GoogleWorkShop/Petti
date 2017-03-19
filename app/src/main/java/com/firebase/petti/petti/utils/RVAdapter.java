@@ -23,8 +23,12 @@ import com.firebase.petti.petti.UserChatActivity;
 
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 
+/**
+ * The adapter for a single friend detail screen. on this screen the user is able to see the
+ * friend's name and photo, and also use of of the 2 buttons-  start a chat with him or
+ * delete him from his friends list. The adapter handles each one of these two options.
+ */
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
     Context context;

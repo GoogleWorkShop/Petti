@@ -43,7 +43,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * The main matches screen. This fragment is launched upon both "Neighbour Dogs" and "Who wants to
+ * walk now" sidebar buttons. It will display a grid of all the user that match the current user
+ * preferences (i.e radius and location). Click on a matched item will lead to the corresponding
+ * user details and elaborated in matchedDogFragment doc.
+ * if the fragment was launched via the "who wants to walk now" option, a flag is checked and
+ * and an option to see the matches in a map is available.
  */
 public class MatchesFragment extends Fragment {
 
