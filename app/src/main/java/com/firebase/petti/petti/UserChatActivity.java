@@ -34,6 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * This activity is responsible for a single conversation chat between 2 Petti users.
+ * Each message is saved in the firebase database so each conversation is both real-time
+ * (the messages are automatically shown on both ends without the need of refresh) as well as
+ * history-preserved: the full conversation is shown every time.
+ */
 public class UserChatActivity extends AppCompatActivity {
     private ListView mainListView;
     private String otherUserId;

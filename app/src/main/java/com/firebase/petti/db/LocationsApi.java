@@ -24,7 +24,12 @@ import static com.firebase.petti.db.API.HALF_HOUR_MILLSEC;
 import static com.firebase.petti.db.API.mFirebaseDatabase;
 
 /**
- * Created by yahav on 1/16/2017.
+ * The main connector between the main features (both dynamic - for the "who wants to walk", and
+ * static - for "neighbouring dogs") of the app to the database (the location section
+ * of it). this class uses geoFire and geoQuery modules to determine which users are located near
+ * the current user location. This is done by referencing the relevant data on the database and
+ * querying it with location (latitude, longitude) and radius parameters.
+ * the queryReady public field lets the caller function know that a new set of matches is available.
  */
 
 public class LocationsApi {

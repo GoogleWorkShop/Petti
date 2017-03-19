@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by yahav on 12/31/2016.
+ * This the chat API class- used as a placeholder for some static methods to access and alter the
+ * the chat section of the database. These methods are used in the chat activity and includes
+ * send message, get message etc.
  */
 
 public class ChatApi {

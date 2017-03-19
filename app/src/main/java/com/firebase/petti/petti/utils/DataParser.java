@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by roy on 07/01/2017.
+ * this utility is responsible for parse a json retrieved from google places API into a custom
+ * hashmap with certain fields which represent out places (which later will be displayed as a layer
+ * above a map).
  */
 
 public class DataParser {

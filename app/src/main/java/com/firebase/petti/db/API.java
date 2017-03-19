@@ -29,6 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This API class is functioning practically as placeholder for general-purpose static methods to be
+ * used in several activities and fragments through the entire app. For example some of these
+ * methods are used to alter the firebase DB, such as user creation and modfication; get information
+ * of the current user; and get friends statuses between this user and other.
+ */
 public class API {
 
     private static final String tag = "***FIREBASE API***";

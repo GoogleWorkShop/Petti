@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.firebase.petti.petti.utils.UtilsContract.FoodEntry;
 
 /**
- * Created by barjon on 30-Dec-16.
+ * Helper utility to create database table for the food notifications feature.
  */
 
 public class UtilsDBHelper extends SQLiteOpenHelper {

@@ -13,6 +13,10 @@ import android.util.Log;
 
 import com.firebase.petti.petti.R;
 
+/**
+ * This utility is responsible for creating and scheduling a notification to the user's device.
+ * Used both by the foodNotification fragment and the vaccination card fragment.
+ */
 public class NotificationPublisher extends BroadcastReceiver {
     public NotificationPublisher() {
     }

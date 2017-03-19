@@ -18,7 +18,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
- * Created by barjon on 24-Dec-16.
+ * GPS utility responsible for getting the user location via his device's GPS. Also handle case in
+ * which GPS is not enabled and lets the user enable it via the device settings. Lets the user now
+ * if no location can be obtained.
  */
 
 public class GPSTracker extends Service implements LocationListener {
