@@ -27,6 +27,9 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    maven {
+        url 'https://dl.bintray.com/spark/maven'
+    }
     maven { url 'https://maven.fabric.io/public' }
 }
 
@@ -44,15 +47,17 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.google.firebase:firebase-database:10.0.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.firebaseui:firebase-ui-auth:1.0.1'
     compile 'com.firebase:geofire-android:2.1.1'
     compile 'pl.bclogic:pulsator4droid:1.0.3'
+    compile 'me.spark:submitbutton:1.0.1'
     testCompile 'junit:junit:4.12'
-    compile files('C:/Users/barjon/workspace/Petti/libs/activation.jar')
-    compile files('C:/Users/barjon/workspace/Petti/libs/additionnal.jar')
-    compile files('C:/Users/barjon/workspace/Petti/libs/mail.jar')
+    compile files('C:/Apps/petti/Petti/libs/activation.jar')
+    compile files('C:/Apps/petti/Petti/libs/additionnal.jar')
+    compile files('C:/Apps/petti/Petti/libs/mail.jar')
 }
 
 

@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import com.firebase.petti.db.API;
 import com.firebase.petti.db.classes.User.Dog;
 import com.firebase.petti.petti.utils.ImageLoaderUtils;
+import com.firebase.petti.petti.utils.MyBounceInterpolator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
@@ -158,14 +161,40 @@ public class DogRegistrationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    //when upload button is clicked upload picture chooser dialog
     public void uploadImageMethod(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+
+            }
+        });
+        uploadButton.startAnimation(myAnim);
+
     }
 
+
+    //after the user choose picture, upadte the db and and activity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
             // Get the url from data
@@ -193,11 +222,11 @@ public class DogRegistrationActivity extends AppCompatActivity {
                     });
         }
     }
-
+    // notify that the upload has faild
     private void uploadImageFailedToast() {
         Toast.makeText(this, "Failed to upload image..", Toast.LENGTH_SHORT).show();
     }
-
+    //update the activity with the new image
     private void setDogImage() {
         if (currDogData != null) {
             ImageLoaderUtils.setImage(currDogData.getPhotoUrl(), petImage);
@@ -283,7 +312,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, UserRegistrationActivitey.class);
         startActivity(intent);
     }
-
+  // date picker to choose the dog age
     public void ShowDatePicker(View view) {
         DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override

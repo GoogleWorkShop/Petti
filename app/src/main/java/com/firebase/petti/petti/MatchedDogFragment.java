@@ -25,6 +25,7 @@ import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+
  */
 public class MatchedDogFragment extends Fragment {
 

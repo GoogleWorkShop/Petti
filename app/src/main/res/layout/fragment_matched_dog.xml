@@ -7,14 +7,15 @@
     android:gravity="top"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
-    android:background="@drawable/nature">
+    android:background="@color/gray">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="180dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        app:civ_border_width="3dp"
+        app:civ_border_color="#FFFFFF"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_margin="5dp"
         android:id="@+id/matched_dog_image"
-        android:contentDescription="dogs image"
         android:layout_gravity="center_vertical|center_horizontal|center"/>
 
     <RelativeLayout

@@ -57,7 +57,13 @@ public class GridViewAdapter extends ArrayAdapter {
     }
 
     public String getImage(int position){
-        return mMatchesArray.get(position).getDog().getPhotoUrl();
+
+        String photo = mMatchesArray.get(position).getDog().getPhotoUrl();
+        if (photo == null)
+        {
+            photo = "@drawable/anonymous_prpl";
+        }
+        return photo;
     }
 
     public boolean isFriend(int position){

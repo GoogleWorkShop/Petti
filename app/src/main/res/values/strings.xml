@@ -19,6 +19,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <color name="gray">#EEEEEE</color>
     <string name="action_settings">Settings</string>
     <string name="schedule_a_walk">Find A Mate For A Walk\n\nonly people who want to walk now</string>
     <string name="find_walk_partners_around">Find All The Dog Owners In Your Area</string>

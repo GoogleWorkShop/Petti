@@ -21,11 +21,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.petti.petti.utils.MyBounceInterpolator;
 import com.firebase.petti.petti.utils.NotificationPublisher;
 import com.firebase.petti.petti.utils.UtilsContract;
 import com.firebase.petti.petti.utils.UtilsDBHelper;
@@ -38,6 +41,8 @@ import static android.support.customtabs.CustomTabsIntent.KEY_ID;
 
 /**
  * A simple {@link Fragment} subclass.
+ * this fragment allows the user to enter enter some data when he buys food for his dog,
+ * and get notification when he is about to run out of dog food
  */
 public class FoodNotificationsFragment extends Fragment {
 
@@ -93,6 +98,10 @@ public class FoodNotificationsFragment extends Fragment {
                 /* amount_bought (in grams) - amount_per_day (in grams) * days = amount_bought * 20/100 */
                 /* days * amount_per_day = amount_per_day * 80/100 */
                 /* days = (amount_bought * 8/10) / amount_per_day */
+                final Animation myAnim = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+                myAnim.setInterpolator(interpolator);
+                vv.startAnimation(myAnim);
                 int amount_int = Integer.parseInt(amount_str) * 1000;
                 int per_day_int = Integer.parseInt(per_meal_str);
                 long daysUntilNotif = Math.round((amount_int * 0.8) / per_day_int);

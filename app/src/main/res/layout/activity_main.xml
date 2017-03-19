@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
-    android:background="@drawable/nature">
+    android:background="@color/gray">
 
     <!-- This LinearLayout represents the contents of the screen  -->
     <LinearLayout
@@ -35,6 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:background="@android:color/white"
+        android:background="@color/gray"
         app:menu="@menu/drawer_view" />
 </android.support.v4.widget.DrawerLayout>

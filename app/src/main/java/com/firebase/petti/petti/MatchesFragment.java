@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,8 +18,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -30,8 +35,11 @@ import com.firebase.petti.db.classes.User;
 import com.firebase.petti.petti.utils.FetchMatchesTask;
 import com.firebase.petti.petti.utils.GPSTracker;
 import com.firebase.petti.petti.utils.GridViewAdapter;
+import com.firebase.petti.petti.utils.MyBounceInterpolator;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
@@ -115,7 +123,8 @@ public class MatchesFragment extends Fragment {
         } else {
             goToMapBtn.setVisibility(View.GONE);
         }
-
+        MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.sound);
+        mp.start();
         gridView.setVisibility(View.GONE);
         notFoundView.setVisibility(View.GONE);
         if (checkVisible()){
@@ -144,15 +153,42 @@ public class MatchesFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        goToMapBtn.setEnabled(false);
-        goToMapBtn.setOnClickListener(new View.OnClickListener() {
+
+
+        goToMapBtn.setEnabled(true);
+        goToMapBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Intent mapsIntent = new Intent(getActivity(), MapsActivity.class);
-                mapsIntent.putExtra("neighbours", true);
-                startActivity(mapsIntent);
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        final Animation myAnim = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+                        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+                        myAnim.setInterpolator(interpolator);
+                        myAnim.setAnimationListener(new Animation.AnimationListener(){
+
+                            @Override
+                            public void onAnimationStart(Animation animation){}
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation){}
+
+                            @Override
+                            public void onAnimationEnd(Animation animation){
+                                Intent mapsIntent = new Intent(getActivity(), MapsActivity.class);
+                                mapsIntent.putExtra("neighbours", true);
+                                startActivity(mapsIntent);
+                            }
+                        });
+                        goToMapBtn.startAnimation(myAnim);
+
+                        return true;
+                }
+                return false;
             }
         });
+
 
 
         return rootView;
