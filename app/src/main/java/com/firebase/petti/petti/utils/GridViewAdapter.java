@@ -59,12 +59,13 @@ public class GridViewAdapter extends ArrayAdapter {
 
     public String getImage(int position){
 
-        String photo = mMatchesArray.get(position).getDog().getPhotoUrl();
-        if (photo == null)
-        {
-            photo = "@drawable/anonymous_prpl";
-        }
-        return photo;
+        return mMatchesArray.get(position).getDog().getPhotoUrl();
+//        String photo = mMatchesArray.get(position).getDog().getPhotoUrl();
+//        if (photo == null)
+//        {
+//            photo = "@drawable/anonymous_prpl";
+//        }
+//        return photo;
     }
 
     public boolean isFriend(int position){
@@ -101,7 +102,7 @@ public class GridViewAdapter extends ArrayAdapter {
         holder.imageTitle.setText(name);
         holder.distance.setText(distanceTo);
 //        Picasso.with(mContext).load(url).into(holder.image);
-        ImageLoaderUtils.setImage(url, holder.image);
+        ImageLoaderUtils.setImage(url, holder.image, R.drawable.anonymous_prpl);
         if (isFriend(position)) {
             holder.friendIndicator.setVisibility(View.VISIBLE);
         } else {
