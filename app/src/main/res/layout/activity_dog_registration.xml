@@ -72,14 +72,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
+                android:paddingBottom="10dp"
                 android:orientation="horizontal"
-                android:weightSum="3">
+               >
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:hint="Name:"
                     android:maxLines="1"
-                    android:onClick="ShowDatePicker"
                     android:textSize="20sp" />
                 <EditText
                     android:id="@+id/pet_name"
@@ -87,7 +87,6 @@
                     android:background="@android:color/transparent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:textSize="20sp" />
 
             </LinearLayout>
