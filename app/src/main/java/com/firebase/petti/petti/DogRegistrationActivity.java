@@ -1,8 +1,12 @@
 package com.firebase.petti.petti;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,9 +35,13 @@ import com.firebase.petti.petti.utils.ImageLoaderUtils;
 import com.firebase.petti.petti.utils.MyBounceInterpolator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -205,13 +213,25 @@ public class DogRegistrationActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
             // Get the url from data
-            Uri selectedImageUri = data.getData();
-            petImage.setImageURI(selectedImageUri);
+            Uri imageUri = data.getData();
+            InputStream imageStream = null;
+            try {
+                imageStream = getContentResolver().openInputStream(imageUri);
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            selectedImage = getResizedBitmap(selectedImage,400);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            petImage.setImageBitmap(selectedImage);
             StorageReference photoRef = API.mPetPhotos
                     .child(API.currUserUid)
-                    .child(selectedImageUri.getLastPathSegment());
+                    .child(imageUri.getLastPathSegment());
             // Upload file to Firebase Storage
-            UploadTask uploadImageTask = photoRef.putFile(selectedImageUri);
+            UploadTask uploadImageTask = photoRef. putBytes(byteArray);
             uploadImageTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // When the image has successfully uploaded, we get its download URL
@@ -229,6 +249,7 @@ public class DogRegistrationActivity extends AppCompatActivity {
                     });
         }
     }
+
     // notify that the upload has faild
     private void uploadImageFailedToast() {
         Toast.makeText(this, "Failed to upload image..", Toast.LENGTH_SHORT).show();
@@ -238,6 +259,23 @@ public class DogRegistrationActivity extends AppCompatActivity {
         if (currDogData != null) {
             ImageLoaderUtils.setImage(currDogData.getPhotoUrl(), petImage);
         }
+    }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        Bitmap toRet =  Bitmap.createScaledBitmap(image, width, height, true);
+
+        return toRet;
     }
 
     public void genderSelection(View view) {
@@ -334,4 +372,23 @@ public class DogRegistrationActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH)).show();
     }
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+    public static int getOrientation(Context context, Uri photoUri) {
+    /* it's on the external media. */
+        Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
+
+        if (cursor.getCount() != 1) {
+            return -1;
+        }
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
 }

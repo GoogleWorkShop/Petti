@@ -2,6 +2,9 @@ package com.firebase.petti.petti;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,6 +42,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Calendar;
 
 /**
@@ -247,14 +253,25 @@ public class UserRegistrationActivitey extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
-            // Get the url from data
-            Uri selectedImageUri = data.getData();
-            userImage.setImageURI(selectedImageUri);
+            Uri imageUri = data.getData();
+            InputStream imageStream = null;
+            try {
+                imageStream = getContentResolver().openInputStream(imageUri);
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            selectedImage = getResizedBitmap(selectedImage,400);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            userImage.setImageBitmap(selectedImage);
             StorageReference photoRef = API.mOwnerPhotos
                     .child(API.currUserUid)
-                    .child(selectedImageUri.getLastPathSegment());
+                    .child(imageUri.getLastPathSegment());
             // Upload file to Firebase Storage
-            UploadTask uploadImageTask = photoRef.putFile(selectedImageUri);
+            UploadTask uploadImageTask = photoRef.putBytes(byteArray);
             uploadImageTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // When the image has successfully uploaded, we get its download URL
@@ -332,7 +349,22 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         startMainActivity(view);
 
     }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
 
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        Bitmap toRet = Bitmap.createScaledBitmap(image, width, height, true);
+
+        return toRet;
+    }
     private boolean updateFields(boolean stubborn) {
         //fill fields to pass to db
         userName = nameView.getText().toString();
@@ -371,6 +403,12 @@ public class UserRegistrationActivitey extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
 }

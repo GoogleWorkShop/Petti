@@ -90,7 +90,6 @@
                     android:id="@+id/user_name"
                     android:layout_width="281dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
                     android:background="@android:color/transparent"
                     android:maxLines="1"
                     android:textSize="20sp" />
