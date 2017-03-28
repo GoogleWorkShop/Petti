@@ -16,7 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="121dp"
             android:padding="16dp">
-
+            <Button
+                android:id="@+id/trans_button"
+                android:layout_width="100dp"
+                android:background="@android:color/transparent"
+                android:layout_height="100dp">
+            </Button>
             <de.hdodenhof.circleimageview.CircleImageView
                 app:civ_border_width="3dp"
                 app:civ_border_color="#FFFFFF"
@@ -26,7 +31,6 @@
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
                 android:clickable="true"/>
-
             <TextView
                 android:id="@+id/matched_user_dogs_name"
                 android:layout_width="90dp"

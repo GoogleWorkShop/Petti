@@ -40,7 +40,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         TextView personName;
         ImageView personPhoto;
         public Button delete_bt;
-         public Button start_chat_bt;
+        public Button start_chat_bt;
+        public Button trans_button;
 
         PersonViewHolder(View itemView) {
             super(itemView);
@@ -49,9 +50,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
             delete_bt = (Button) itemView.findViewById(R.id.delete_bt);
             start_chat_bt = (Button) itemView.findViewById(R.id.chat_bt);
+            trans_button = (Button) itemView.findViewById(R.id.trans_button);
             cv.setOnClickListener(this);
             start_chat_bt.setOnClickListener(this);
-            personPhoto.setOnClickListener(this);
+            trans_button.setOnClickListener(this);
             delete_bt.setOnClickListener(this);
         }
 
@@ -59,7 +61,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         public void onClick(final View v) {
             //needs to be final for the animation
             final int position = getAdapterPosition();
-            final Button b = (Button)v;
             final String message = RVAdapter.this.mFriends.get(position).getTempUid();
             final Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
             MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
@@ -87,14 +88,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
                         mFriends.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mFriends.size());
-                    } else if(viewId == personPhoto.getId()){
+                    } else if (viewId == trans_button.getId()) {
                         // enter the user card
-                        User otherUser =  mFriends.get(position);
+                        User otherUser = mFriends.get(position);
                         Intent intent = new Intent(context, MatchedDogActivity.class);
                         intent.putExtra("user", otherUser);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-                    }  else if (viewId == start_chat_bt.getId() || viewId == cv.getId()) {
+                    } else if (viewId == start_chat_bt.getId() || viewId == cv.getId()) {
                         // go into chat activity with this user
                         String currUser = mFriends.get(position).getDog().getName();
                         Intent myIntent = new Intent(context, UserChatActivity.class);
@@ -107,11 +108,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
                 }
             });
-            b.startAnimation(myAnim);
-
-
+            int viewId = v.getId();
+            if (viewId == delete_bt.getId()) {
+                delete_bt.startAnimation(myAnim);
+            } else if (viewId == trans_button.getId()) {
+                trans_button.startAnimation(myAnim);
+            } else if (viewId == start_chat_bt.getId()) {
+                start_chat_bt.startAnimation(myAnim);
+            }
         }
-
     }
 
     public RVAdapter(List<User> mFriends, Context con) {
