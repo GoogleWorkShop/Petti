@@ -22,7 +22,7 @@ Additionally, the app has more useful features for dog owners: Food and vaccinat
 - Show other people who want to walk now on map as markers (Google maps API), Or as items with info on a grid.
 - Real time chat.
 - Show interesting markers (vets, shop and parks) on map (Google maps API).
-- Create ìfood running lowî phone notifications.
+- Create ‚Äúfood running low‚Äù phone notifications.
 - Save future treatments as calendar events (Google calendar API).
 
 ## Main APIs
