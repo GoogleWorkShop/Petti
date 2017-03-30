@@ -22,7 +22,7 @@ Additionally, the app has more useful features for dog owners: Food and vaccinat
 - Show other people who want to walk now on map as markers (Google maps API), Or as items with info on a grid.
 - Real time chat.
 - Show interesting markers (vets, shop and parks) on map (Google maps API).
-- Create ìfood running lowî phone notifications.
+- Create ‚Äúfood running low‚Äù phone notifications.
 - Save future treatments as calendar events (Google calendar API).
 
 ## Main APIs
@@ -31,7 +31,7 @@ As mentioned above, Petti app uses "Firebase" as its BaaS (beckend as a sericve)
 Having said that, We have encapsulated these firebase APIs and created our custom ones to serve our use-cases better,
  eventually creating 3 main API modules for the differnet screens / activities:
 "API.java", "ChatApi.java" and "LocationsApi.java" 
-###API.java main methods:
+### API.java main methods:
 -initDataBaseApi - sets the the main DB references - the useres one, the dog photos one, and the owner photos one.
 - getCurrOwnerData()- gets the current (one which runs the app) data of the owner
 - getCurrDogData() - gets the current (one which runs the app) data of the dog
@@ -44,12 +44,12 @@ Having said that, We have encapsulated these firebase APIs and created our custo
 - unblockUser(uid) - removes the block from the user whose id is <uid> to send messages to the current user
 - isBlockedByMe(uid) - checks if the user whose id is <uid> is blocked by the current user.
 - isBlockingMe(uid) - checks if the user  whose id is <uid> is blocking the current user.
-###LocationsAPI.java main methods:
+### LocationsAPI.java main methods:
 -initLocationApi() - sets the the locations DB references - the dynamic locations (for the walk now feature) and static locatios ref (for the neighbouring dogs feature).
 - addStaticLocation/addLoction() - adds a static location to the DB / adds a dynamic location to the DB
 - attachNearByUserListener() - attaches geoFire lisetner to the current user, so data about near by users can be recognized and put in the DB.
 - detachNearByUserListener() - dettaches the geoFire listener.
-#ChatApi.java main methods:
+### ChatApi.java main methods:
 - initchatDB() - sets the the chat DB references - the "messages" one.
 - sendChatMessage(toUid, text) - sends the text message to the user whose id is toUid. 
 - getMagRefById(otherUserId) - gets all the messages between the current user and the user whose id is otherUserId.
